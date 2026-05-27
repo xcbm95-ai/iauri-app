@@ -1,343 +1,393 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="bg-[#0A0A0A]">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>耳頷所會員系統</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <script src="https://static.liff.line.me/edge/2/sdk.js"></script>
-  <style>
-    /* 隱藏滾動條但保持功能 */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0A0A0A"/>
+    <title>耳顏所會員系統</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        /* 隱藏滾動條但保持功能 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body class="bg-black text-zinc-100 min-h-screen flex flex-col no-scrollbar select-none">
+<body class="bg-[#0A0A0A] text-[#F5F5F5] antialiased min-h-screen flex flex-col justify-between pb-20 select-none">
 
-  <header class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-zinc-900 px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center space-x-3">
-      <img id="user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar" class="w-10 h-10 rounded-full border border-zinc-800 object-cover">
-      <div>
-        <div class="text-xs text-zinc-500">歡迎回來</div>
-        <div id="user-name" class="text-sm font-semibold text-zinc-200">訪客用戶</div>
-      </div>
-    </div>
-    <div class="bg-zinc-900 border border-zinc-800 px-3 py-1 rounded-full flex items-center space-x-1">
-      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span class="text-xs text-zinc-400 font-medium">頂級會員</span>
-    </div>
-  </header>
-
-  <main class="flex-1 overflow-y-auto px-4 py-6 pb-24">
-    
-    <div id="tab-home" class="tab-content space-y-6">
-      <div class="p-5 rounded-2xl bg-gradient-to-br from-zinc-900 to-black border border-zinc-800 relative overflow-hidden shadow-xl">
-        <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl"></div>
-        <div class="flex items-center space-x-2 text-amber-500 text-xs font-semibold uppercase tracking-wider">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
-          <span>專屬權益進度</span>
-        </div>
-        <h3 id="free-plan-text" class="text-base font-bold text-zinc-100 mt-2">小臉養成計畫 (已預約 0/8 次) 0%</h3>
-        <div class="w-full bg-zinc-950 h-2.5 rounded-full mt-4 p-0.5 border border-zinc-800/50">
-          <div id="free-plan-progress" class="bg-gradient-to-r from-amber-600 to-amber-400 h-1.5 rounded-full transition-all duration-500" style="w-full: 0%"></div>
-        </div>
-        <p class="text-xs text-zinc-500 mt-3 leading-relaxed">此進度條將動態追蹤您的預約次數，當完成 8 次免費瘦小臉計畫後，專案區塊將自動完成隱藏。</p>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <button onclick="showTab('booking')" class="p-4 rounded-xl bg-zinc-900 border border-zinc-800 flex flex-col items-center justify-center space-y-2 active:scale-95 transition-all">
-          <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-          </div>
-          <span class="text-xs font-medium text-zinc-400">立即預約</span>
-        </button>
-        <button onclick="showTab('records')" class="p-4 rounded-xl bg-zinc-900 border border-zinc-800 flex flex-col items-center justify-center space-y-2 active:scale-95 transition-all">
-          <div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-          </div>
-          <span class="text-xs font-medium text-zinc-400">理療紀錄</span>
-        </button>
-      </div>
+    <div class="fixed inset-0 opacity-30 pointer-events-none z-0">
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-[#D4AF37] opacity-10 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#C9A227] opacity-10 blur-[120px] rounded-full"></div>
     </div>
 
-    <div id="tab-booking" class="tab-content hidden space-y-6">
-      <div class="flex items-center space-x-2 border-b border-zinc-900 pb-3">
-        <h2 class="text-lg font-bold text-zinc-100">預約新理療</h2>
-      </div>
-
-      <form id="booking-form" class="space-y-6">
-        <div class="space-y-3">
-          <label class="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">1. 選擇理療項目</label>
-          <input type="hidden" id="selected-service" value="">
-          
-          <div class="space-y-3">
-            <div id="free-plan-card" class="service-card p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 flex justify-between items-center transition-all cursor-pointer" data-value="免費兩個月瘦小臉計畫">
-              <div>
-                <div class="font-medium text-zinc-200 text-sm">免費兩個月瘦小臉計畫</div>
-                <div class="text-xs text-zinc-500 mt-1">專屬回饋計畫 · 耗時 45 分鐘</div>
-              </div>
-              <div class="text-sm font-semibold text-amber-500">NT$ 0</div>
+    <main class="relative z-10 flex-1 p-4 no-scrollbar overflow-y-auto">
+        
+        <header class="relative z-10 pb-4 flex items-center justify-between border-b border-zinc-800/50 mb-4">
+            <div>
+                <div class="text-xs tracking-[0.35em] uppercase text-[#C9A227] font-medium">MEMBER</div>
+                <h1 class="text-xl font-light mt-1 text-white tracking-wide">耳顏所會員系統</h1>
             </div>
+            <div class="relative">
+                <img id="user-avatar" class="w-10 h-10 rounded-full border border-[#D4AF37]/40 p-0.5 bg-zinc-900" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User Avatar" />
+                <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#0A0A0A]"></div>
+            </div>
+        </header>
+
+        <section id="page-home" class="page-content space-y-4">
+            <div class="bg-gradient-to-br from-zinc-900 via-zinc-900 to-black p-5 rounded-2xl border border-zinc-800/80 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 blur-[40px] rounded-full"></div>
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700">
+                        <span class="text-lg text-[#D4AF37]">👑</span>
+                    </div>
+                    <div>
+                        <h2 id="user-name" class="text-lg font-medium text-white">載入中...</h2>
+                        <p class="text-xs text-[#D4AF37] font-light mt-0.5">黃金會員</p>
+                    </div>
+                </div>
+
+                <div id="free-plan-progress-box" class="mt-5 pt-4 border-t border-zinc-800/60">
+                    <div class="flex justify-between items-center text-xs mb-2">
+                        <span id="free-plan-count-text" class="text-zinc-400 font-light">小臉養成計畫 (已預約 0/8 次)</span>
+                        <span id="free-plan-percent-text" class="text-[#D4AF37] font-medium">0%</span>
+                    </div>
+                    <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+                        <div id="free-plan-bar" class="bg-gradient-to-r from-[#D4AF37] to-[#C9A227] h-full w-[0%] transition-all duration-500 rounded-full"></div>
+                    </div>
+                </div>
+
+                <div class="mt-5 pt-4 border-t border-zinc-800/60 grid grid-cols-3 gap-2 text-center">
+                    <div>
+                        <div class="text-lg font-semibold text-white">0</div>
+                        <div class="text-[10px] text-zinc-400 mt-1">累積點數</div>
+                    </div>
+                    <div>
+                        <div class="text-lg font-semibold text-white">0</div>
+                        <div class="text-[10px] text-zinc-400 mt-1">到店次數</div>
+                    </div>
+                    <div>
+                        <div class="text-lg font-semibold text-white">0</div>
+                        <div class="text-[10px] text-zinc-400 mt-1">可換獎勵</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="switchTab('booking')" class="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 text-left active:scale-[0.98] transition-transform">
+                    <div class="text-lg mb-1">📅</div>
+                    <div class="text-sm font-medium text-white">立即預約</div>
+                </button>
+                <button onclick="switchTab('member')" class="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 text-left active:scale-[0.98] transition-transform">
+                    <div class="text-lg mb-1">💳</div>
+                    <div class="text-sm font-medium text-white">會員卡</div>
+                </button>
+                <button id="btn-face-record" onclick="switchTab('records')" class="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 text-left active:scale-[0.98] transition-transform">
+                    <div class="text-lg mb-1">📄</div>
+                    <div class="text-sm font-medium text-white">小臉紀錄</div>
+                </button>
+                <button onclick="alert('功能開發中，敬請期待！')" class="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 text-left active:scale-[0.98] transition-transform">
+                    <div class="text-lg mb-1">🔗</div>
+                    <div class="text-sm font-medium text-white">推薦好友</div>
+                </button>
+            </div>
+        </section>
+
+        <section id="page-records" class="page-content hidden space-y-4">
+            <h3 class="text-base font-medium text-white tracking-wide">您的理療紀錄</h3>
+            <div id="records-container" class="space-y-3">
+                <div class="bg-zinc-900/60 border border-zinc-800/80 p-6 rounded-xl text-center text-zinc-500 text-sm">
+                    目前尚無前往理療的歷史紀錄。
+                </div>
+            </div>
+        </section>
+
+        <section id="page-booking" class="page-content hidden space-y-4">
+            <h3 class="text-base font-medium text-white tracking-wide">線上預約服務</h3>
             
-            <div class="service-card p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 flex justify-between items-center transition-all cursor-pointer" data-value="基礎平衡耳頷理療項目">
-              <div>
-                <div class="font-medium text-zinc-200 text-sm">基礎平衡耳頷理療項目</div>
-                <div class="text-xs text-zinc-500 mt-1">常規核心護理 · 耗時 60 分鐘</div>
-              </div>
-              <div class="text-sm font-semibold text-zinc-400">現場收費</div>
+            <div class="space-y-2">
+                <label class="text-xs text-zinc-400 block">選擇療程項目</label>
+                <div class="grid grid-cols-1 gap-2">
+                    <div id="option-free-plan" onclick="selectService(this, '0', '免費兩個月瘦小臉計畫')" class="service-option border-2 border-dashed border-[#D4AF37] bg-[#D4AF37]/5 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]">
+                        <div>
+                            <div class="text-sm font-semibold text-white flex items-center">
+                                免費兩個月瘦小臉計畫 <span class="ml-2 text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded-full animate-pulse">新客禮</span>
+                            </div>
+                            <div class="text-xs text-zinc-400 mt-0.5">專屬加入會員免費體驗計畫 (限做 8 次)</div>
+                        </div>
+                        <div class="text-sm font-bold text-[#D4AF37]">免費</div>
+                    </div>
+                    
+                    <div onclick="selectService(this, '400', '精準局部體驗')" class="service-option bg-zinc-900 border border-zinc-800 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]">
+                        <div>
+                            <div class="text-sm font-medium text-white">精準局部體驗</div>
+                            <div class="text-xs text-zinc-400 mt-0.5">針對特定不適點加強</div>
+                        </div>
+                        <div class="text-sm font-medium text-[#D4AF37]">$400</div>
+                    </div>
+                    <div onclick="selectService(this, '800', '全息平衡調理')" class="service-option bg-zinc-900 border border-zinc-800 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]">
+                        <div>
+                            <div class="text-sm font-medium text-white">全息平衡調理</div>
+                            <div class="text-xs text-zinc-400 mt-0.5">全身性耳穴全息舒緩與平衡</div>
+                        </div>
+                        <div class="text-sm font-medium text-[#D4AF37]">$800</div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
 
-        <div class="space-y-3">
-          <label class="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">2. 選擇預約日期</label>
-          <input type="hidden" id="selected-date" value="">
-          <div id="date-container" class="flex space-x-3 overflow-x-auto pb-2 no-scrollbar">
+            <div class="space-y-2">
+                <label class="text-xs text-zinc-400 block">選擇預約日期</label>
+                <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar" id="date-picker-container"></div>
             </div>
-        </div>
 
-        <div class="space-y-3">
-          <label class="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">3. 選擇預約時段</label>
-          <input type="hidden" id="selected-time" value="">
-          
-          <div class="grid grid-cols-3 gap-3">
-            <button type="button" class="time-btn py-3 rounded-xl border border-zinc-800 bg-zinc-900/50 text-sm text-zinc-400 transition-all active:scale-95" data-value="13:00">13:00</button>
-            <button type="button" class="time-btn py-3 rounded-xl border border-zinc-800 bg-zinc-900/50 text-sm text-zinc-400 transition-all active:scale-95" data-value="15:30">15:30</button>
-            <button type="button" class="time-btn py-3 rounded-xl border border-zinc-800 bg-zinc-900/50 text-sm text-zinc-400 transition-all active:scale-95" data-value="19:00">19:00</button>
-          </div>
-        </div>
+            <div class="space-y-2">
+                <label class="text-xs text-zinc-400 block">選擇預約時段</label>
+                <div class="grid grid-cols-3 gap-2" id="time-picker-container">
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">10:00</div>
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">13:30</div>
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">15:00</div>
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">16:30</div>
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">19:00</div>
+                </div>
+            </div>
 
-        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-black font-semibold py-4 rounded-xl transition-all shadow-lg shadow-amber-500/10 mt-4 block text-center text-sm">
-          確認送出預約
+            <button onclick="submitBooking()" class="w-full bg-gradient-to-r from-[#D4AF37] to-[#C9A227] text-black font-medium p-3.5 rounded-xl text-sm mt-4 active:scale-[0.98] transition-transform shadow-lg shadow-[#D4AF37]/10">
+                確認送出預約
+            </button>
+        </section>
+
+        <section id="page-member" class="page-content hidden space-y-4">
+            <h3 class="text-base font-medium text-white tracking-wide">專屬電子會員卡</h3>
+            <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl text-center space-y-4 relative overflow-hidden">
+                <div class="text-xs text-zinc-500 tracking-[0.2em]">IAURI EAR THERAPY CARD</div>
+                <div class="bg-white p-4 rounded-lg inline-block mx-auto">
+                    <div class="w-48 h-12 bg-[repeating-linear-gradient(90deg,black,black_2px,white_2px,white_8px,black_8px,black_10px)]"></div>
+                </div>
+                <div class="text-sm font-mono text-zinc-400 tracking-widest">ID: 888-2026-LIFF</div>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-900 py-2 px-6 flex justify-between items-center z-50 shadow-2xl">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center space-y-1 text-[#D4AF37]">
+            <span class="text-xl">🏠</span>
+            <span class="text-[10px] font-medium">首頁</span>
         </button>
-      </form>
-    </div>
+        <button onclick="switchTab('records')" id="nav-records" class="nav-btn flex flex-col items-center space-y-1 text-zinc-500">
+            <span class="text-xl">📋</span>
+            <span class="text-[10px] font-medium">紀錄</span>
+        </button>
+        <button onclick="switchTab('booking')" id="nav-booking" class="nav-btn flex flex-col items-center space-y-1 text-zinc-500">
+            <span class="text-xl">📅</span>
+            <span class="text-[10px] font-medium">預約</span>
+        </button>
+        <button onclick="switchTab('member')" id="nav-member" class="nav-btn flex flex-col items-center space-y-1 text-zinc-500">
+            <span class="text-xl">👤</span>
+            <span class="text-[10px] font-medium">會員</span>
+        </button>
+    </nav>
 
-    <div id="tab-records" class="tab-content hidden space-y-4">
-      <div class="flex items-center space-x-2 border-b border-zinc-900 pb-3">
-        <h2 class="text-lg font-bold text-zinc-100">理療歷史紀錄</h2>
-      </div>
-      <div id="record-list" class="space-y-3">
-        </div>
-    </div>
+    <script>
+        let selectedServiceItem = null;
+        let selectedServiceName = '';
+        let selectedDateItem = null;
+        let selectedTimeItem = null;
 
-  </main>
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`page-${tabId}`).classList.remove('hidden');
 
-  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-t border-zinc-900 px-6 py-2 flex justify-around items-center">
-    <button onclick="showTab('home')" id="nav-home" class="nav-item flex flex-col items-center space-y-1 text-amber-500 transition-all">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-      <span class="text-[10px] font-medium">首頁</span>
-    </button>
-    <button onclick="showTab('booking')" id="nav-booking" class="nav-item flex flex-col items-center space-y-1 text-zinc-500 transition-all">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-      <span class="text-[10px] font-medium">預約</span>
-    </button>
-    <button onclick="showTab('records')" id="nav-records" class="nav-item flex flex-col items-center space-y-1 text-zinc-500 transition-all">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-      <span class="text-[10px] font-medium">紀錄</span>
-    </button>
-  </nav>
-
-  <script>
-    // 1. 初始化 LINE LIFF 功能 (整合 async/await 排隊機制)
-    async function initializeLiff() {
-      try {
-        // 請確保此處填入您正確的 LIFF ID
-        await liff.init({ liffId: "2010173212-2gFbVMbf" });
-
-        // 若使用者未在 LINE 登入，引導登入
-        if (!liff.isLoggedIn()) {
-          liff.login();
-          return;
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('text-[#D4AF37]');
+                el.classList.add('text-zinc-500');
+            });
+            document.getElementById(`nav-${tabId}`).classList.remove('text-zinc-500');
+            document.getElementById(`nav-${tabId}`).classList.add('text-[#D4AF37]');
         }
 
-        // 成功取得個人資料
-        const profile = await liff.getProfile();
-        
-        // 渲染名字與大頭貼到網頁上
-        if (profile.displayName) {
-          document.getElementById('user-name').innerText = profile.displayName;
+        function selectService(element, price, name) {
+            document.querySelectorAll('.service-option').forEach(el => {
+                el.classList.remove('border-[#D4AF37]', 'bg-zinc-800/80', 'bg-[#D4AF37]/10');
+                if(el.id === 'option-free-plan') {
+                    el.className = "service-option border-2 border-dashed border-[#D4AF37] bg-[#D4AF37]/5 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]";
+                } else {
+                    el.className = "service-option bg-zinc-900 border border-zinc-800 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]";
+                }
+            });
+            
+            element.classList.add('border-[#D4AF37]', 'bg-[#D4AF37]/10');
+            selectedServiceItem = price;
+            selectedServiceName = name;
         }
-        if (profile.pictureUrl) {
-          document.getElementById('user-avatar').src = profile.pictureUrl;
+
+        function selectDate(element, dateStr) {
+            document.querySelectorAll('.date-option').forEach(el => {
+                el.classList.remove('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+                el.classList.add('border-zinc-800', 'bg-zinc-900/50', 'text-zinc-400');
+            });
+            element.classList.remove('border-zinc-800', 'bg-zinc-900/50', 'text-zinc-400');
+            element.classList.add('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+            selectedDateItem = dateStr;
         }
-      } catch (err) {
-        console.error("LINE 登入功能初始化失敗：", err);
-        document.getElementById('user-name').innerText = "訪客用戶";
-      }
-    }
 
-    // 分頁切換控制
-    function showTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-      const activeTab = document.getElementById(`tab-${tabId}`);
-      if (activeTab) activeTab.classList.remove('hidden');
-      
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('text-amber-500');
-        item.classList.add('text-zinc-500');
-      });
-      const activeNav = document.getElementById(`nav-${tabId}`);
-      if (activeNav) {
-        activeNav.classList.remove('text-zinc-500');
-        activeNav.classList.add('text-amber-500');
-      }
-    }
-
-    // 項目選擇器互動
-    document.querySelectorAll('.service-card').forEach(card => {
-      card.addEventListener('click', function() {
-        document.querySelectorAll('.service-card').forEach(c => {
-          c.classList.remove('border-amber-500', 'bg-amber-500/5');
-          c.classList.add('border-zinc-800', 'bg-zinc-900/50');
-        });
-        this.classList.remove('border-zinc-800', 'bg-zinc-900/50');
-        this.classList.add('border-amber-500', 'bg-amber-500/5');
-        document.getElementById('selected-service').value = this.dataset.value;
-      });
-    });
-
-    // 時段選擇器互動
-    document.querySelectorAll('.time-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.time-btn').forEach(b => {
-          b.classList.remove('border-amber-500', 'text-amber-500', 'bg-amber-500/10');
-          b.classList.add('border-zinc-800', 'text-zinc-400', 'bg-zinc-900/50');
-        });
-        this.classList.remove('border-zinc-800', 'text-zinc-400', 'bg-zinc-900/50');
-        this.classList.add('border-amber-500', 'text-amber-500', 'bg-amber-500/10');
-        document.getElementById('selected-time').value = this.dataset.value;
-      });
-    });
-
-    // 生產日期陣列項目
-    function generateDates() {
-      const dateContainer = document.getElementById('date-container');
-      if (!dateContainer) return;
-      dateContainer.innerHTML = '';
-      
-      const daysOfWeek = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-      const today = new Date();
-      
-      for (let i = 0; i < 7; i++) {
-        const futureDate = new Date(today);
-        futureDate.setDate(today.getDate() + i);
-        
-        const dayName = i === 0 ? '今天' : daysOfWeek[futureDate.getDay()];
-        const month = futureDate.getMonth() + 1;
-        const date = futureDate.getDate();
-        const dateString = `${month}/${date}`;
-        const fullDateValue = `${futureDate.getFullYear()}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-        
-        const dateBtn = document.createElement('button');
-        dateBtn.type = 'button';
-        dateBtn.className = 'date-btn flex flex-col items-center justify-center min-w-[64px] h-16 rounded-xl border border-zinc-800 bg-zinc-900/50 text-zinc-400 transition-all';
-        dateBtn.dataset.date = fullDateValue;
-        dateBtn.innerHTML = `
-          <span class="text-xs text-zinc-500">${dayName}</span>
-          <span class="text-sm font-semibold mt-1">${dateString}</span>
-        `;
-        
-        dateBtn.addEventListener('click', function() {
-          document.querySelectorAll('.date-btn').forEach(btn => {
-            btn.classList.remove('border-amber-500', 'text-amber-500', 'bg-amber-500/10');
-            btn.classList.add('border-zinc-800', 'text-zinc-400', 'bg-zinc-900/50');
-          });
-          this.classList.remove('border-zinc-800', 'text-zinc-400', 'bg-zinc-900/50');
-          this.classList.add('border-amber-500', 'text-amber-500', 'bg-amber-500/10');
-          document.getElementById('selected-date').value = this.dataset.date;
-        });
-        
-        dateContainer.appendChild(dateBtn);
-      }
-    }
-
-    // 檢查免費瘦小臉計畫預約次數，控制進度條與區塊隱藏
-    function checkFreePlanStatus() {
-      const records = JSON.parse(localStorage.getItem('booking_records') || '[]');
-      const freePlanCount = records.filter(r => r.service === '免費兩個月瘦小臉計畫').length;
-      
-      const progressPercent = Math.min((freePlanCount / 8) * 100, 100);
-      const progressBar = document.getElementById('free-plan-progress');
-      const progressText = document.getElementById('free-plan-text');
-      const freePlanCard = document.getElementById('free-plan-card');
-      
-      if (progressBar) progressBar.style.width = `${progressPercent}%`;
-      if (progressText) progressText.innerText = `小臉養成計畫 (已預約 ${freePlanCount}/8 次) ${Math.round(progressPercent)}%`;
-      
-      // 滿 8 次自動隱藏該預約選項
-      if (freePlanCount >= 8 && freePlanCard) {
-        freePlanCard.style.display = 'none';
-      } else if (freePlanCard) {
-        freePlanCard.style.display = 'block';
-      }
-    }
-
-    // 載入歷史紀錄項目
-    function loadRecords() {
-      const recordList = document.getElementById('record-list');
-      if (!recordList) return;
-      
-      const records = JSON.parse(localStorage.getItem('booking_records') || '[]');
-      if (records.length === 0) {
-        recordList.innerHTML = '<div class="text-center text-zinc-500 py-12 text-sm">目前尚無前往理療的歷史紀錄。</div>';
-        return;
-      }
-      
-      recordList.innerHTML = records.reverse().map(r => `
-        <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800 mb-3 flex justify-between items-center">
-          <div>
-            <div class="font-medium text-zinc-200 text-sm">${r.service}</div>
-            <div class="text-xs text-zinc-500 mt-1">${r.date} ${r.time}</div>
-          </div>
-          <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">已預約</span>
-        </div>
-      `).join('');
-    }
-
-    // 處理表單預約送出
-    const bookingForm = document.getElementById('booking-form');
-    if (bookingForm) {
-      bookingForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const service = document.getElementById('selected-service').value;
-        const date = document.getElementById('selected-date').value;
-        const time = document.getElementById('selected-time').value;
-        
-        if (!service || !date || !time) {
-          alert('請選擇完整的療程項目、日期與時段！');
-          return;
+        function selectTime(element) {
+            document.querySelectorAll('.time-option').forEach(el => {
+                el.classList.remove('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+                el.classList.add('border-zinc-800', 'bg-zinc-900');
+            });
+            element.classList.remove('border-zinc-800', 'bg-zinc-900');
+            element.classList.add('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+            selectedTimeItem = element.innerText;
         }
-        
-        const records = JSON.parse(localStorage.getItem('booking_records') || '[]');
-        records.push({ service, date, time, timestamp: new Date().getTime() });
-        localStorage.setItem('booking_records', JSON.stringify(records));
-        
-        alert('預約成功！');
-        
-        // 重置選取表單狀態
-        document.getElementById('selected-service').value = '';
-        document.getElementById('selected-date').value = '';
-        document.getElementById('selected-time').value = '';
-        document.querySelectorAll('.date-btn, .time-btn, .service-card').forEach(btn => {
-          btn.classList.remove('border-amber-500', 'text-amber-500', 'bg-amber-500/10', 'bg-amber-500/5');
-          btn.classList.add('border-zinc-800', 'text-zinc-400', 'bg-zinc-900/50');
-        });
-        
-        checkFreePlanStatus();
-        loadRecords();
-        showTab('home');
-      });
-    }
 
-    // 視窗完全載入時，排隊按順序執行
-    window.onload = async function() {
-      await initializeLiff(); // 第一優先：等 LINE 回傳頭像與名字
-      generateDates();
-      checkFreePlanStatus();
-      loadRecords();
-    };
-  </script>
+        function generateDates() {
+            const container = document.getElementById('date-picker-container');
+            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+            container.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                const month = d.getMonth() + 1;
+                const date = d.getDate();
+                const dayName = weekDays[d.getDay()];
+                const fullDateStr = `${d.getFullYear()}-${String(month).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
+
+                const dateEl = document.createElement('div');
+                dateEl.className = "date-option flex-shrink-0 w-14 bg-zinc-900/50 border border-zinc-800 p-2 rounded-xl text-center cursor-pointer active:scale-[0.95] text-zinc-400";
+                dateEl.onclick = function() { selectDate(this, fullDateStr); };
+                dateEl.innerHTML = `
+                    <div class="text-[10px] opacity-70">周${dayName}</div>
+                    <div class="text-sm font-medium mt-0.5">${month}/${date}</div>
+                `;
+                container.appendChild(dateEl);
+            }
+        }
+
+        // 核心檢查：計算累計預約次數，並動態控制進度條或隱藏
+        function checkFreePlanStatus() {
+            // 從本地資料庫抓取目前的預約次數（如果沒有，預設就是 0）
+            let currentCount = parseInt(localStorage.getItem('free_plan_count') || '0');
+            
+            const progressBox = document.getElementById('free-plan-progress-box');
+            const recordBtn = document.getElementById('btn-face-record');
+            const freeOption = document.getElementById('option-free-plan');
+            
+            const countText = document.getElementById('free-plan-count-text');
+            const percentText = document.getElementById('free-plan-percent-text');
+            const progressBar = document.getElementById('free-plan-bar');
+
+            if (currentCount >= 8) {
+                // 做滿 8 次，全部隱藏
+                if (progressBox) progressBox.style.display = 'none';
+                if (recordBtn) recordBtn.style.display = 'none';
+                if (freeOption) freeOption.style.display = 'none';
+            } else {
+                // 未滿 8 次，正常顯示並動態更新進度條
+                if (progressBox) progressBox.style.display = 'block';
+                if (recordBtn) recordBtn.style.display = 'block';
+                if (freeOption) freeOption.style.display = 'flex';
+
+                // 計算百分比（做 1 次 = 12.5% ... 做 8 次 = 100%）
+                let percent = Math.round((currentCount / 8) * 100);
+                
+                if (countText) countText.innerText = `小臉養成計畫 (已預約 ${currentCount}/8 次)`;
+                if (percentText) percentText.innerText = `${percent}%`;
+                if (progressBar) progressBar.style.width = `${percent}%`;
+            }
+        }
+
+        // 送出預約
+        function submitBooking() {
+            if (!selectedServiceItem) { alert('請選擇預約療程項目！'); return; }
+            if (!selectedDateItem) { alert('請選擇預約日期！'); return; }
+            if (!selectedTimeItem) { alert('請選擇預約時段！'); return; }
+
+            alert(`【預約成功！】\n療程：${selectedServiceName}\n時間：${selectedDateItem} ${selectedTimeItem}\n\n期待您的光臨！`);
+            
+            // 如果預約的是免費小臉計畫，計數器 +1
+            if (selectedServiceName === '免費兩個月瘦小臉計畫') {
+                let currentCount = parseInt(localStorage.getItem('free_plan_count') || '0');
+                currentCount += 1;
+                localStorage.setItem('free_plan_count', currentCount.toString());
+            }
+
+            const newRecord = {
+                service: selectedServiceName,
+                date: selectedDateItem,
+                time: selectedTimeItem,
+                status: '已預約成功'
+            };
+            let localRecords = JSON.parse(localStorage.getItem('iauri_records') || '[]');
+            localRecords.unshift(newRecord);
+            localStorage.setItem('iauri_records', JSON.stringify(localRecords));
+
+            // 重新刷新進度條狀態與紀錄
+            checkFreePlanStatus();
+            loadRecords();
+
+            // 重設欄位並回首頁
+            selectedServiceItem = null;
+            selectedServiceName = '';
+            selectedDateItem = null;
+            selectedTimeItem = null;
+            switchTab('home');
+        }
+
+        // 載入紀錄
+        function loadRecords() {
+            const container = document.getElementById('records-container');
+            const localRecords = JSON.parse(localStorage.getItem('iauri_records') || '[]');
+            
+            if (localRecords.length > 0) {
+                container.innerHTML = '';
+                localRecords.forEach(r => {
+                    const el = document.createElement('div');
+                    el.className = "bg-zinc-900/90 border border-zinc-800 p-4 rounded-xl flex justify-between items-center";
+                    el.innerHTML = `
+                        <div>
+                            <div class="text-sm font-medium text-white">${r.service}</div>
+                            <div class="text-xs text-zinc-400 mt-1">📅 ${r.date} &nbsp; ⏰ ${r.time}</div>
+                        </div>
+                        <span class="text-xs bg-amber-500/10 text-[#D4AF37] border border-[#D4AF37]/20 px-2 py-1 rounded-md">${r.status}</span>
+                    `;
+                    container.appendChild(el);
+                });
+            }
+        }
+
+        // LINE LIFF 初始化
+        function initializeLiff() {
+            liff.init({ liffId: "2010175024-xxxxxx" }) 
+                .then(() => {
+                    if (liff.isLoggedIn()) {
+                        liff.getProfile().then(profile => {
+                            document.getElementById('user-name').innerText = profile.displayName;
+                            if (profile.pictureUrl) {
+                                document.getElementById('user-avatar').src = profile.pictureUrl;
+                            }
+                        });
+                    } else {
+                        document.getElementById('user-name').innerText = "測試體驗官";
+                    }
+                })
+                .catch((err) => {
+                    console.log("LIFF 失敗：", err);
+                    document.getElementById('user-name').innerText = "訪客用戶";
+                });
+        }
+
+        window.onload = function() {
+            initializeLiff();
+            generateDates();
+            checkFreePlanStatus(); // 載入時依據預約次數渲染進度條
+            loadRecords();
+        
+        };
+    </script>
 </body>
 </html>
