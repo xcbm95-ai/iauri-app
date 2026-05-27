@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iAuri 會員系統</title>
+    <title>耳顏所會員系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -11,7 +11,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #0A0A0A; color: #F5F5F5; }
         .nav-active { color: #D4AF37 !important; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .tab-content.hidden { display: none; }
     </style>
 </head>
 <body class="pb-24">
@@ -21,69 +21,83 @@
             <p class="text-[10px] tracking-[0.2em] text-[#D4AF37] uppercase font-light">iAuri member</p>
             <h1 class="text-xl font-bold tracking-wide mt-0.5">耳顏所會員系統</h1>
         </div>
-        <div class="w-10 h-10 rounded-full border border-[#D4AF37]/30 overflow-hidden bg-zinc-900 shadow-lg">
+        <div class="w-10 h-10 rounded-full border border-[#D4AF37]/30 overflow-hidden bg-zinc-900">
             <img id="user-avatar" src="" alt="頭像" class="w-full h-full object-cover">
         </div>
     </header>
 
     <main class="max-w-md w-full mx-auto px-4 py-6">
         
-        <div id="home-tab" class="tab-content">
+        <div id="home-tab" class="tab-content space-y-6">
             <div class="bg-gradient-to-br from-zinc-900 to-black rounded-3xl p-6 border border-zinc-800">
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4 mb-6">
                     <div class="text-4xl text-[#D4AF37]"><i class="fa-solid fa-crown"></i></div>
                     <div>
                         <h2 id="user-name" class="text-lg font-bold">載入中...</h2>
                         <p class="text-xs text-[#D4AF37]">黃金會員</p>
                     </div>
                 </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs"><span>小臉養成計畫 (已預約 0/8 次)</span><span>0%</span></div>
+                    <div class="h-2 bg-zinc-800 rounded-full overflow-hidden"><div class="h-full bg-[#D4AF37] w-0"></div></div>
+                </div>
+                <div class="flex justify-between mt-6 text-center text-sm">
+                    <div><p class="text-lg font-bold">0</p><p class="text-[10px] text-zinc-500">累積點數</p></div>
+                    <div><p class="text-lg font-bold">0</p><p class="text-[10px] text-zinc-500">到店次數</p></div>
+                    <div><p class="text-lg font-bold">0</p><p class="text-[10px] text-zinc-500">可換獎勵</p></div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="showTab('booking')" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-calendar mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">立即預約</p></button>
+                <button class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-id-card mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">會員卡</p></button>
+                <button onclick="showTab('records')" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-file-lines mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">小臉紀錄</p></button>
+                <button class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-link mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">推薦好友</p></button>
             </div>
         </div>
 
         <div id="records-tab" class="tab-content hidden space-y-6">
-            <h2 class="text-lg font-bold mb-4">小臉紀錄</h2>
+            <h2 class="text-lg font-bold">小臉紀錄</h2>
             <div class="grid grid-cols-1 gap-4">
-                <button onclick="showSubTab('normal-list')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left hover:border-[#D4AF37]/50 transition-all">
+                <button onclick="showSubTab('normal-list')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left">
                     <i class="fa-solid fa-file-lines text-[#D4AF37] text-xl mb-2"></i>
                     <h3 class="font-bold">一般調理紀錄</h3>
-                    <p class="text-xs text-zinc-500 mt-1">查看歷次理療詳細文字紀錄</p>
                 </button>
-                <button onclick="showSubTab('photo-view')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left hover:border-[#D4AF37]/50 transition-all">
+                <button onclick="showSubTab('photo-view')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left">
                     <i class="fa-solid fa-camera text-[#D4AF37] text-xl mb-2"></i>
                     <h3 class="font-bold">小臉變化對比相簿</h3>
-                    <p class="text-xs text-zinc-500 mt-1">每週臉部定焦拍照，追蹤進化</p>
                 </button>
             </div>
         </div>
 
         <div id="normal-list-tab" class="tab-content hidden space-y-4">
-            <button onclick="showTab('records')" class="text-zinc-500 text-sm mb-4"><i class="fa-solid fa-chevron-left mr-1"></i> 返回</button>
-            <h2 class="text-lg font-bold mb-4">調理文字紀錄</h2>
-            <div class="space-y-3">
-                <div class="p-4 bg-zinc-900 rounded-xl border border-zinc-800">
-                    <p class="text-xs text-[#D4AF37] mb-1">2026-05-27</p>
-                    <p class="text-sm">今日針對咀嚼肌部位加強，調理後緊繃感明顯改善。</p>
-                </div>
-            </div>
+            <button onclick="showTab('records')" class="text-zinc-500 text-sm"><i class="fa-solid fa-chevron-left mr-1"></i> 返回</button>
+            <h2 class="text-lg font-bold">調理文字紀錄</h2>
+            <div class="p-4 bg-zinc-900 rounded-xl border border-zinc-800"><p class="text-xs text-[#D4AF37]">2026-05-27</p><p class="text-sm">調理後緊繃感明顯改善。</p></div>
         </div>
 
         <div id="photo-view-tab" class="tab-content hidden">
             <button onclick="showTab('records')" class="text-zinc-500 text-sm mb-4"><i class="fa-solid fa-chevron-left mr-1"></i> 返回</button>
-            <h2 class="text-lg font-bold mb-4">臉部變化對比</h2>
-            <div class="relative group">
-                <div class="aspect-[3/4] bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800 overflow-hidden relative">
-                    <p class="text-zinc-600">第 1 / 8 張照片</p>
-                </div>
-                <button class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white"><i class="fa-solid fa-chevron-left"></i></button>
-                <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="aspect-[3/4] bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800 relative">
+                <p class="text-zinc-600">八張對比照片輪播區</p>
+                <button class="absolute left-2 bg-black/50 p-2 rounded-full text-white"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="absolute right-2 bg-black/50 p-2 rounded-full text-white"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
-            <p class="text-xs text-center text-zinc-500 mt-4">左右滑動即可查看每週變化</p>
+        </div>
+
+        <div id="booking-tab" class="tab-content hidden">
+            <h2 class="text-lg font-bold mb-4">預約新理療</h2>
+            <div class="bg-zinc-900 p-4 rounded-2xl mb-4 border border-zinc-800">
+                <p class="font-bold mb-2">免費兩個月瘦小臉計畫</p>
+                <p class="text-xs text-zinc-400">專屬回饋計畫 · 耗時 45 分鐘</p>
+                <p class="text-[#D4AF37] font-bold mt-2">NT$ 0</p>
+            </div>
         </div>
     </main>
 
     <nav class="fixed bottom-0 inset-x-0 bg-[#0A0A0A] border-t border-zinc-900 p-4 flex justify-around z-50">
-        <button onclick="showTab('home')" id="nav-home" class="text-zinc-500 flex flex-col items-center text-xs"><i class="fa-solid fa-house mb-1"></i>首頁</button>
-        <button onclick="showTab('records')" id="nav-records" class="text-[#D4AF37] flex flex-col items-center text-xs"><i class="fa-solid fa-clipboard mb-1"></i>紀錄</button>
+        <button onclick="showTab('home')" class="text-[#D4AF37] flex flex-col items-center text-xs"><i class="fa-solid fa-house mb-1"></i>首頁</button>
+        <button onclick="showTab('records')" class="text-zinc-500 flex flex-col items-center text-xs"><i class="fa-solid fa-file-lines mb-1"></i>紀錄</button>
+        <button onclick="showTab('booking')" class="text-zinc-500 flex flex-col items-center text-xs"><i class="fa-solid fa-calendar mb-1"></i>預約</button>
     </nav>
 
     <script>
@@ -91,12 +105,10 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`${tabId}-tab`).classList.remove('hidden');
         }
-
         function showSubTab(subTabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`${subTabId}-tab`).classList.remove('hidden');
         }
-
         async function initializeLiff() {
             try {
                 await liff.init({ liffId: "2010173212-2gFbVMbf" });
@@ -105,7 +117,7 @@
                     document.getElementById('user-name').innerText = profile.displayName;
                     document.getElementById('user-avatar').src = profile.pictureUrl;
                 }
-            } catch (err) { console.error("LIFF 初始化失敗", err); }
+            } catch (err) { console.error(err); }
         }
         initializeLiff();
     </script>
