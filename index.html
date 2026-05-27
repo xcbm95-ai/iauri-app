@@ -7,6 +7,7 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 <style>
@@ -34,16 +35,6 @@ body{
     border:1px solid rgba(212,175,55,.18);
     box-shadow:0 20px 60px rgba(0,0,0,.45);
     backdrop-filter:blur(18px);
-}
-
-.free-service-card{
-    background:
-    linear-gradient(145deg,rgba(212,175,55,.22),rgba(255,255,255,.04)),
-    linear-gradient(145deg,#17150f,#0f0f10);
-    border:1px solid rgba(212,175,55,.55);
-    box-shadow:
-    0 0 0 1px rgba(212,175,55,.15),
-    0 20px 60px rgba(212,175,55,.12);
 }
 
 .gold-card{
@@ -81,14 +72,20 @@ body{
     font-weight:900;
 }
 
+.free-service-card{
+    background:
+    linear-gradient(145deg,rgba(212,175,55,.22),rgba(255,255,255,.04)),
+    linear-gradient(145deg,#17150f,#0f0f10);
+    border:1px solid rgba(212,175,55,.55);
+    box-shadow:0 0 0 1px rgba(212,175,55,.15),0 20px 60px rgba(212,175,55,.12);
+}
+
 .nickname-text{
     max-width:180px;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
-
-.smooth{transition:all .25s ease;}
 
 .selected-slot{
     background:#D4AF37!important;
@@ -100,6 +97,20 @@ body{
 .date-btn,.time-btn{
     border:1px solid rgba(255,255,255,.08);
     background:rgba(255,255,255,.055);
+}
+
+.qr-box canvas,
+.qr-box img{
+    width:96px!important;
+    height:96px!important;
+    border-radius:12px;
+}
+
+.qr-large canvas,
+.qr-large img{
+    width:220px!important;
+    height:220px!important;
+    border-radius:18px;
 }
 
 ::-webkit-scrollbar{display:none;}
@@ -153,10 +164,20 @@ body{
                 <span>免費瘦小臉體驗 FREE FACE</span>
                 <span id="free-face-count" class="gold-text">1 / 8 次</span>
             </div>
-
             <div class="w-full h-2 rounded-full bg-black/40 overflow-hidden">
                 <div id="free-face-progress-bar" class="h-full bg-[#D4AF37] rounded-full w-[12.5%]"></div>
             </div>
+        </div>
+
+        <div class="mt-6 relative z-10 flex items-center justify-between gap-4">
+            <div>
+                <p class="text-xs gold-text tracking-[0.25em] mb-1">MEMBER QR</p>
+                <p class="text-xs text-zinc-500">員工掃描後可快速完成調理紀錄</p>
+            </div>
+
+            <button onclick="openQrModal()" class="bg-white p-2 rounded-2xl">
+                <div id="member-qr-small" class="qr-box"></div>
+            </button>
         </div>
     </div>
 
@@ -167,31 +188,54 @@ body{
 
     <div class="grid grid-cols-2 gap-4">
 
-        <button onclick="navTo('page-points')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+        <button onclick="navTo('page-points')" class="menu-card rounded-[1.8rem] p-6 text-left active:scale-95">
             <i class="fa-solid fa-coins text-2xl gold-text mb-8"></i>
             <p class="font-black text-xl mb-1">積分</p>
             <p class="text-[10px] tracking-[0.22em] text-zinc-500">POINTS</p>
         </button>
 
-        <button onclick="navTo('page-booking')" class="booking-highlight rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+        <button onclick="navTo('page-booking')" class="booking-highlight rounded-[1.8rem] p-6 text-left active:scale-95">
             <i class="fa-solid fa-calendar-check text-3xl gold-text mb-8"></i>
             <p class="font-black text-2xl mb-1">立即預約</p>
             <p class="text-[10px] tracking-[0.22em] text-zinc-400">BOOKING NOW</p>
         </button>
 
-        <button onclick="navTo('page-records')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+        <button onclick="navTo('page-records')" class="menu-card rounded-[1.8rem] p-6 text-left active:scale-95">
             <i class="fa-solid fa-file-lines text-2xl gold-text mb-8"></i>
             <p class="font-black text-xl mb-1">調理紀錄</p>
             <p class="text-[10px] tracking-[0.22em] text-zinc-500">TREATMENT</p>
         </button>
 
-        <button onclick="shareReferral()" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+        <button onclick="shareReferral()" class="menu-card rounded-[1.8rem] p-6 text-left active:scale-95">
             <i class="fa-solid fa-user-plus text-2xl gold-text mb-8"></i>
             <p class="font-black text-xl mb-1">推薦好友</p>
             <p class="text-[10px] tracking-[0.22em] text-zinc-500">REFERRAL</p>
         </button>
 
     </div>
+</section>
+
+<section id="page-staff-record" class="page-content">
+    <p class="text-[10px] tracking-[0.35em] gold-text mb-2">STAFF QUICK RECORD</p>
+    <h2 class="text-2xl font-black mb-6">員工快速紀錄</h2>
+
+    <div class="gold-card rounded-[2rem] p-6 mb-5">
+        <p class="text-xs text-zinc-500 mb-2">會員識別碼</p>
+        <p id="staff-target-id" class="font-black text-lg break-all gold-text">-</p>
+    </div>
+
+    <div class="glass-card rounded-[1.8rem] p-6 mb-5">
+        <p class="text-xs text-zinc-500 mb-2">目前免費小臉進度</p>
+        <p id="staff-current-count" class="text-4xl font-black gold-text">1 / 8</p>
+    </div>
+
+    <button onclick="completeFreeFaceTreatment()" class="w-full py-5 rounded-[1.8rem] bg-[#D4AF37] text-black font-black text-lg mb-4">
+        完成本次小臉調理
+    </button>
+
+    <button onclick="navTo('page-home')" class="w-full py-4 rounded-[1.8rem] bg-white/10 text-zinc-300 font-bold">
+        回首頁
+    </button>
 </section>
 
 <section id="page-points" class="page-content">
@@ -203,17 +247,6 @@ body{
         <div class="flex items-end gap-2">
             <p id="points-total" class="text-5xl font-black">0</p>
             <p class="text-zinc-400 mb-2">PTS</p>
-        </div>
-    </div>
-
-    <div class="glass-card rounded-[1.8rem] p-6 mb-5">
-        <p class="font-black text-xl mb-4">積分紀錄</p>
-        <div class="flex justify-between border-b border-white/5 pb-3">
-            <div>
-                <p class="font-bold">首次加入會員</p>
-                <p class="text-xs text-zinc-500">WELCOME BONUS</p>
-            </div>
-            <p class="gold-text font-black">+0</p>
         </div>
     </div>
 
@@ -232,7 +265,6 @@ body{
             <p class="font-black text-xl mb-2">一般調理紀錄</p>
             <p class="text-sm text-zinc-500">GENERAL TREATMENT</p>
         </div>
-
         <div class="glass-card rounded-[1.8rem] p-6">
             <p class="font-black text-xl mb-2">調理前後對比相簿</p>
             <p class="text-sm text-zinc-500">BEFORE & AFTER</p>
@@ -243,7 +275,6 @@ body{
 <section id="page-activity" class="page-content">
     <p class="text-[10px] tracking-[0.35em] gold-text mb-2">ACTIVITY</p>
     <h2 class="text-2xl font-black mb-6">最新活動</h2>
-
     <div class="glass-card rounded-[1.8rem] p-6">
         <p class="font-black text-xl mb-3">活動公告預留區</p>
         <p class="text-sm text-zinc-500 leading-7">未來可放置店內活動、限時優惠、新會員任務。</p>
@@ -253,7 +284,6 @@ body{
 <section id="page-support" class="page-content">
     <p class="text-[10px] tracking-[0.35em] gold-text mb-2">SUPPORT</p>
     <h2 class="text-2xl font-black mb-6">聯繫客服</h2>
-
     <div class="glass-card rounded-[1.8rem] p-6">
         <p class="font-black text-xl mb-3">客服中心預留區</p>
         <p class="text-sm text-zinc-500 leading-7">未來可放置 LINE 客服、營業時間、常見問題。</p>
@@ -266,7 +296,7 @@ body{
 
     <div id="booking-step1" class="booking-step active space-y-4">
 
-        <button id="free-service-option" onclick="selectService('免費兩個月瘦小臉計畫')" class="w-full text-left free-service-card rounded-[1.8rem] p-6 smooth">
+        <button id="free-service-option" onclick="selectService('免費兩個月瘦小臉計畫')" class="w-full text-left free-service-card rounded-[1.8rem] p-6">
             <div class="flex items-center justify-between gap-4">
                 <div class="min-w-0">
                     <p class="font-black text-xl mb-2">免費兩個月瘦小臉計畫</p>
@@ -298,7 +328,6 @@ body{
     </div>
 
     <div id="booking-step2" class="booking-step">
-
         <button onclick="backToStep1()" class="text-zinc-500 underline mb-5">← 返回項目選擇</button>
 
         <div class="glass-card rounded-[1.8rem] p-5 mb-5">
@@ -366,16 +395,29 @@ body{
 
 </main>
 
+<div id="qr-modal" class="fixed inset-0 z-[999] bg-black/80 backdrop-blur-xl hidden items-center justify-center px-6">
+    <div class="gold-card rounded-[2rem] p-6 w-full max-w-sm text-center">
+        <p class="text-[10px] tracking-[0.35em] gold-text mb-3">MEMBER QR CODE</p>
+        <h3 class="text-2xl font-black mb-5">會員專屬 QR Code</h3>
+
+        <div class="bg-white rounded-[1.5rem] p-5 mx-auto w-fit mb-5">
+            <div id="member-qr-large" class="qr-large"></div>
+        </div>
+
+        <p class="text-xs text-zinc-500 mb-5">請提供給員工掃描，快速完成本次調理紀錄。</p>
+
+        <button onclick="closeQrModal()" class="w-full py-4 rounded-[1.5rem] bg-[#D4AF37] text-black font-black">關閉</button>
+    </div>
+</div>
+
 <nav class="fixed bottom-0 left-0 right-0 border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl">
     <div class="max-w-md mx-auto flex justify-around py-4">
         <button onclick="navTo('page-home')" class="flex flex-col items-center text-xs text-zinc-300">
             <i class="fa-solid fa-house mb-2"></i>首頁
         </button>
-
         <button onclick="navTo('page-activity')" class="flex flex-col items-center text-xs text-zinc-300">
             <i class="fa-solid fa-bullhorn mb-2"></i>活動
         </button>
-
         <button onclick="navTo('page-support')" class="flex flex-col items-center text-xs text-zinc-300">
             <i class="fa-solid fa-headset mb-2"></i>客服
         </button>
@@ -384,6 +426,7 @@ body{
 
 <script>
 const memberState={
+    lineUserId:'test-user',
     freeFaceUsedCount:1,
     freeFaceTotalCount:8,
     pointsTotal:0
@@ -406,6 +449,10 @@ function navTo(pageId){
         updateFreeServiceOption();
         setupDateButtons();
         autoSelectToday();
+    }
+
+    if(pageId==='page-staff-record'){
+        updateStaffRecordUI();
     }
 }
 
@@ -432,28 +479,27 @@ function saveCustomName(){
     closeNameEditor();
 }
 
-async function shareReferral(){
-    const shareData={
-        title:'耳顏所 IAURI BEAUTY CLUB',
-        text:'推薦你加入耳顏所會員，領取專屬體驗與會員服務。',
-        url:'https://lin.ee/vxi3sZ4'
-    };
+function getStoredFreeFaceCount(){
+    const saved=localStorage.getItem('iauriFreeFaceCount');
 
-    if(navigator.share){
-        try{
-            await navigator.share(shareData);
-        }catch(err){
-            console.log('Share cancelled or failed:',err);
-        }
-    }else{
-        alert('推薦連結：https://lin.ee/vxi3sZ4');
+    if(saved===null){
+        return memberState.freeFaceUsedCount;
     }
+
+    return Number(saved);
+}
+
+function saveFreeFaceCount(count){
+    localStorage.setItem('iauriFreeFaceCount',String(count));
+    memberState.freeFaceUsedCount=count;
 }
 
 function updateFreeFaceProgress(){
     const area=document.getElementById('free-face-progress-area');
     const countText=document.getElementById('free-face-count');
     const bar=document.getElementById('free-face-progress-bar');
+
+    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
 
     if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
         area.style.display='none';
@@ -470,6 +516,8 @@ function updateFreeFaceProgress(){
 function updateFreeServiceOption(){
     const option=document.getElementById('free-service-option');
 
+    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
+
     if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
         option.style.display='none';
     }else{
@@ -477,8 +525,93 @@ function updateFreeServiceOption(){
     }
 }
 
+function updateStaffRecordUI(){
+    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
+
+    document.getElementById('staff-target-id').textContent=memberState.lineUserId;
+    document.getElementById('staff-current-count').textContent=
+        memberState.freeFaceUsedCount+' / '+memberState.freeFaceTotalCount;
+}
+
+function completeFreeFaceTreatment(){
+    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
+
+    if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
+        alert('此會員已完成 8 次免費小臉體驗。');
+        updateFreeFaceProgress();
+        updateFreeServiceOption();
+        updateStaffRecordUI();
+        return;
+    }
+
+    const nextCount=memberState.freeFaceUsedCount+1;
+
+    saveFreeFaceCount(nextCount);
+    updateFreeFaceProgress();
+    updateFreeServiceOption();
+    updateStaffRecordUI();
+
+    alert('已完成本次小臉調理，目前進度：'+nextCount+' / '+memberState.freeFaceTotalCount);
+}
+
 function updatePointsUI(){
     document.getElementById('points-total').textContent=memberState.pointsTotal;
+}
+
+function buildStaffQrUrl(){
+    const baseUrl=window.location.origin+window.location.pathname;
+    return baseUrl+'?mode=staff&uid='+encodeURIComponent(memberState.lineUserId);
+}
+
+function renderMemberQr(){
+    const qrUrl=buildStaffQrUrl();
+
+    document.getElementById('member-qr-small').textContent='';
+    document.getElementById('member-qr-large').textContent='';
+
+    new QRCode(document.getElementById('member-qr-small'),{
+        text:qrUrl,
+        width:96,
+        height:96,
+        colorDark:'#000000',
+        colorLight:'#ffffff',
+        correctLevel:QRCode.CorrectLevel.H
+    });
+
+    new QRCode(document.getElementById('member-qr-large'),{
+        text:qrUrl,
+        width:220,
+        height:220,
+        colorDark:'#000000',
+        colorLight:'#ffffff',
+        correctLevel:QRCode.CorrectLevel.H
+    });
+}
+
+function openQrModal(){
+    document.getElementById('qr-modal').style.display='flex';
+}
+
+function closeQrModal(){
+    document.getElementById('qr-modal').style.display='none';
+}
+
+async function shareReferral(){
+    const shareData={
+        title:'耳顏所 IAURI BEAUTY CLUB',
+        text:'推薦你加入耳顏所會員，領取專屬體驗與會員服務。',
+        url:'https://lin.ee/vxi3sZ4'
+    };
+
+    if(navigator.share){
+        try{
+            await navigator.share(shareData);
+        }catch(err){
+            console.log('Share cancelled or failed:',err);
+        }
+    }else{
+        alert('推薦連結：https://lin.ee/vxi3sZ4');
+    }
 }
 
 function showBookingStep(stepId){
@@ -645,6 +778,17 @@ function submitBooking(){
     );
 }
 
+function checkStaffMode(){
+    const params=new URLSearchParams(window.location.search);
+    const mode=params.get('mode');
+    const uid=params.get('uid');
+
+    if(mode==='staff'&&uid){
+        memberState.lineUserId=uid;
+        navTo('page-staff-record');
+    }
+}
+
 async function initLiff(){
     try{
         await liff.init({
@@ -657,10 +801,15 @@ async function initLiff(){
         }
 
         const profile=await liff.getProfile();
+        memberState.lineUserId=profile.userId;
         updateUserUI(profile);
+        renderMemberQr();
+        checkStaffMode();
 
     }catch(err){
         console.error('LIFF INIT ERROR:',err);
+        renderMemberQr();
+        checkStaffMode();
     }
 }
 
