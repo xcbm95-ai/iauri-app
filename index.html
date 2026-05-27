@@ -112,7 +112,7 @@ body{
         <div class="absolute right-[-40px] top-[-40px] w-40 h-40 rounded-full bg-[#D4AF37]/10"></div>
 
         <div class="flex items-center gap-5 relative z-10">
-            <img id="user-avatar" class="w-20 h-20 rounded-full object-cover bg-zinc-800 border border-[#D4AF37]/30">
+            <img id="user-avatar" class="w-[104px] h-[104px] rounded-full object-cover bg-zinc-800 border border-[#D4AF37]/30">
 
             <div class="min-w-0">
                 <p class="text-xs gold-text tracking-[0.28em] mb-1">PREMIUM MEMBER</p>
@@ -146,8 +146,6 @@ body{
             <div class="w-full h-2 rounded-full bg-black/40 overflow-hidden">
                 <div id="free-face-progress-bar" class="h-full bg-[#D4AF37] rounded-full w-[12.5%]"></div>
             </div>
-
-            <p class="text-[11px] text-zinc-500 mt-3">完成 8 次體驗後，此進度將自動隱藏。</p>
         </div>
     </div>
 
@@ -158,16 +156,16 @@ body{
 
     <div class="grid grid-cols-2 gap-4">
 
-        <button onclick="navTo('page-booking')" class="booking-highlight rounded-[1.8rem] p-6 text-left smooth active:scale-95">
-            <i class="fa-solid fa-calendar-check text-3xl gold-text mb-8"></i>
-            <p class="font-black text-2xl mb-1">立即預約</p>
-            <p class="text-[10px] tracking-[0.22em] text-zinc-400">BOOKING NOW</p>
-        </button>
-
         <button onclick="navTo('page-points')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
             <i class="fa-solid fa-coins text-2xl gold-text mb-8"></i>
             <p class="font-black text-xl mb-1">積分</p>
             <p class="text-[10px] tracking-[0.22em] text-zinc-500">POINTS</p>
+        </button>
+
+        <button onclick="navTo('page-booking')" class="booking-highlight rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+            <i class="fa-solid fa-calendar-check text-3xl gold-text mb-8"></i>
+            <p class="font-black text-2xl mb-1">立即預約</p>
+            <p class="text-[10px] tracking-[0.22em] text-zinc-400">BOOKING NOW</p>
         </button>
 
         <button onclick="navTo('page-records')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
