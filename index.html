@@ -69,502 +69,522 @@
 
 <body class="pb-28">
 
-    <header class="sticky top-0 z-50 border-b border-white/5 bg-[#050505]/90 backdrop-blur-xl">
-        <div class="max-w-md mx-auto px-5 py-5">
-            <p class="text-[10px] tracking-[0.42em] gold-text uppercase font-light mb-2">
-                IAURI BEAUTY CLUB
-            </p>
-            <h1 class="text-3xl font-black tracking-tight">
-                耳顏所會員系統
-            </h1>
-        </div>
-    </header>
+<header class="sticky top-0 z-50 border-b border-white/5 bg-[#050505]/90 backdrop-blur-xl">
+    <div class="max-w-md mx-auto px-5 py-5">
+        <p class="text-[10px] tracking-[0.42em] gold-text uppercase font-light mb-2">IAURI BEAUTY CLUB</p>
+        <h1 class="text-3xl font-black tracking-tight">耳顏所會員系統</h1>
+    </div>
+</header>
 
-    <main class="max-w-md mx-auto px-5 py-7">
+<main class="max-w-md mx-auto px-5 py-7">
 
-        <!-- HOME -->
-        <section id="page-home" class="page-content active">
+    <!-- HOME -->
+    <section id="page-home" class="page-content active">
 
-            <div class="gold-card rounded-[2.2rem] p-6 mb-7 relative overflow-hidden">
-                <div class="absolute right-[-40px] top-[-40px] w-40 h-40 rounded-full bg-[#D4AF37]/10"></div>
+        <div class="gold-card rounded-[2.2rem] p-6 mb-7 relative overflow-hidden">
+            <div class="absolute right-[-40px] top-[-40px] w-40 h-40 rounded-full bg-[#D4AF37]/10"></div>
 
-                <div class="flex items-center gap-5 relative z-10">
-                    <img id="user-avatar" class="w-20 h-20 rounded-full object-cover bg-zinc-800 border border-[#D4AF37]/30">
+            <div class="flex items-center gap-5 relative z-10">
+                <img id="user-avatar" class="w-20 h-20 rounded-full object-cover bg-zinc-800 border border-[#D4AF37]/30">
 
-                    <div>
-                        <p class="text-xs gold-text tracking-[0.28em] mb-1">
-                            PREMIUM MEMBER
-                        </p>
-                        <h2 id="user-name" class="font-black text-3xl leading-tight">
-                            載入中...
-                        </h2>
-                        <p class="text-sm text-zinc-400 mt-1">
-                            黃金會員 GOLD
-                        </p>
-                    </div>
-                </div>
-
-                <div id="free-face-progress-area" class="mt-6 relative z-10">
-                    <div class="flex justify-between text-xs text-zinc-400 mb-2">
-                        <span>免費瘦小臉體驗 FREE FACE</span>
-                        <span id="free-face-count" class="gold-text">1 / 8 次</span>
-                    </div>
-
-                    <div class="w-full h-2 rounded-full bg-black/40 overflow-hidden">
-                        <div id="free-face-progress-bar" class="h-full bg-[#D4AF37] rounded-full w-[12.5%]"></div>
-                    </div>
-
-                    <p class="text-[11px] text-zinc-500 mt-3">
-                        完成 8 次體驗後，此進度將自動隱藏。
-                    </p>
+                <div>
+                    <p class="text-xs gold-text tracking-[0.28em] mb-1">PREMIUM MEMBER</p>
+                    <h2 id="user-name" class="font-black text-3xl leading-tight">載入中...</h2>
+                    <p class="text-sm text-zinc-400 mt-1">黃金會員 GOLD</p>
                 </div>
             </div>
 
-            <div class="mb-5">
-                <p class="text-[10px] tracking-[0.35em] gold-text mb-2">
-                    QUICK ACCESS
+            <div id="free-face-progress-area" class="mt-6 relative z-10">
+                <div class="flex justify-between text-xs text-zinc-400 mb-2">
+                    <span>免費瘦小臉體驗 FREE FACE</span>
+                    <span id="free-face-count" class="gold-text">1 / 8 次</span>
+                </div>
+
+                <div class="w-full h-2 rounded-full bg-black/40 overflow-hidden">
+                    <div id="free-face-progress-bar" class="h-full bg-[#D4AF37] rounded-full w-[12.5%]"></div>
+                </div>
+
+                <p class="text-[11px] text-zinc-500 mt-3">
+                    完成 8 次體驗後，此進度將自動隱藏。
                 </p>
-                <h3 class="text-xl font-black">
-                    會員服務
-                </h3>
             </div>
+        </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="navTo('page-booking')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
-                    <i class="fa-solid fa-calendar-check text-2xl gold-text mb-8"></i>
-                    <p class="font-black text-xl mb-1">立即預約</p>
-                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">BOOKING</p>
-                </button>
+        <div class="mb-5">
+            <p class="text-[10px] tracking-[0.35em] gold-text mb-2">QUICK ACCESS</p>
+            <h3 class="text-xl font-black">會員服務</h3>
+        </div>
 
-                <button onclick="navTo('page-points')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
-                    <i class="fa-solid fa-coins text-2xl gold-text mb-8"></i>
-                    <p class="font-black text-xl mb-1">積分</p>
-                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">POINTS</p>
-                </button>
+        <div class="grid grid-cols-2 gap-4">
 
-                <button onclick="navTo('page-records')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
-                    <i class="fa-solid fa-file-lines text-2xl gold-text mb-8"></i>
-                    <p class="font-black text-xl mb-1">小臉紀錄</p>
-                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">RECORDS</p>
-                </button>
+            <button onclick="navTo('page-booking')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                <i class="fa-solid fa-calendar-check text-2xl gold-text mb-8"></i>
+                <p class="font-black text-xl mb-1">立即預約</p>
+                <p class="text-[10px] tracking-[0.22em] text-zinc-500">BOOKING</p>
+            </button>
 
-                <button class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
-                    <i class="fa-solid fa-user-plus text-2xl gold-text mb-8"></i>
-                    <p class="font-black text-xl mb-1">推薦好友</p>
-                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">REFERRAL</p>
-                </button>
+            <button onclick="navTo('page-points')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                <i class="fa-solid fa-coins text-2xl gold-text mb-8"></i>
+                <p class="font-black text-xl mb-1">積分</p>
+                <p class="text-[10px] tracking-[0.22em] text-zinc-500">POINTS</p>
+            </button>
+
+            <button onclick="navTo('page-records')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                <i class="fa-solid fa-file-lines text-2xl gold-text mb-8"></i>
+                <p class="font-black text-xl mb-1">調理紀錄</p>
+                <p class="text-[10px] tracking-[0.22em] text-zinc-500">TREATMENT</p>
+            </button>
+
+            <button onclick="shareReferral()" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                <i class="fa-solid fa-user-plus text-2xl gold-text mb-8"></i>
+                <p class="font-black text-xl mb-1">推薦好友</p>
+                <p class="text-[10px] tracking-[0.22em] text-zinc-500">REFERRAL</p>
+            </button>
+
+        </div>
+    </section>
+
+    <!-- POINTS -->
+    <section id="page-points" class="page-content">
+        <p class="text-[10px] tracking-[0.35em] gold-text mb-2">POINTS CENTER</p>
+        <h2 class="text-2xl font-black mb-6">積分中心</h2>
+
+        <div class="gold-card rounded-[2rem] p-6 mb-5">
+            <p class="text-xs tracking-[0.25em] gold-text mb-3">CURRENT POINTS</p>
+            <div class="flex items-end gap-2">
+                <p id="points-total" class="text-5xl font-black">0</p>
+                <p class="text-zinc-400 mb-2">PTS</p>
             </div>
-        </section>
+        </div>
 
-        <!-- POINTS -->
-        <section id="page-points" class="page-content">
-            <p class="text-[10px] tracking-[0.35em] gold-text mb-2">POINTS CENTER</p>
-            <h2 class="text-2xl font-black mb-6">積分中心</h2>
-
-            <div class="gold-card rounded-[2rem] p-6 mb-5">
-                <p class="text-xs tracking-[0.25em] gold-text mb-3">CURRENT POINTS</p>
-                <div class="flex items-end gap-2">
-                    <p id="points-total" class="text-5xl font-black">0</p>
-                    <p class="text-zinc-400 mb-2">PTS</p>
+        <div class="glass-card rounded-[1.8rem] p-6 mb-5">
+            <p class="font-black text-xl mb-4">積分紀錄</p>
+            <div class="space-y-4">
+                <div class="flex justify-between border-b border-white/5 pb-3">
+                    <div>
+                        <p class="font-bold">首次加入會員</p>
+                        <p class="text-xs text-zinc-500">WELCOME BONUS</p>
+                    </div>
+                    <p class="gold-text font-black">+0</p>
                 </div>
             </div>
+        </div>
 
-            <div class="glass-card rounded-[1.8rem] p-6 mb-5">
-                <p class="font-black text-xl mb-4">積分紀錄</p>
+        <div class="glass-card rounded-[1.8rem] p-6">
+            <p class="font-black text-xl mb-3">如何獲取積分</p>
+            <p class="text-sm text-zinc-500 leading-7">
+                此區塊預留給未來積分規則，例如：完成預約、推薦好友、回訪體驗、活動任務等。
+            </p>
+        </div>
+    </section>
 
-                <div class="space-y-4">
-                    <div class="flex justify-between border-b border-white/5 pb-3">
-                        <div>
-                            <p class="font-bold">首次加入會員</p>
-                            <p class="text-xs text-zinc-500">WELCOME BONUS</p>
-                        </div>
-                        <p class="gold-text font-black">+0</p>
-                    </div>
+    <!-- RECORDS -->
+    <section id="page-records" class="page-content">
+        <p class="text-[10px] tracking-[0.35em] gold-text mb-2">TREATMENT RECORDS</p>
+        <h2 class="text-2xl font-black mb-6">調理紀錄</h2>
 
-                    <div class="flex justify-between border-b border-white/5 pb-3">
-                        <div>
-                            <p class="font-bold">預留紀錄欄位</p>
-                            <p class="text-xs text-zinc-500">POINTS RECORD</p>
-                        </div>
-                        <p class="gold-text font-black">+0</p>
-                    </div>
-                </div>
+        <div class="space-y-4">
+            <div class="glass-card rounded-[1.8rem] p-6">
+                <p class="font-black text-xl mb-2">一般調理紀錄</p>
+                <p class="text-sm text-zinc-500">GENERAL TREATMENT</p>
             </div>
 
             <div class="glass-card rounded-[1.8rem] p-6">
-                <p class="font-black text-xl mb-3">如何獲取積分</p>
-                <p class="text-sm text-zinc-500 leading-7">
-                    此區塊預留給未來積分規則，例如：完成預約、推薦好友、回訪體驗、活動任務等。
-                </p>
+                <p class="font-black text-xl mb-2">調理前後對比相簿</p>
+                <p class="text-sm text-zinc-500">BEFORE & AFTER</p>
             </div>
-        </section>
-
-        <!-- RECORDS -->
-        <section id="page-records" class="page-content">
-            <p class="text-[10px] tracking-[0.35em] gold-text mb-2">FACE RECORDS</p>
-            <h2 class="text-2xl font-black mb-6">小臉紀錄</h2>
-
-            <div class="space-y-4">
-                <div class="glass-card rounded-[1.8rem] p-6">
-                    <p class="font-black text-xl mb-2">一般調理紀錄</p>
-                    <p class="text-sm text-zinc-500">TREATMENT RECORDS</p>
-                </div>
-
-                <div class="glass-card rounded-[1.8rem] p-6">
-                    <p class="font-black text-xl mb-2">調理前後對比相簿</p>
-                    <p class="text-sm text-zinc-500">BEFORE & AFTER</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- BOOKING -->
-        <section id="page-booking" class="page-content">
-
-            <p class="text-[10px] tracking-[0.35em] gold-text mb-2">RESERVATION</p>
-            <h2 class="text-2xl font-black mb-6">預約新理療</h2>
-
-            <div id="booking-step1" class="booking-step active space-y-4">
-
-                <button onclick="selectService('免費兩個月瘦小臉計畫')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
-                    <p class="font-black text-xl mb-2">免費兩個月瘦小臉計畫</p>
-                    <p class="text-sm text-zinc-500">FREE FACE PLAN</p>
-                </button>
-
-                <button onclick="selectService('精準局部體驗 $400')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
-                    <p class="font-black text-xl mb-2">精準局部體驗 $400</p>
-                    <p class="text-sm text-zinc-500">LOCAL EXPERIENCE</p>
-                </button>
-
-                <button onclick="selectService('全息平衡調理 $800')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
-                    <p class="font-black text-xl mb-2">全息平衡調理 $800</p>
-                    <p class="text-sm text-zinc-500">FULL BALANCE</p>
-                </button>
-
-            </div>
-
-            <div id="booking-step2" class="booking-step">
-
-                <button onclick="backToStep1()" class="text-zinc-500 underline mb-5">
-                    ← 返回項目選擇
-                </button>
-
-                <div class="glass-card rounded-[1.8rem] p-5 mb-5">
-                    <p class="text-xs text-zinc-500 mb-2">SELECTED SERVICE</p>
-                    <p id="selected-service" class="font-black text-lg gold-text">-</p>
-                </div>
-
-                <div class="glass-card rounded-[1.8rem] p-5 mb-5">
-                    <p class="font-black text-lg mb-4">選擇日期 DATE</p>
-
-                    <div class="flex gap-3 overflow-x-auto pb-2">
-                        <button id="date-btn-0" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
-                        <button id="date-btn-1" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
-                        <button id="date-btn-2" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
-                        <button id="date-btn-3" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
-                        <button id="date-btn-4" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
-                        <button id="date-btn-5" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
-                        <button id="date-btn-6" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
-                    </div>
-                </div>
-
-                <div class="glass-card rounded-[1.8rem] p-5 mb-6">
-                    <p class="font-black text-lg mb-1">選擇時間 TIME</p>
-                    <p class="text-xs text-zinc-500 mb-4">營業時間 10:00 - 02:00，每 30 分鐘一格</p>
-
-                    <div class="grid grid-cols-3 gap-3">
-                        <button class="time-btn py-3 rounded-2xl" data-time="10:00" onclick="selectTime(this)">10:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="10:30" onclick="selectTime(this)">10:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="11:00" onclick="selectTime(this)">11:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="11:30" onclick="selectTime(this)">11:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="12:00" onclick="selectTime(this)">12:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="12:30" onclick="selectTime(this)">12:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="13:00" onclick="selectTime(this)">13:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="13:30" onclick="selectTime(this)">13:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="14:00" onclick="selectTime(this)">14:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="14:30" onclick="selectTime(this)">14:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="15:00" onclick="selectTime(this)">15:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="15:30" onclick="selectTime(this)">15:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="16:00" onclick="selectTime(this)">16:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="16:30" onclick="selectTime(this)">16:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="17:00" onclick="selectTime(this)">17:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="17:30" onclick="selectTime(this)">17:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="18:00" onclick="selectTime(this)">18:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="18:30" onclick="selectTime(this)">18:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="19:00" onclick="selectTime(this)">19:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="19:30" onclick="selectTime(this)">19:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="20:00" onclick="selectTime(this)">20:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="20:30" onclick="selectTime(this)">20:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="21:00" onclick="selectTime(this)">21:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="21:30" onclick="selectTime(this)">21:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="22:00" onclick="selectTime(this)">22:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="22:30" onclick="selectTime(this)">22:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="23:00" onclick="selectTime(this)">23:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="23:30" onclick="selectTime(this)">23:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="00:00" onclick="selectTime(this)">00:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="00:30" onclick="selectTime(this)">00:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="01:00" onclick="selectTime(this)">01:00</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="01:30" onclick="selectTime(this)">01:30</button>
-                        <button class="time-btn py-3 rounded-2xl" data-time="02:00" onclick="selectTime(this)">02:00</button>
-                    </div>
-                </div>
-
-                <button onclick="submitBooking()" class="w-full py-5 rounded-[1.8rem] bg-[#D4AF37] text-black font-black text-lg">
-                    確認送出預約
-                </button>
-
-            </div>
-        </section>
-    </main>
-
-    <nav class="fixed bottom-0 left-0 right-0 border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl">
-        <div class="max-w-md mx-auto flex justify-around py-4">
-            <button onclick="navTo('page-home')" class="flex flex-col items-center text-xs text-zinc-300">
-                <i class="fa-solid fa-house mb-2"></i>首頁
-            </button>
-
-            <button onclick="navTo('page-records')" class="flex flex-col items-center text-xs text-zinc-300">
-                <i class="fa-solid fa-file-lines mb-2"></i>紀錄
-            </button>
-
-            <button onclick="navTo('page-booking')" class="flex flex-col items-center text-xs text-zinc-300">
-                <i class="fa-solid fa-calendar mb-2"></i>預約
-            </button>
         </div>
-    </nav>
+    </section>
 
-    <script>
-        const memberState = {
-            freeFaceUsedCount: 1,
-            freeFaceTotalCount: 8,
-            pointsTotal: 0
+    <!-- ACTIVITY -->
+    <section id="page-activity" class="page-content">
+        <p class="text-[10px] tracking-[0.35em] gold-text mb-2">ACTIVITY</p>
+        <h2 class="text-2xl font-black mb-6">最新活動</h2>
+
+        <div class="glass-card rounded-[1.8rem] p-6">
+            <p class="font-black text-xl mb-3">活動公告預留區</p>
+            <p class="text-sm text-zinc-500 leading-7">
+                此區未來可放置店內活動、限時優惠、新會員任務、免費體驗活動等。
+            </p>
+        </div>
+    </section>
+
+    <!-- SUPPORT -->
+    <section id="page-support" class="page-content">
+        <p class="text-[10px] tracking-[0.35em] gold-text mb-2">SUPPORT</p>
+        <h2 class="text-2xl font-black mb-6">聯繫客服</h2>
+
+        <div class="glass-card rounded-[1.8rem] p-6">
+            <p class="font-black text-xl mb-3">客服中心預留區</p>
+            <p class="text-sm text-zinc-500 leading-7">
+                此區未來可放置 LINE 客服、營業時間、常見問題、預約修改提醒等。
+            </p>
+        </div>
+    </section>
+
+    <!-- BOOKING -->
+    <section id="page-booking" class="page-content">
+
+        <p class="text-[10px] tracking-[0.35em] gold-text mb-2">RESERVATION</p>
+        <h2 class="text-2xl font-black mb-6">預約新理療</h2>
+
+        <div id="booking-step1" class="booking-step active space-y-4">
+
+            <button onclick="selectService('免費兩個月瘦小臉計畫')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
+                <p class="font-black text-xl mb-2">免費兩個月瘦小臉計畫</p>
+                <p class="text-sm text-zinc-500">FREE FACE PLAN</p>
+            </button>
+
+            <button onclick="selectService('精準局部體驗 $400')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
+                <p class="font-black text-xl mb-2">精準局部體驗 $400</p>
+                <p class="text-sm text-zinc-500">LOCAL EXPERIENCE</p>
+            </button>
+
+            <button onclick="selectService('全息平衡調理 $800')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
+                <p class="font-black text-xl mb-2">全息平衡調理 $800</p>
+                <p class="text-sm text-zinc-500">FULL BALANCE</p>
+            </button>
+
+        </div>
+
+        <div id="booking-step2" class="booking-step">
+
+            <button onclick="backToStep1()" class="text-zinc-500 underline mb-5">
+                ← 返回項目選擇
+            </button>
+
+            <div class="glass-card rounded-[1.8rem] p-5 mb-5">
+                <p class="text-xs text-zinc-500 mb-2">SELECTED SERVICE</p>
+                <p id="selected-service" class="font-black text-lg gold-text">-</p>
+            </div>
+
+            <div class="glass-card rounded-[1.8rem] p-5 mb-5">
+                <p class="font-black text-lg mb-4">選擇日期 DATE</p>
+
+                <div class="flex gap-3 overflow-x-auto pb-2">
+                    <button id="date-btn-0" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                    <button id="date-btn-1" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                    <button id="date-btn-2" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                    <button id="date-btn-3" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                    <button id="date-btn-4" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                    <button id="date-btn-5" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                    <button id="date-btn-6" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-[1.8rem] p-5 mb-6">
+                <p class="font-black text-lg mb-1">選擇時間 TIME</p>
+                <p class="text-xs text-zinc-500 mb-4">營業時間 10:00 - 02:00，每 30 分鐘一格</p>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="time-btn py-3 rounded-2xl" data-time="10:00" onclick="selectTime(this)">10:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="10:30" onclick="selectTime(this)">10:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="11:00" onclick="selectTime(this)">11:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="11:30" onclick="selectTime(this)">11:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="12:00" onclick="selectTime(this)">12:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="12:30" onclick="selectTime(this)">12:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="13:00" onclick="selectTime(this)">13:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="13:30" onclick="selectTime(this)">13:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="14:00" onclick="selectTime(this)">14:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="14:30" onclick="selectTime(this)">14:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="15:00" onclick="selectTime(this)">15:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="15:30" onclick="selectTime(this)">15:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="16:00" onclick="selectTime(this)">16:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="16:30" onclick="selectTime(this)">16:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="17:00" onclick="selectTime(this)">17:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="17:30" onclick="selectTime(this)">17:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="18:00" onclick="selectTime(this)">18:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="18:30" onclick="selectTime(this)">18:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="19:00" onclick="selectTime(this)">19:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="19:30" onclick="selectTime(this)">19:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="20:00" onclick="selectTime(this)">20:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="20:30" onclick="selectTime(this)">20:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="21:00" onclick="selectTime(this)">21:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="21:30" onclick="selectTime(this)">21:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="22:00" onclick="selectTime(this)">22:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="22:30" onclick="selectTime(this)">22:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="23:00" onclick="selectTime(this)">23:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="23:30" onclick="selectTime(this)">23:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="00:00" onclick="selectTime(this)">00:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="00:30" onclick="selectTime(this)">00:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="01:00" onclick="selectTime(this)">01:00</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="01:30" onclick="selectTime(this)">01:30</button>
+                    <button class="time-btn py-3 rounded-2xl" data-time="02:00" onclick="selectTime(this)">02:00</button>
+                </div>
+            </div>
+
+            <button onclick="submitBooking()" class="w-full py-5 rounded-[1.8rem] bg-[#D4AF37] text-black font-black text-lg">
+                確認送出預約
+            </button>
+
+        </div>
+    </section>
+
+</main>
+
+<nav class="fixed bottom-0 left-0 right-0 border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl">
+    <div class="max-w-md mx-auto flex justify-around py-4">
+        <button onclick="navTo('page-home')" class="flex flex-col items-center text-xs text-zinc-300">
+            <i class="fa-solid fa-house mb-2"></i>首頁
+        </button>
+
+        <button onclick="navTo('page-activity')" class="flex flex-col items-center text-xs text-zinc-300">
+            <i class="fa-solid fa-bullhorn mb-2"></i>活動
+        </button>
+
+        <button onclick="navTo('page-support')" class="flex flex-col items-center text-xs text-zinc-300">
+            <i class="fa-solid fa-headset mb-2"></i>客服
+        </button>
+    </div>
+</nav>
+
+<script>
+    const memberState = {
+        freeFaceUsedCount: 1,
+        freeFaceTotalCount: 8,
+        pointsTotal: 0
+    };
+
+    const bookingState = {
+        service: null,
+        date: null,
+        time: null
+    };
+
+    function navTo(pageId) {
+        document.querySelectorAll('.page-content').forEach(page => {
+            page.classList.remove('active');
+        });
+
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    async function shareReferral() {
+        const shareData = {
+            title: '耳顏所 IAURI BEAUTY CLUB',
+            text: '推薦你加入耳顏所會員，領取專屬體驗與會員服務。',
+            url: 'https://lin.ee/vxi3sZ4'
         };
 
-        const bookingState = {
-            service: null,
-            date: null,
-            time: null
-        };
-
-        function navTo(pageId) {
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.remove('active');
-            });
-
-            document.getElementById(pageId).classList.add('active');
-        }
-
-        function updateFreeFaceProgress() {
-            const area = document.getElementById('free-face-progress-area');
-            const countText = document.getElementById('free-face-count');
-            const bar = document.getElementById('free-face-progress-bar');
-
-            if (memberState.freeFaceUsedCount >= memberState.freeFaceTotalCount) {
-                area.style.display = 'none';
-                return;
-            }
-
-            const percent = memberState.freeFaceUsedCount / memberState.freeFaceTotalCount * 100;
-
-            area.style.display = 'block';
-            countText.textContent = memberState.freeFaceUsedCount + ' / ' + memberState.freeFaceTotalCount + ' 次';
-            bar.style.width = percent + '%';
-        }
-
-        function updatePointsUI() {
-            document.getElementById('points-total').textContent = memberState.pointsTotal;
-        }
-
-        function showBookingStep(stepId) {
-            document.querySelectorAll('.booking-step').forEach(step => {
-                step.classList.remove('active');
-            });
-
-            document.getElementById(stepId).classList.add('active');
-        }
-
-        function selectService(serviceName) {
-            bookingState.service = serviceName;
-            bookingState.date = null;
-            bookingState.time = null;
-
-            document.getElementById('selected-service').textContent = serviceName;
-
-            clearSelectedSlots();
-            setupDateButtons();
-            showBookingStep('booking-step2');
-        }
-
-        function backToStep1() {
-            showBookingStep('booking-step1');
-        }
-
-        function clearSelectedSlots() {
-            document.querySelectorAll('.date-btn').forEach(btn => {
-                btn.classList.remove('selected-slot');
-            });
-
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                btn.classList.remove('selected-slot');
-            });
-        }
-
-        function setupDateButtons() {
-            const today = new Date();
-
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() + i);
-
-                const btn = document.getElementById('date-btn-' + i);
-
-                const month = date.getMonth() + 1;
-                const day = date.getDate();
-                const weekText = getWeekText(date.getDay());
-
-                btn.textContent = month + '/' + day + ' ' + weekText;
-                btn.dataset.date = formatDate(date);
-                btn.style.display = 'block';
-            }
-
-            filterTimeButtons();
-        }
-
-        function getWeekText(day) {
-            const weeks = ['日', '一', '二', '三', '四', '五', '六'];
-            return weeks[day];
-        }
-
-        function formatDate(date) {
-            const y = date.getFullYear();
-            const m = String(date.getMonth() + 1).padStart(2, '0');
-            const d = String(date.getDate()).padStart(2, '0');
-
-            return y + '-' + m + '-' + d;
-        }
-
-        function selectDate(button) {
-            bookingState.date = button.dataset.date;
-            bookingState.time = null;
-
-            document.querySelectorAll('.date-btn').forEach(btn => {
-                btn.classList.remove('selected-slot');
-            });
-
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                btn.classList.remove('selected-slot');
-            });
-
-            button.classList.add('selected-slot');
-
-            filterTimeButtons();
-        }
-
-        function selectTime(button) {
-            bookingState.time = button.dataset.time;
-
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                btn.classList.remove('selected-slot');
-            });
-
-            button.classList.add('selected-slot');
-        }
-
-        function filterTimeButtons() {
-            const now = new Date();
-            const minimumTime = new Date(now.getTime() + 60 * 60 * 1000);
-
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                btn.style.display = 'block';
-            });
-
-            if (!bookingState.date) {
-                return;
-            }
-
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                const slotDate = getSlotDateTime(bookingState.date, btn.dataset.time);
-
-                if (slotDate < minimumTime) {
-                    btn.style.display = 'none';
-                } else {
-                    btn.style.display = 'block';
-                }
-            });
-        }
-
-        function getSlotDateTime(dateString, timeString) {
-            const parts = dateString.split('-');
-            const timeParts = timeString.split(':');
-
-            let year = Number(parts[0]);
-            let month = Number(parts[1]) - 1;
-            let day = Number(parts[2]);
-
-            let hour = Number(timeParts[0]);
-            let minute = Number(timeParts[1]);
-
-            const slotDate = new Date(year, month, day, hour, minute, 0);
-
-            if (hour >= 0 && hour <= 2) {
-                slotDate.setDate(slotDate.getDate() + 1);
-            }
-
-            return slotDate;
-        }
-
-        function submitBooking() {
-            if (!bookingState.service) {
-                alert('請選擇服務項目');
-                return;
-            }
-
-            if (!bookingState.date) {
-                alert('請選擇日期');
-                return;
-            }
-
-            if (!bookingState.time) {
-                alert('請選擇時間');
-                return;
-            }
-
-            alert(
-                '預約成功！\n\n' +
-                '項目：' + bookingState.service + '\n' +
-                '日期：' + bookingState.date + '\n' +
-                '時間：' + bookingState.time
-            );
-        }
-
-        async function initLiff() {
+        if (navigator.share) {
             try {
-                await liff.init({
-                    liffId: "2010173212-2gFbVMbf"
-                });
-
-                if (!liff.isLoggedIn()) {
-                    liff.login();
-                    return;
-                }
-
-                const profile = await liff.getProfile();
-                updateUserUI(profile);
-
+                await navigator.share(shareData);
             } catch (err) {
-                console.error('LIFF INIT ERROR:', err);
+                console.log('Share cancelled or failed:', err);
             }
+        } else {
+            alert('推薦連結：https://lin.ee/vxi3sZ4');
+        }
+    }
+
+    function updateFreeFaceProgress() {
+        const area = document.getElementById('free-face-progress-area');
+        const countText = document.getElementById('free-face-count');
+        const bar = document.getElementById('free-face-progress-bar');
+
+        if (memberState.freeFaceUsedCount >= memberState.freeFaceTotalCount) {
+            area.style.display = 'none';
+            return;
         }
 
-        function updateUserUI(profile) {
-            document.getElementById('user-name').textContent = profile.displayName;
-            document.getElementById('user-avatar').src = profile.pictureUrl;
-        }
+        const percent = memberState.freeFaceUsedCount / memberState.freeFaceTotalCount * 100;
 
-        updateFreeFaceProgress();
-        updatePointsUI();
+        area.style.display = 'block';
+        countText.textContent = memberState.freeFaceUsedCount + ' / ' + memberState.freeFaceTotalCount + ' 次';
+        bar.style.width = percent + '%';
+    }
+
+    function updatePointsUI() {
+        document.getElementById('points-total').textContent = memberState.pointsTotal;
+    }
+
+    function showBookingStep(stepId) {
+        document.querySelectorAll('.booking-step').forEach(step => {
+            step.classList.remove('active');
+        });
+
+        document.getElementById(stepId).classList.add('active');
+    }
+
+    function selectService(serviceName) {
+        bookingState.service = serviceName;
+        bookingState.date = null;
+        bookingState.time = null;
+
+        document.getElementById('selected-service').textContent = serviceName;
+
+        clearSelectedSlots();
         setupDateButtons();
-        initLiff();
-    </script>
+        showBookingStep('booking-step2');
+    }
+
+    function backToStep1() {
+        showBookingStep('booking-step1');
+    }
+
+    function clearSelectedSlots() {
+        document.querySelectorAll('.date-btn').forEach(btn => {
+            btn.classList.remove('selected-slot');
+        });
+
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.classList.remove('selected-slot');
+        });
+    }
+
+    function setupDateButtons() {
+        const today = new Date();
+
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+
+            const btn = document.getElementById('date-btn-' + i);
+
+            btn.textContent = (date.getMonth() + 1) + '/' + date.getDate() + ' ' + getWeekText(date.getDay());
+            btn.dataset.date = formatDate(date);
+            btn.style.display = 'block';
+        }
+
+        filterTimeButtons();
+    }
+
+    function getWeekText(day) {
+        const weeks = ['日', '一', '二', '三', '四', '五', '六'];
+        return weeks[day];
+    }
+
+    function formatDate(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+
+        return y + '-' + m + '-' + d;
+    }
+
+    function selectDate(button) {
+        bookingState.date = button.dataset.date;
+        bookingState.time = null;
+
+        document.querySelectorAll('.date-btn').forEach(btn => {
+            btn.classList.remove('selected-slot');
+        });
+
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.classList.remove('selected-slot');
+        });
+
+        button.classList.add('selected-slot');
+
+        filterTimeButtons();
+    }
+
+    function selectTime(button) {
+        bookingState.time = button.dataset.time;
+
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.classList.remove('selected-slot');
+        });
+
+        button.classList.add('selected-slot');
+    }
+
+    function filterTimeButtons() {
+        const now = new Date();
+        const minimumTime = new Date(now.getTime() + 60 * 60 * 1000);
+
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.style.display = 'block';
+        });
+
+        if (!bookingState.date) {
+            return;
+        }
+
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            const slotDate = getSlotDateTime(bookingState.date, btn.dataset.time);
+
+            if (slotDate < minimumTime) {
+                btn.style.display = 'none';
+            } else {
+                btn.style.display = 'block';
+            }
+        });
+    }
+
+    function getSlotDateTime(dateString, timeString) {
+        const parts = dateString.split('-');
+        const timeParts = timeString.split(':');
+
+        let year = Number(parts[0]);
+        let month = Number(parts[1]) - 1;
+        let day = Number(parts[2]);
+
+        let hour = Number(timeParts[0]);
+        let minute = Number(timeParts[1]);
+
+        const slotDate = new Date(year, month, day, hour, minute, 0);
+
+        if (hour >= 0 && hour <= 2) {
+            slotDate.setDate(slotDate.getDate() + 1);
+        }
+
+        return slotDate;
+    }
+
+    function submitBooking() {
+        if (!bookingState.service) {
+            alert('請選擇服務項目');
+            return;
+        }
+
+        if (!bookingState.date) {
+            alert('請選擇日期');
+            return;
+        }
+
+        if (!bookingState.time) {
+            alert('請選擇時間');
+            return;
+        }
+
+        alert(
+            '預約成功！\n\n' +
+            '項目：' + bookingState.service + '\n' +
+            '日期：' + bookingState.date + '\n' +
+            '時間：' + bookingState.time
+        );
+    }
+
+    async function initLiff() {
+        try {
+            await liff.init({
+                liffId: "2010173212-2gFbVMbf"
+            });
+
+            if (!liff.isLoggedIn()) {
+                liff.login();
+                return;
+            }
+
+            const profile = await liff.getProfile();
+            updateUserUI(profile);
+
+        } catch (err) {
+            console.error('LIFF INIT ERROR:', err);
+        }
+    }
+
+    function updateUserUI(profile) {
+        document.getElementById('user-name').textContent = profile.displayName;
+        document.getElementById('user-avatar').src = profile.pictureUrl;
+    }
+
+    updateFreeFaceProgress();
+    updatePointsUI();
+    setupDateButtons();
+    initLiff();
+</script>
 
 </body>
 </html>
