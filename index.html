@@ -7,541 +7,387 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
-
-        * {
-            box-sizing: border-box;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background: #0A0A0A;
+            background:
+                radial-gradient(circle at top right, rgba(212,175,55,.13), transparent 32%),
+                radial-gradient(circle at top left, rgba(255,255,255,.06), transparent 28%),
+                #050505;
             color: #F5F5F5;
         }
 
-        .page-content {
-            display: none;
+        .page-content { display: none; }
+        .page-content.active { display: block; }
+
+        .booking-step { display: none; }
+        .booking-step.active { display: block; }
+
+        .gold-text { color: #D4AF37; }
+
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+            border: 1px solid rgba(212,175,55,.18);
+            box-shadow: 0 20px 60px rgba(0,0,0,.45);
+            backdrop-filter: blur(18px);
         }
 
-        .page-content.active {
-            display: block;
+        .gold-card {
+            background:
+                linear-gradient(145deg, rgba(212,175,55,.22), rgba(255,255,255,.035)),
+                #101010;
+            border: 1px solid rgba(212,175,55,.35);
         }
 
-        .gold-text {
-            color: #D4AF37;
+        .menu-card {
+            background: linear-gradient(145deg, #19191d, #0f0f11);
+            border: 1px solid rgba(255,255,255,.08);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 14px 35px rgba(0,0,0,.3);
         }
 
-        .gold-border {
-            border: 1px solid rgba(212, 175, 55, 0.25);
-        }
-
-        .card-bg {
-            background: #111111;
-        }
-
-        .smooth {
-            transition: all .3s ease;
-        }
-
-        .booking-step {
-            display: none;
-        }
-
-        .booking-step.active {
-            display: block;
-        }
-
-        .date-btn,
-        .time-btn {
-            min-width: 80px;
-        }
+        .smooth { transition: all .25s ease; }
 
         .selected-slot {
             background: #D4AF37 !important;
-            color: #000000 !important;
+            color: #000 !important;
             border-color: #D4AF37 !important;
+            font-weight: 900;
         }
 
-        ::-webkit-scrollbar {
-            display: none;
+        .date-btn, .time-btn {
+            border: 1px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.055);
         }
+
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 
 <body class="pb-28">
 
-    <!-- HEADER -->
-    <header class="sticky top-0 z-50 border-b border-zinc-900 bg-[#0A0A0A]/95 backdrop-blur">
-        <div class="max-w-md mx-auto px-4 py-4">
-
-            <p class="text-[10px] tracking-[0.3em] gold-text uppercase font-light mb-1">
-                IAURI MEMBER
+    <header class="sticky top-0 z-50 border-b border-white/5 bg-[#050505]/90 backdrop-blur-xl">
+        <div class="max-w-md mx-auto px-5 py-5">
+            <p class="text-[10px] tracking-[0.42em] gold-text uppercase font-light mb-2">
+                IAURI BEAUTY CLUB
             </p>
-
-            <div class="flex items-center justify-between">
-                <h1 class="text-xl font-bold">
-                    耳顏所會員系統
-                </h1>
-
-                <i class="fa-solid fa-crown gold-text"></i>
-            </div>
-
+            <h1 class="text-3xl font-black tracking-tight">
+                耳顏所會員系統
+            </h1>
         </div>
     </header>
 
-    <!-- MAIN -->
-    <main class="max-w-md mx-auto px-4 py-6">
+    <main class="max-w-md mx-auto px-5 py-7">
 
         <!-- HOME -->
         <section id="page-home" class="page-content active">
 
-            <!-- MEMBER CARD -->
-            <div class="card-bg rounded-3xl p-6 gold-border mb-6">
+            <div class="gold-card rounded-[2.2rem] p-6 mb-7 relative overflow-hidden">
+                <div class="absolute right-[-40px] top-[-40px] w-40 h-40 rounded-full bg-[#D4AF37]/10"></div>
 
-                <div class="flex items-center space-x-4 mb-5">
-
-                    <img
-                        id="user-avatar"
-                        class="w-16 h-16 rounded-full object-cover bg-zinc-800"
-                    >
+                <div class="flex items-center gap-5 relative z-10">
+                    <img id="user-avatar" class="w-20 h-20 rounded-full object-cover bg-zinc-800 border border-[#D4AF37]/30">
 
                     <div>
-                        <h2 id="user-name" class="font-bold text-lg">
+                        <p class="text-xs gold-text tracking-[0.28em] mb-1">
+                            PREMIUM MEMBER
+                        </p>
+                        <h2 id="user-name" class="font-black text-3xl leading-tight">
                             載入中...
                         </h2>
-
-                        <p class="text-xs gold-text tracking-widest">
-                            GOLD MEMBER
+                        <p class="text-sm text-zinc-400 mt-1">
+                            黃金會員 GOLD
                         </p>
                     </div>
-
                 </div>
 
-                <!-- PROGRESS -->
-                <div>
-
-                    <div class="flex justify-between text-xs mb-2 text-zinc-400">
-                        <span>本月會員進度</span>
-                        <span>72%</span>
+                <div class="mt-6 relative z-10">
+                    <div class="flex justify-between text-xs text-zinc-400 mb-2">
+                        <span>MEMBER LEVEL</span>
+                        <span class="gold-text">72%</span>
                     </div>
-
-                    <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
-                        <div class="h-full bg-[#D4AF37] rounded-full w-[72%]"></div>
+                    <div class="w-full h-2 rounded-full bg-black/40 overflow-hidden">
+                        <div class="h-full w-[72%] bg-[#D4AF37] rounded-full"></div>
                     </div>
-
                 </div>
-
             </div>
 
-            <!-- MENU -->
+            <div class="mb-5">
+                <p class="text-[10px] tracking-[0.35em] gold-text mb-2">
+                    QUICK ACCESS
+                </p>
+                <h3 class="text-xl font-black">
+                    會員服務
+                </h3>
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
-
-                <button
-                    onclick="navTo('page-booking')"
-                    class="card-bg rounded-2xl p-6 gold-border smooth hover:scale-[1.02]"
-                >
-                    <i class="fa-solid fa-calendar-check text-2xl gold-text mb-4"></i>
-
-                    <p class="font-bold mb-1">
-                        立即預約
-                    </p>
-
-                    <p class="text-xs text-zinc-500">
-                        BOOKING
-                    </p>
+                <button onclick="navTo('page-booking')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                    <i class="fa-solid fa-calendar-check text-2xl gold-text mb-8"></i>
+                    <p class="font-black text-xl mb-1">立即預約</p>
+                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">BOOKING</p>
                 </button>
 
-                <button
-                    class="card-bg rounded-2xl p-6 gold-border smooth hover:scale-[1.02]"
-                >
-                    <i class="fa-solid fa-id-card text-2xl gold-text mb-4"></i>
-
-                    <p class="font-bold mb-1">
-                        會員卡
-                    </p>
-
-                    <p class="text-xs text-zinc-500">
-                        MEMBER CARD
-                    </p>
+                <button class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                    <i class="fa-solid fa-id-card text-2xl gold-text mb-8"></i>
+                    <p class="font-black text-xl mb-1">會員卡</p>
+                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">MEMBER CARD</p>
                 </button>
 
-                <button
-                    onclick="navTo('page-records')"
-                    class="card-bg rounded-2xl p-6 gold-border smooth hover:scale-[1.02]"
-                >
-                    <i class="fa-solid fa-file-lines text-2xl gold-text mb-4"></i>
-
-                    <p class="font-bold mb-1">
-                        小臉紀錄
-                    </p>
-
-                    <p class="text-xs text-zinc-500">
-                        RECORDS
-                    </p>
+                <button onclick="navTo('page-records')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                    <i class="fa-solid fa-file-lines text-2xl gold-text mb-8"></i>
+                    <p class="font-black text-xl mb-1">小臉紀錄</p>
+                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">RECORDS</p>
                 </button>
 
-                <button
-                    class="card-bg rounded-2xl p-6 gold-border smooth hover:scale-[1.02]"
-                >
-                    <i class="fa-solid fa-user-plus text-2xl gold-text mb-4"></i>
-
-                    <p class="font-bold mb-1">
-                        推薦好友
-                    </p>
-
-                    <p class="text-xs text-zinc-500">
-                        REFERRAL
-                    </p>
+                <button class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                    <i class="fa-solid fa-user-plus text-2xl gold-text mb-8"></i>
+                    <p class="font-black text-xl mb-1">推薦好友</p>
+                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">REFERRAL</p>
                 </button>
-
             </div>
-
         </section>
 
-        <!-- RECORD -->
+        <!-- RECORDS -->
         <section id="page-records" class="page-content">
-
-            <h2 class="text-xl font-bold mb-5">
-                小臉紀錄
-            </h2>
+            <p class="text-[10px] tracking-[0.35em] gold-text mb-2">FACE RECORDS</p>
+            <h2 class="text-2xl font-black mb-6">小臉紀錄</h2>
 
             <div class="space-y-4">
-
-                <div class="card-bg rounded-2xl p-6 gold-border">
-                    <p class="font-bold mb-2">
-                        一般調理紀錄
-                    </p>
-
-                    <p class="text-sm text-zinc-500">
-                        TREATMENT RECORDS
-                    </p>
+                <div class="glass-card rounded-[1.8rem] p-6">
+                    <p class="font-black text-xl mb-2">一般調理紀錄</p>
+                    <p class="text-sm text-zinc-500">TREATMENT RECORDS</p>
                 </div>
 
-                <div class="card-bg rounded-2xl p-6 gold-border">
-                    <p class="font-bold mb-2">
-                        調理前後對比相簿
-                    </p>
-
-                    <p class="text-sm text-zinc-500">
-                        BEFORE & AFTER
-                    </p>
+                <div class="glass-card rounded-[1.8rem] p-6">
+                    <p class="font-black text-xl mb-2">調理前後對比相簿</p>
+                    <p class="text-sm text-zinc-500">BEFORE & AFTER</p>
                 </div>
-
             </div>
-
         </section>
 
         <!-- BOOKING -->
         <section id="page-booking" class="page-content">
 
-            <div class="flex items-center justify-between mb-5">
-
-                <div>
-                    <p class="text-[10px] tracking-[0.3em] gold-text uppercase mb-1">
-                        BOOKING SYSTEM
-                    </p>
-
-                    <h2 class="text-xl font-bold">
-                        預約新理療
-                    </h2>
-                </div>
-
-            </div>
+            <p class="text-[10px] tracking-[0.35em] gold-text mb-2">RESERVATION</p>
+            <h2 class="text-2xl font-black mb-6">預約新理療</h2>
 
             <!-- STEP 1 -->
-            <div id="booking-step1" class="booking-step active">
+            <div id="booking-step1" class="booking-step active space-y-4">
 
-                <div class="space-y-4">
+                <button onclick="selectService('免費兩個月瘦小臉計畫')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
+                    <p class="font-black text-xl mb-2">免費兩個月瘦小臉計畫</p>
+                    <p class="text-sm text-zinc-500">FREE FACE PLAN</p>
+                </button>
 
-                    <button
-                        onclick="selectService('免費兩個月瘦小臉計畫')"
-                        class="w-full text-left card-bg rounded-2xl p-6 gold-border smooth"
-                    >
-                        <p class="font-bold mb-1">
-                            免費兩個月瘦小臉計畫
-                        </p>
+                <button onclick="selectService('精準局部體驗 $400')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
+                    <p class="font-black text-xl mb-2">精準局部體驗 $400</p>
+                    <p class="text-sm text-zinc-500">LOCAL EXPERIENCE</p>
+                </button>
 
-                        <p class="text-sm text-zinc-500">
-                            FREE FACE PLAN
-                        </p>
-                    </button>
-
-                    <button
-                        onclick="selectService('精準局部體驗 ($400)')"
-                        class="w-full text-left card-bg rounded-2xl p-6 gold-border smooth"
-                    >
-                        <p class="font-bold mb-1">
-                            精準局部體驗 ($400)
-                        </p>
-
-                        <p class="text-sm text-zinc-500">
-                            PARTIAL EXPERIENCE
-                        </p>
-                    </button>
-
-                    <button
-                        onclick="selectService('全息平衡調理 ($800)')"
-                        class="w-full text-left card-bg rounded-2xl p-6 gold-border smooth"
-                    >
-                        <p class="font-bold mb-1">
-                            全息平衡調理 ($800)
-                        </p>
-
-                        <p class="text-sm text-zinc-500">
-                            FULL BALANCE
-                        </p>
-                    </button>
-
-                </div>
+                <button onclick="selectService('全息平衡調理 $800')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
+                    <p class="font-black text-xl mb-2">全息平衡調理 $800</p>
+                    <p class="text-sm text-zinc-500">FULL BALANCE</p>
+                </button>
 
             </div>
 
             <!-- STEP 2 -->
             <div id="booking-step2" class="booking-step">
 
-                <button
-                    onclick="backToStep1()"
-                    class="text-sm text-zinc-500 mb-5"
-                >
+                <button onclick="backToStep1()" class="text-zinc-500 underline mb-5">
                     ← 返回項目選擇
                 </button>
 
-                <!-- SELECTED -->
-                <div class="card-bg rounded-2xl p-5 gold-border mb-5">
-
-                    <p class="text-xs text-zinc-500 mb-2">
-                        已選擇項目
-                    </p>
-
-                    <p
-                        id="selected-service"
-                        class="font-bold gold-text"
-                    >
-                        -
-                    </p>
-
+                <div class="glass-card rounded-[1.8rem] p-5 mb-5">
+                    <p class="text-xs text-zinc-500 mb-2">SELECTED SERVICE</p>
+                    <p id="selected-service" class="font-black text-lg gold-text">-</p>
                 </div>
 
-                <!-- DATE -->
-                <div class="card-bg rounded-2xl p-5 gold-border mb-5">
+                <div class="glass-card rounded-[1.8rem] p-5 mb-5">
+                    <p class="font-black text-lg mb-4">選擇日期 DATE</p>
 
-                    <p class="font-bold mb-4">
-                        選擇日期
-                    </p>
-
-                    <div class="flex space-x-3 overflow-x-auto pb-2">
-
-                        <button
-                            onclick="selectDate(this, '2026-05-27')"
-                            class="date-btn px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 smooth"
-                        >
-                            5/27
-                        </button>
-
-                        <button
-                            onclick="selectDate(this, '2026-05-28')"
-                            class="date-btn px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 smooth"
-                        >
-                            5/28
-                        </button>
-
-                        <button
-                            onclick="selectDate(this, '2026-05-29')"
-                            class="date-btn px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 smooth"
-                        >
-                            5/29
-                        </button>
-
+                    <div class="flex gap-3 overflow-x-auto pb-2">
+                        <button id="date-btn-0" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                        <button id="date-btn-1" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                        <button id="date-btn-2" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                        <button id="date-btn-3" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                        <button id="date-btn-4" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                        <button id="date-btn-5" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
+                        <button id="date-btn-6" onclick="selectDate(this)" class="date-btn min-w-[76px] py-3 rounded-2xl"></button>
                     </div>
-
                 </div>
 
-                <!-- TIME -->
-                <div class="card-bg rounded-2xl p-5 gold-border mb-6">
-
-                    <p class="font-bold mb-4">
-                        選擇時間
-                    </p>
+                <div class="glass-card rounded-[1.8rem] p-5 mb-6">
+                    <p class="font-black text-lg mb-1">選擇時間 TIME</p>
+                    <p class="text-xs text-zinc-500 mb-4">營業時間 10:00 - 02:00，每 30 分鐘一格</p>
 
                     <div class="grid grid-cols-3 gap-3">
-
-                        <button
-                            onclick="selectTime(this, '13:00')"
-                            class="time-btn py-3 rounded-xl bg-zinc-900 border border-zinc-800 smooth"
-                        >
-                            13:00
-                        </button>
-
-                        <button
-                            onclick="selectTime(this, '15:00')"
-                            class="time-btn py-3 rounded-xl bg-zinc-900 border border-zinc-800 smooth"
-                        >
-                            15:00
-                        </button>
-
-                        <button
-                            onclick="selectTime(this, '17:00')"
-                            class="time-btn py-3 rounded-xl bg-zinc-900 border border-zinc-800 smooth"
-                        >
-                            17:00
-                        </button>
-
+                        <button class="time-btn py-3 rounded-2xl" data-time="10:00" onclick="selectTime(this)">10:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="10:30" onclick="selectTime(this)">10:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="11:00" onclick="selectTime(this)">11:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="11:30" onclick="selectTime(this)">11:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="12:00" onclick="selectTime(this)">12:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="12:30" onclick="selectTime(this)">12:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="13:00" onclick="selectTime(this)">13:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="13:30" onclick="selectTime(this)">13:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="14:00" onclick="selectTime(this)">14:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="14:30" onclick="selectTime(this)">14:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="15:00" onclick="selectTime(this)">15:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="15:30" onclick="selectTime(this)">15:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="16:00" onclick="selectTime(this)">16:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="16:30" onclick="selectTime(this)">16:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="17:00" onclick="selectTime(this)">17:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="17:30" onclick="selectTime(this)">17:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="18:00" onclick="selectTime(this)">18:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="18:30" onclick="selectTime(this)">18:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="19:00" onclick="selectTime(this)">19:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="19:30" onclick="selectTime(this)">19:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="20:00" onclick="selectTime(this)">20:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="20:30" onclick="selectTime(this)">20:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="21:00" onclick="selectTime(this)">21:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="21:30" onclick="selectTime(this)">21:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="22:00" onclick="selectTime(this)">22:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="22:30" onclick="selectTime(this)">22:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="23:00" onclick="selectTime(this)">23:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="23:30" onclick="selectTime(this)">23:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="00:00" onclick="selectTime(this)">00:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="00:30" onclick="selectTime(this)">00:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="01:00" onclick="selectTime(this)">01:00</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="01:30" onclick="selectTime(this)">01:30</button>
+                        <button class="time-btn py-3 rounded-2xl" data-time="02:00" onclick="selectTime(this)">02:00</button>
                     </div>
-
                 </div>
 
-                <!-- CONFIRM -->
-                <button
-                    onclick="submitBooking()"
-                    class="w-full py-4 rounded-2xl bg-[#D4AF37] text-black font-bold smooth"
-                >
+                <button onclick="submitBooking()" class="w-full py-5 rounded-[1.8rem] bg-[#D4AF37] text-black font-black text-lg">
                     確認送出預約
                 </button>
 
             </div>
-
         </section>
-
     </main>
 
-    <!-- BOTTOM NAV -->
-    <nav class="fixed bottom-0 left-0 right-0 border-t border-zinc-900 bg-[#0A0A0A]/95 backdrop-blur">
-
+    <nav class="fixed bottom-0 left-0 right-0 border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl">
         <div class="max-w-md mx-auto flex justify-around py-4">
-
-            <button
-                onclick="navTo('page-home')"
-                class="flex flex-col items-center text-xs text-zinc-300"
-            >
-                <i class="fa-solid fa-house mb-2"></i>
-                首頁
+            <button onclick="navTo('page-home')" class="flex flex-col items-center text-xs text-zinc-300">
+                <i class="fa-solid fa-house mb-2"></i>首頁
             </button>
 
-            <button
-                onclick="navTo('page-records')"
-                class="flex flex-col items-center text-xs text-zinc-300"
-            >
-                <i class="fa-solid fa-file-lines mb-2"></i>
-                紀錄
+            <button onclick="navTo('page-records')" class="flex flex-col items-center text-xs text-zinc-300">
+                <i class="fa-solid fa-file-lines mb-2"></i>紀錄
             </button>
 
-            <button
-                onclick="navTo('page-booking')"
-                class="flex flex-col items-center text-xs text-zinc-300"
-            >
-                <i class="fa-solid fa-calendar mb-2"></i>
-                預約
+            <button onclick="navTo('page-booking')" class="flex flex-col items-center text-xs text-zinc-300">
+                <i class="fa-solid fa-calendar mb-2"></i>預約
             </button>
-
         </div>
-
     </nav>
 
     <script>
-
-        /*
-        ==========================
-        GLOBAL STATE
-        ==========================
-        */
-
         const bookingState = {
             service: null,
             date: null,
             time: null
         };
 
-        /*
-        ==========================
-        PAGE NAVIGATION
-        ==========================
-        */
-
         function navTo(pageId) {
-
-            const pages = document.querySelectorAll('.page-content');
-
-            pages.forEach(page => {
+            document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.remove('active');
             });
 
             document.getElementById(pageId).classList.add('active');
         }
 
-        /*
-        ==========================
-        BOOKING STEP CONTROL
-        ==========================
-        */
-
         function showBookingStep(stepId) {
-
-            const steps = document.querySelectorAll('.booking-step');
-
-            steps.forEach(step => {
+            document.querySelectorAll('.booking-step').forEach(step => {
                 step.classList.remove('active');
             });
 
             document.getElementById(stepId).classList.add('active');
         }
 
-        /*
-        ==========================
-        SELECT SERVICE
-        ==========================
-        */
-
         function selectService(serviceName) {
-
             bookingState.service = serviceName;
+            bookingState.date = null;
+            bookingState.time = null;
 
-            document.getElementById('selected-service').textContent =
-                serviceName;
+            document.getElementById('selected-service').textContent = serviceName;
 
+            clearSelectedSlots();
+            setupDateButtons();
             showBookingStep('booking-step2');
         }
 
-        /*
-        ==========================
-        BACK STEP
-        ==========================
-        */
-
         function backToStep1() {
-
             showBookingStep('booking-step1');
         }
 
-        /*
-        ==========================
-        SELECT DATE
-        ==========================
-        */
+        function clearSelectedSlots() {
+            document.querySelectorAll('.date-btn').forEach(btn => {
+                btn.classList.remove('selected-slot');
+            });
 
-        function selectDate(button, date) {
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('selected-slot');
+            });
+        }
 
-            bookingState.date = date;
+        function setupDateButtons() {
+            const today = new Date();
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+
+                const btn = document.getElementById('date-btn-' + i);
+
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                const weekText = getWeekText(date.getDay());
+
+                btn.textContent = month + '/' + day + ' ' + weekText;
+                btn.dataset.date = formatDate(date);
+                btn.style.display = 'block';
+            }
+
+            filterTimeButtons();
+        }
+
+        function getWeekText(day) {
+            const weeks = ['日', '一', '二', '三', '四', '五', '六'];
+            return weeks[day];
+        }
+
+        function formatDate(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+
+            return y + '-' + m + '-' + d;
+        }
+
+        function selectDate(button) {
+            bookingState.date = button.dataset.date;
+            bookingState.time = null;
 
             document.querySelectorAll('.date-btn').forEach(btn => {
                 btn.classList.remove('selected-slot');
             });
 
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('selected-slot');
+            });
+
             button.classList.add('selected-slot');
+
+            filterTimeButtons();
         }
 
-        /*
-        ==========================
-        SELECT TIME
-        ==========================
-        */
-
-        function selectTime(button, time) {
-
-            bookingState.time = time;
+        function selectTime(button) {
+            bookingState.time = button.dataset.time;
 
             document.querySelectorAll('.time-btn').forEach(btn => {
                 btn.classList.remove('selected-slot');
@@ -550,14 +396,50 @@
             button.classList.add('selected-slot');
         }
 
-        /*
-        ==========================
-        SUBMIT BOOKING
-        ==========================
-        */
+        function filterTimeButtons() {
+            const now = new Date();
+            const minimumTime = new Date(now.getTime() + 60 * 60 * 1000);
+
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.style.display = 'block';
+            });
+
+            if (!bookingState.date) {
+                return;
+            }
+
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                const slotDate = getSlotDateTime(bookingState.date, btn.dataset.time);
+
+                if (slotDate < minimumTime) {
+                    btn.style.display = 'none';
+                } else {
+                    btn.style.display = 'block';
+                }
+            });
+        }
+
+        function getSlotDateTime(dateString, timeString) {
+            const parts = dateString.split('-');
+            const timeParts = timeString.split(':');
+
+            let year = Number(parts[0]);
+            let month = Number(parts[1]) - 1;
+            let day = Number(parts[2]);
+
+            let hour = Number(timeParts[0]);
+            let minute = Number(timeParts[1]);
+
+            const slotDate = new Date(year, month, day, hour, minute, 0);
+
+            if (hour >= 0 && hour <= 2) {
+                slotDate.setDate(slotDate.getDate() + 1);
+            }
+
+            return slotDate;
+        }
 
         function submitBooking() {
-
             if (!bookingState.service) {
                 alert('請選擇服務項目');
                 return;
@@ -573,8 +455,6 @@
                 return;
             }
 
-            console.log('Booking Data:', bookingState);
-
             alert(
                 '預約成功！\n\n' +
                 '項目：' + bookingState.service + '\n' +
@@ -583,16 +463,8 @@
             );
         }
 
-        /*
-        ==========================
-        LIFF INIT
-        ==========================
-        */
-
         async function initLiff() {
-
             try {
-
                 await liff.init({
                     liffId: "2010173212-2gFbVMbf"
                 });
@@ -603,41 +475,20 @@
                 }
 
                 const profile = await liff.getProfile();
-
                 updateUserUI(profile);
 
             } catch (err) {
-
                 console.error('LIFF INIT ERROR:', err);
-
             }
-
         }
-
-        /*
-        ==========================
-        UPDATE USER UI
-        ==========================
-        */
 
         function updateUserUI(profile) {
-
-            document.getElementById('user-name').textContent =
-                profile.displayName;
-
-            document.getElementById('user-avatar').src =
-                profile.pictureUrl;
-
+            document.getElementById('user-name').textContent = profile.displayName;
+            document.getElementById('user-avatar').src = profile.pictureUrl;
         }
 
-        /*
-        ==========================
-        START
-        ==========================
-        */
-
+        setupDateButtons();
         initLiff();
-
     </script>
 
 </body>
