@@ -410,7 +410,7 @@ body{
     </div>
 </div>
 
-<nav class="fixed bottom-0 left-0 right-0 border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl">
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl">
     <div class="max-w-md mx-auto flex justify-around py-4">
         <button onclick="navTo('page-home')" class="flex flex-col items-center text-xs text-zinc-300">
             <i class="fa-solid fa-house mb-2"></i>首頁
@@ -425,6 +425,10 @@ body{
 </nav>
 
 <script>
+const urlParams=new URLSearchParams(window.location.search);
+const isStaffMode=urlParams.get('mode')==='staff';
+const staffTargetUid=urlParams.get('uid');
+
 const memberState={
     lineUserId:'test-user',
     freeFaceUsedCount:1,
@@ -456,6 +460,57 @@ function navTo(pageId){
     }
 }
 
+function getCountKey(){
+    return 'iauriFreeFaceCount_'+memberState.lineUserId;
+}
+
+function getStoredFreeFaceCount(){
+    const saved=localStorage.getItem(getCountKey());
+
+    if(saved===null){
+        return memberState.freeFaceUsedCount;
+    }
+
+    return Number(saved);
+}
+
+function saveFreeFaceCount(count){
+    localStorage.setItem(getCountKey(),String(count));
+    memberState.freeFaceUsedCount=count;
+}
+
+function enterStaffMode(uid){
+    memberState.lineUserId=uid;
+    document.body.classList.remove('pb-28');
+    document.getElementById('bottom-nav').style.display='none';
+    navTo('page-staff-record');
+}
+
+function updateStaffRecordUI(){
+    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
+
+    document.getElementById('staff-target-id').textContent=memberState.lineUserId;
+    document.getElementById('staff-current-count').textContent=
+        memberState.freeFaceUsedCount+' / '+memberState.freeFaceTotalCount;
+}
+
+function completeFreeFaceTreatment(){
+    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
+
+    if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
+        alert('此會員已完成 8 次免費小臉體驗。');
+        updateStaffRecordUI();
+        return;
+    }
+
+    const nextCount=memberState.freeFaceUsedCount+1;
+
+    saveFreeFaceCount(nextCount);
+    updateStaffRecordUI();
+
+    alert('已完成本次小臉調理，目前進度：'+nextCount+' / '+memberState.freeFaceTotalCount);
+}
+
 function openNameEditor(){
     document.getElementById('custom-name-input').value=document.getElementById('user-name').textContent;
     document.getElementById('name-editor').style.display='block';
@@ -479,27 +534,12 @@ function saveCustomName(){
     closeNameEditor();
 }
 
-function getStoredFreeFaceCount(){
-    const saved=localStorage.getItem('iauriFreeFaceCount');
-
-    if(saved===null){
-        return memberState.freeFaceUsedCount;
-    }
-
-    return Number(saved);
-}
-
-function saveFreeFaceCount(count){
-    localStorage.setItem('iauriFreeFaceCount',String(count));
-    memberState.freeFaceUsedCount=count;
-}
-
 function updateFreeFaceProgress(){
+    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
+
     const area=document.getElementById('free-face-progress-area');
     const countText=document.getElementById('free-face-count');
     const bar=document.getElementById('free-face-progress-bar');
-
-    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
 
     if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
         area.style.display='none';
@@ -523,35 +563,6 @@ function updateFreeServiceOption(){
     }else{
         option.style.display='block';
     }
-}
-
-function updateStaffRecordUI(){
-    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
-
-    document.getElementById('staff-target-id').textContent=memberState.lineUserId;
-    document.getElementById('staff-current-count').textContent=
-        memberState.freeFaceUsedCount+' / '+memberState.freeFaceTotalCount;
-}
-
-function completeFreeFaceTreatment(){
-    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
-
-    if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
-        alert('此會員已完成 8 次免費小臉體驗。');
-        updateFreeFaceProgress();
-        updateFreeServiceOption();
-        updateStaffRecordUI();
-        return;
-    }
-
-    const nextCount=memberState.freeFaceUsedCount+1;
-
-    saveFreeFaceCount(nextCount);
-    updateFreeFaceProgress();
-    updateFreeServiceOption();
-    updateStaffRecordUI();
-
-    alert('已完成本次小臉調理，目前進度：'+nextCount+' / '+memberState.freeFaceTotalCount);
 }
 
 function updatePointsUI(){
@@ -778,18 +789,12 @@ function submitBooking(){
     );
 }
 
-function checkStaffMode(){
-    const params=new URLSearchParams(window.location.search);
-    const mode=params.get('mode');
-    const uid=params.get('uid');
-
-    if(mode==='staff'&&uid){
-        memberState.lineUserId=uid;
-        navTo('page-staff-record');
-    }
-}
-
 async function initLiff(){
+    if(isStaffMode&&staffTargetUid){
+        enterStaffMode(staffTargetUid);
+        return;
+    }
+
     try{
         await liff.init({
             liffId:"2010173212-2gFbVMbf"
@@ -803,13 +808,16 @@ async function initLiff(){
         const profile=await liff.getProfile();
         memberState.lineUserId=profile.userId;
         updateUserUI(profile);
+        updateFreeFaceProgress();
+        updateFreeServiceOption();
         renderMemberQr();
-        checkStaffMode();
 
     }catch(err){
         console.error('LIFF INIT ERROR:',err);
+        document.getElementById('user-name').textContent='測試會員';
+        updateFreeFaceProgress();
+        updateFreeServiceOption();
         renderMemberQr();
-        checkStaffMode();
     }
 }
 
@@ -825,8 +833,6 @@ function updateUserUI(profile){
     document.getElementById('user-avatar').src=profile.pictureUrl;
 }
 
-updateFreeFaceProgress();
-updateFreeServiceOption();
 updatePointsUI();
 setupDateButtons();
 initLiff();
