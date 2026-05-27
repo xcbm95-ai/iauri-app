@@ -172,7 +172,7 @@ body{
         <div class="mt-6 relative z-10 flex items-center justify-between gap-4">
             <div>
                 <p class="text-xs gold-text tracking-[0.25em] mb-1">MEMBER QR</p>
-                <p class="text-xs text-zinc-500">員工掃描後可快速完成調理紀錄</p>
+                <p class="text-xs text-zinc-500">調理師掃描後可快速完成調理紀錄</p>
             </div>
 
             <button onclick="openQrModal()" class="bg-white p-2 rounded-2xl">
@@ -216,8 +216,8 @@ body{
 </section>
 
 <section id="page-staff-record" class="page-content">
-    <p class="text-[10px] tracking-[0.35em] gold-text mb-2">STAFF QUICK RECORD</p>
-    <h2 class="text-2xl font-black mb-6">員工快速紀錄</h2>
+    <p class="text-[10px] tracking-[0.35em] gold-text mb-2">THERAPIST QUICK RECORD</p>
+    <h2 class="text-2xl font-black mb-6">調理師快速紀錄</h2>
 
     <div class="gold-card rounded-[2rem] p-6 mb-5">
         <p class="text-xs text-zinc-500 mb-2">會員識別碼</p>
@@ -250,9 +250,69 @@ body{
         </div>
     </div>
 
+    <div class="glass-card rounded-[1.8rem] p-6 mb-5">
+        <p class="font-black text-xl mb-4">積分紀錄</p>
+
+        <div class="space-y-4">
+            <div class="flex justify-between border-b border-white/5 pb-3">
+                <div>
+                    <p id="points-record-title" class="font-bold">目前尚無積分紀錄</p>
+                    <p id="points-record-date" class="text-xs text-zinc-500">POINTS HISTORY</p>
+                </div>
+                <p id="points-record-value" class="gold-text font-black">+0</p>
+            </div>
+        </div>
+    </div>
+
     <div class="glass-card rounded-[1.8rem] p-6">
         <p class="font-black text-xl mb-3">如何獲取積分</p>
-        <p class="text-sm text-zinc-500 leading-7">此區塊預留給未來積分規則。</p>
+        <p class="text-sm text-zinc-500 leading-7">
+            可透過分享任務、推薦好友、完成調理、活動任務等方式獲取積分。
+        </p>
+    </div>
+</section>
+
+<section id="page-missions" class="page-content">
+    <p class="text-[10px] tracking-[0.35em] gold-text mb-2">MISSION CENTER</p>
+    <h2 class="text-2xl font-black mb-6">任務中心</h2>
+
+    <div class="gold-card rounded-[2rem] p-6 mb-5">
+        <p class="text-xs tracking-[0.25em] gold-text mb-3">TODAY MISSION</p>
+        <h3 class="text-2xl font-black mb-2">分享耳顏所</h3>
+        <p class="text-sm text-zinc-400 leading-7 mb-5">
+            每日分享一次，可獲得積分獎勵。正式版將接 Firebase 紀錄，避免重複領取。
+        </p>
+
+        <div class="flex items-center justify-between mb-5">
+            <p class="text-zinc-400">任務獎勵</p>
+            <p class="text-3xl font-black gold-text">+5 PTS</p>
+        </div>
+
+        <button id="daily-share-mission-btn" onclick="completeShareMission()" class="w-full py-5 rounded-[1.8rem] bg-[#D4AF37] text-black font-black text-lg">
+            分享並領取積分
+        </button>
+
+        <p id="daily-share-mission-status" class="text-xs text-zinc-500 mt-4">
+            今日尚未完成。
+        </p>
+    </div>
+
+    <div class="glass-card rounded-[1.8rem] p-6 mb-5">
+        <p class="font-black text-xl mb-3">推薦好友任務</p>
+        <p class="text-sm text-zinc-500 leading-7 mb-5">
+            分享好友加入耳顏所官方 LINE。未來可設定好友成功加入後自動加分。
+        </p>
+
+        <button onclick="shareReferral()" class="w-full py-4 rounded-[1.5rem] bg-white/10 text-white font-black">
+            分享好友連結
+        </button>
+    </div>
+
+    <div class="glass-card rounded-[1.8rem] p-6">
+        <p class="font-black text-xl mb-3">任務規則預留區</p>
+        <p class="text-sm text-zinc-500 leading-7">
+            未來可新增 IG 限動、Google 評論、Threads 分享、小紅書打卡、完成第 8 次調理等任務。
+        </p>
     </div>
 </section>
 
@@ -269,15 +329,6 @@ body{
             <p class="font-black text-xl mb-2">調理前後對比相簿</p>
             <p class="text-sm text-zinc-500">BEFORE & AFTER</p>
         </div>
-    </div>
-</section>
-
-<section id="page-activity" class="page-content">
-    <p class="text-[10px] tracking-[0.35em] gold-text mb-2">ACTIVITY</p>
-    <h2 class="text-2xl font-black mb-6">最新活動</h2>
-    <div class="glass-card rounded-[1.8rem] p-6">
-        <p class="font-black text-xl mb-3">活動公告預留區</p>
-        <p class="text-sm text-zinc-500 leading-7">未來可放置店內活動、限時優惠、新會員任務。</p>
     </div>
 </section>
 
@@ -404,7 +455,7 @@ body{
             <div id="member-qr-large" class="qr-large"></div>
         </div>
 
-        <p class="text-xs text-zinc-500 mb-5">請提供給員工掃描，快速完成本次調理紀錄。</p>
+        <p class="text-xs text-zinc-500 mb-5">請提供給調理師掃描，快速完成本次調理紀錄。</p>
 
         <button onclick="closeQrModal()" class="w-full py-4 rounded-[1.5rem] bg-[#D4AF37] text-black font-black">關閉</button>
     </div>
@@ -415,8 +466,8 @@ body{
         <button onclick="navTo('page-home')" class="flex flex-col items-center text-xs text-zinc-300">
             <i class="fa-solid fa-house mb-2"></i>首頁
         </button>
-        <button onclick="navTo('page-activity')" class="flex flex-col items-center text-xs text-zinc-300">
-            <i class="fa-solid fa-bullhorn mb-2"></i>活動
+        <button onclick="navTo('page-missions')" class="flex flex-col items-center text-xs text-zinc-300">
+            <i class="fa-solid fa-bullhorn mb-2"></i>任務
         </button>
         <button onclick="navTo('page-support')" class="flex flex-col items-center text-xs text-zinc-300">
             <i class="fa-solid fa-headset mb-2"></i>客服
@@ -458,25 +509,79 @@ function navTo(pageId){
     if(pageId==='page-staff-record'){
         updateStaffRecordUI();
     }
+
+    if(pageId==='page-points'){
+        updatePointsUI();
+        updatePointsRecordUI();
+    }
+
+    if(pageId==='page-missions'){
+        updateMissionUI();
+    }
 }
 
 function getCountKey(){
     return 'iauriFreeFaceCount_'+memberState.lineUserId;
 }
 
+function getPointsKey(){
+    return 'iauriPoints_'+memberState.lineUserId;
+}
+
+function getMissionKey(){
+    const today=new Date();
+    const y=today.getFullYear();
+    const m=String(today.getMonth()+1).padStart(2,'0');
+    const d=String(today.getDate()).padStart(2,'0');
+    return 'iauriMissionShare_'+memberState.lineUserId+'_'+y+m+d;
+}
+
+function getPointsRecordTitleKey(){
+    return 'iauriPointsRecordTitle_'+memberState.lineUserId;
+}
+
+function getPointsRecordDateKey(){
+    return 'iauriPointsRecordDate_'+memberState.lineUserId;
+}
+
+function getPointsRecordValueKey(){
+    return 'iauriPointsRecordValue_'+memberState.lineUserId;
+}
+
 function getStoredFreeFaceCount(){
     const saved=localStorage.getItem(getCountKey());
-
-    if(saved===null){
-        return memberState.freeFaceUsedCount;
-    }
-
+    if(saved===null){ return memberState.freeFaceUsedCount; }
     return Number(saved);
 }
 
 function saveFreeFaceCount(count){
     localStorage.setItem(getCountKey(),String(count));
     memberState.freeFaceUsedCount=count;
+}
+
+function getStoredPoints(){
+    const saved=localStorage.getItem(getPointsKey());
+    if(saved===null){ return 0; }
+    return Number(saved);
+}
+
+function savePoints(points){
+    localStorage.setItem(getPointsKey(),String(points));
+    memberState.pointsTotal=points;
+}
+
+function addPoints(value,title){
+    const current=getStoredPoints();
+    const next=current+value;
+    const now=new Date();
+
+    savePoints(next);
+    localStorage.setItem(getPointsRecordTitleKey(),title);
+    localStorage.setItem(getPointsRecordDateKey(),now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate());
+    localStorage.setItem(getPointsRecordValueKey(),'+'+value);
+
+    updatePointsUI();
+    updatePointsRecordUI();
 }
 
 function enterStaffMode(uid){
@@ -566,7 +671,20 @@ function updateFreeServiceOption(){
 }
 
 function updatePointsUI(){
+    memberState.pointsTotal=getStoredPoints();
     document.getElementById('points-total').textContent=memberState.pointsTotal;
+}
+
+function updatePointsRecordUI(){
+    const title=localStorage.getItem(getPointsRecordTitleKey());
+    const date=localStorage.getItem(getPointsRecordDateKey());
+    const value=localStorage.getItem(getPointsRecordValueKey());
+
+    if(title){
+        document.getElementById('points-record-title').textContent=title;
+        document.getElementById('points-record-date').textContent=date;
+        document.getElementById('points-record-value').textContent=value;
+    }
 }
 
 function buildStaffQrUrl(){
@@ -622,6 +740,55 @@ async function shareReferral(){
         }
     }else{
         alert('推薦連結：https://lin.ee/vxi3sZ4');
+    }
+}
+
+async function completeShareMission(){
+    const missionKey=getMissionKey();
+
+    if(localStorage.getItem(missionKey)==='done'){
+        alert('今日分享任務已完成，明天再來領取。');
+        updateMissionUI();
+        return;
+    }
+
+    const shareData={
+        title:'耳顏所 IAURI BEAUTY CLUB',
+        text:'我正在使用耳顏所會員系統，推薦你一起加入。',
+        url:'https://lin.ee/vxi3sZ4'
+    };
+
+    if(navigator.share){
+        try{
+            await navigator.share(shareData);
+        }catch(err){
+            console.log('Share cancelled or failed:',err);
+            return;
+        }
+    }else{
+        alert('分享連結：https://lin.ee/vxi3sZ4');
+    }
+
+    localStorage.setItem(missionKey,'done');
+    addPoints(5,'每日分享任務');
+    updateMissionUI();
+
+    alert('任務完成，已獲得 +5 積分。');
+}
+
+function updateMissionUI(){
+    const missionKey=getMissionKey();
+    const btn=document.getElementById('daily-share-mission-btn');
+    const status=document.getElementById('daily-share-mission-status');
+
+    if(localStorage.getItem(missionKey)==='done'){
+        btn.textContent='今日已完成';
+        btn.style.opacity='0.55';
+        status.textContent='今日分享任務已完成。';
+    }else{
+        btn.textContent='分享並領取積分';
+        btn.style.opacity='1';
+        status.textContent='今日尚未完成。';
     }
 }
 
@@ -810,6 +977,7 @@ async function initLiff(){
         updateUserUI(profile);
         updateFreeFaceProgress();
         updateFreeServiceOption();
+        updatePointsUI();
         renderMemberQr();
 
     }catch(err){
@@ -817,6 +985,7 @@ async function initLiff(){
         document.getElementById('user-name').textContent='測試會員';
         updateFreeFaceProgress();
         updateFreeServiceOption();
+        updatePointsUI();
         renderMemberQr();
     }
 }
