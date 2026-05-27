@@ -25,7 +25,7 @@
         <div id="home-tab" class="tab-content space-y-6">
             <div class="bg-gradient-to-br from-zinc-900 to-black rounded-3xl p-6 border border-zinc-800">
                 <div class="flex items-center space-x-4 mb-6">
-                    <div class="w-14 h-14 rounded-full border-2 border-[#D4AF37]/50 overflow-hidden bg-zinc-800 shadow-xl">
+                    <div class="w-14 h-14 rounded-full border-2 border-[#D4AF37]/50 overflow-hidden bg-zinc-800 shadow-xl shrink-0">
                         <img id="user-avatar" src="" alt="頭像" class="w-full h-full object-cover">
                     </div>
                     <div>
@@ -38,15 +38,21 @@
                 </div>
                 
                 <div class="space-y-2">
-                    <div class="flex justify-between text-xs"><span>小臉養成計畫 (已預約 0/8 次)</span><span>0%</span></div>
+                    <div class="flex justify-between text-xs text-zinc-400"><span>小臉養成計畫 (已預約 0/8 次)</span><span>0%</span></div>
                     <div class="h-2 bg-zinc-800 rounded-full overflow-hidden"><div class="h-full bg-[#D4AF37] w-[0%]"></div></div>
+                </div>
+                
+                <div class="flex justify-between mt-6 text-center text-sm">
+                    <div><p class="text-lg font-bold">0</p><p class="text-[10px] text-zinc-500">點數</p></div>
+                    <div><p class="text-lg font-bold">0</p><p class="text-[10px] text-zinc-500">次數</p></div>
+                    <div><p class="text-lg font-bold">0</p><p class="text-[10px] text-zinc-500">獎勵</p></div>
                 </div>
             </div>
             
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="showTab('booking')" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-calendar mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">立即預約</p></button>
+                <button onclick="showTab('booking')" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left hover:border-[#D4AF37]/50 transition-colors"><i class="fa-solid fa-calendar mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">立即預約</p></button>
                 <button class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-id-card mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">會員卡</p></button>
-                <button onclick="showTab('records')" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-file-lines mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">小臉紀錄</p></button>
+                <button onclick="showTab('records')" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left hover:border-[#D4AF37]/50 transition-colors"><i class="fa-solid fa-file-lines mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">小臉紀錄</p></button>
                 <button class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-link mb-2 text-[#D4AF37]"></i><p class="text-sm font-bold">推薦好友</p></button>
             </div>
         </div>
@@ -58,15 +64,11 @@
                     <i class="fa-solid fa-file-lines text-[#D4AF37] text-xl mb-2"></i>
                     <h3 class="font-bold">一般調理紀錄</h3>
                 </button>
-                <button onclick="showSubTab('photo-view')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left">
-                    <i class="fa-solid fa-camera text-[#D4AF37] text-xl mb-2"></i>
-                    <h3 class="font-bold">小臉變化對比相簿</h3>
-                </button>
             </div>
         </div>
-        
-        <div id="booking-tab" class="tab-content hidden text-center py-10">
-            <p class="text-zinc-500">預約功能區塊</p>
+
+        <div id="booking-tab" class="tab-content hidden">
+             <h2 class="text-lg font-bold mb-4">預約新理療</h2>
         </div>
     </main>
 
