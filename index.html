@@ -104,14 +104,19 @@
                     </div>
                 </div>
 
-                <div class="mt-6 relative z-10">
+                <div id="free-face-progress-area" class="mt-6 relative z-10">
                     <div class="flex justify-between text-xs text-zinc-400 mb-2">
-                        <span>MEMBER LEVEL</span>
-                        <span class="gold-text">72%</span>
+                        <span>免費瘦小臉體驗 FREE FACE</span>
+                        <span id="free-face-count" class="gold-text">1 / 8 次</span>
                     </div>
+
                     <div class="w-full h-2 rounded-full bg-black/40 overflow-hidden">
-                        <div class="h-full w-[72%] bg-[#D4AF37] rounded-full"></div>
+                        <div id="free-face-progress-bar" class="h-full bg-[#D4AF37] rounded-full w-[12.5%]"></div>
                     </div>
+
+                    <p class="text-[11px] text-zinc-500 mt-3">
+                        完成 8 次體驗後，此進度將自動隱藏。
+                    </p>
                 </div>
             </div>
 
@@ -131,10 +136,10 @@
                     <p class="text-[10px] tracking-[0.22em] text-zinc-500">BOOKING</p>
                 </button>
 
-                <button class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
-                    <i class="fa-solid fa-id-card text-2xl gold-text mb-8"></i>
-                    <p class="font-black text-xl mb-1">會員卡</p>
-                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">MEMBER CARD</p>
+                <button onclick="navTo('page-points')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
+                    <i class="fa-solid fa-coins text-2xl gold-text mb-8"></i>
+                    <p class="font-black text-xl mb-1">積分</p>
+                    <p class="text-[10px] tracking-[0.22em] text-zinc-500">POINTS</p>
                 </button>
 
                 <button onclick="navTo('page-records')" class="menu-card rounded-[1.8rem] p-6 text-left smooth active:scale-95">
@@ -148,6 +153,49 @@
                     <p class="font-black text-xl mb-1">推薦好友</p>
                     <p class="text-[10px] tracking-[0.22em] text-zinc-500">REFERRAL</p>
                 </button>
+            </div>
+        </section>
+
+        <!-- POINTS -->
+        <section id="page-points" class="page-content">
+            <p class="text-[10px] tracking-[0.35em] gold-text mb-2">POINTS CENTER</p>
+            <h2 class="text-2xl font-black mb-6">積分中心</h2>
+
+            <div class="gold-card rounded-[2rem] p-6 mb-5">
+                <p class="text-xs tracking-[0.25em] gold-text mb-3">CURRENT POINTS</p>
+                <div class="flex items-end gap-2">
+                    <p id="points-total" class="text-5xl font-black">0</p>
+                    <p class="text-zinc-400 mb-2">PTS</p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-[1.8rem] p-6 mb-5">
+                <p class="font-black text-xl mb-4">積分紀錄</p>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between border-b border-white/5 pb-3">
+                        <div>
+                            <p class="font-bold">首次加入會員</p>
+                            <p class="text-xs text-zinc-500">WELCOME BONUS</p>
+                        </div>
+                        <p class="gold-text font-black">+0</p>
+                    </div>
+
+                    <div class="flex justify-between border-b border-white/5 pb-3">
+                        <div>
+                            <p class="font-bold">預留紀錄欄位</p>
+                            <p class="text-xs text-zinc-500">POINTS RECORD</p>
+                        </div>
+                        <p class="gold-text font-black">+0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-[1.8rem] p-6">
+                <p class="font-black text-xl mb-3">如何獲取積分</p>
+                <p class="text-sm text-zinc-500 leading-7">
+                    此區塊預留給未來積分規則，例如：完成預約、推薦好友、回訪體驗、活動任務等。
+                </p>
             </div>
         </section>
 
@@ -175,7 +223,6 @@
             <p class="text-[10px] tracking-[0.35em] gold-text mb-2">RESERVATION</p>
             <h2 class="text-2xl font-black mb-6">預約新理療</h2>
 
-            <!-- STEP 1 -->
             <div id="booking-step1" class="booking-step active space-y-4">
 
                 <button onclick="selectService('免費兩個月瘦小臉計畫')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
@@ -195,7 +242,6 @@
 
             </div>
 
-            <!-- STEP 2 -->
             <div id="booking-step2" class="booking-step">
 
                 <button onclick="backToStep1()" class="text-zinc-500 underline mb-5">
@@ -287,6 +333,12 @@
     </nav>
 
     <script>
+        const memberState = {
+            freeFaceUsedCount: 1,
+            freeFaceTotalCount: 8,
+            pointsTotal: 0
+        };
+
         const bookingState = {
             service: null,
             date: null,
@@ -299,6 +351,27 @@
             });
 
             document.getElementById(pageId).classList.add('active');
+        }
+
+        function updateFreeFaceProgress() {
+            const area = document.getElementById('free-face-progress-area');
+            const countText = document.getElementById('free-face-count');
+            const bar = document.getElementById('free-face-progress-bar');
+
+            if (memberState.freeFaceUsedCount >= memberState.freeFaceTotalCount) {
+                area.style.display = 'none';
+                return;
+            }
+
+            const percent = memberState.freeFaceUsedCount / memberState.freeFaceTotalCount * 100;
+
+            area.style.display = 'block';
+            countText.textContent = memberState.freeFaceUsedCount + ' / ' + memberState.freeFaceTotalCount + ' 次';
+            bar.style.width = percent + '%';
+        }
+
+        function updatePointsUI() {
+            document.getElementById('points-total').textContent = memberState.pointsTotal;
         }
 
         function showBookingStep(stepId) {
@@ -487,6 +560,8 @@
             document.getElementById('user-avatar').src = profile.pictureUrl;
         }
 
+        updateFreeFaceProgress();
+        updatePointsUI();
         setupDateButtons();
         initLiff();
     </script>
