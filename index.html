@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>耳顏所會員系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #0A0A0A; color: #F5F5F5; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .tab-btn.active { color: #D4AF37; }
+        /* 核心邏輯：預設隱藏所有頁面，僅 active 顯示 */
+        .page-content { display: none; }
+        .page-content.active { display: block; }
+        .nav-btn.active { color: #D4AF37; }
     </style>
 </head>
 <body class="pb-24">
@@ -23,82 +23,65 @@
 
     <main class="max-w-md w-full mx-auto px-4 py-6">
         
-        <div id="home" class="page active">
-            <div class="bg-zinc-900 rounded-3xl p-6 mb-6">
+        <div id="page-home" class="page-content active">
+            <div class="bg-zinc-900 rounded-3xl p-6 mb-6 border border-zinc-800">
                 <div class="flex items-center space-x-4 mb-4">
-                    <img id="user-avatar" class="w-14 h-14 rounded-full bg-zinc-800">
-                    <div>
-                        <h2 id="user-name" class="font-bold text-lg">載入中...</h2>
-                        <p class="text-xs text-[#D4AF37]">黃金會員</p>
-                    </div>
+                    <div class="w-14 h-14 rounded-full bg-zinc-800 flex items-center justify-center text-xl">👤</div>
+                    <div><h2 class="font-bold text-lg">會員您好</h2><p class="text-xs text-[#D4AF37]">黃金會員</p></div>
                 </div>
-                <div class="w-full bg-zinc-700 h-2 rounded-full overflow-hidden">
-                    <div class="bg-[#D4AF37] h-full w-0%"></div>
-                </div>
-                <p class="text-xs mt-2 text-zinc-400">小臉養成計畫 (已預約 0/8 次)</p>
             </div>
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="switchPage('booking')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left font-bold"><i class="fa-solid fa-calendar mb-2 text-[#D4AF37]"></i><br>立即預約</button>
-                <button class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left font-bold"><i class="fa-solid fa-id-card mb-2 text-[#D4AF37]"></i><br>會員卡</button>
-                <button onclick="switchPage('records')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left font-bold"><i class="fa-solid fa-camera mb-2 text-[#D4AF37]"></i><br>小臉紀錄</button>
-                <button class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left font-bold"><i class="fa-solid fa-link mb-2 text-[#D4AF37]"></i><br>推薦好友</button>
+                <button onclick="navTo('page-booking')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left font-bold">立即預約</button>
+                <button class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left font-bold">會員卡</button>
+                <button onclick="navTo('page-records')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left font-bold">小臉紀錄</button>
+                <button class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left font-bold">推薦好友</button>
             </div>
         </div>
 
-        <div id="records" class="page">
+        <div id="page-records" class="page-content">
             <h2 class="text-lg font-bold mb-4">小臉紀錄</h2>
-            <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 mb-4">
-                <p class="font-bold">一般調理紀錄</p>
-            </div>
-            <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800">
-                <p class="font-bold">調理前後對比相簿</p>
+            <div class="space-y-4">
+                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800">一般調理紀錄</div>
+                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800">調理前後對比相簿</div>
             </div>
         </div>
 
-        <div id="booking" class="page">
+        <div id="page-booking" class="page-content">
             <h2 class="text-lg font-bold mb-4">預約新理療</h2>
-            <div class="space-y-4">
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800">
-                    <p class="font-bold">免費兩個月瘦小臉計畫</p>
-                    <p class="text-xs text-zinc-400 mt-1">專屬會員免費體驗 (限 8 次)</p>
-                </div>
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800">
-                    <p class="font-bold">精準局部體驗</p>
-                    <p class="text-xs text-zinc-400 mt-1">$400</p>
-                </div>
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800">
-                    <p class="font-bold">全息平衡調理</p>
-                    <p class="text-xs text-zinc-400 mt-1">$800</p>
-                </div>
+            <div id="booking-step1" class="space-y-4">
+                <div onclick="showStep2()" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 cursor-pointer">免費兩個月瘦小臉計畫</div>
+                <div onclick="showStep2()" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 cursor-pointer">精準局部體驗 ($400)</div>
+                <div onclick="showStep2()" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 cursor-pointer">全息平衡調理 ($800)</div>
             </div>
-            <button class="w-full mt-6 py-4 bg-[#D4AF37] text-black font-bold rounded-2xl">確認送出預約</button>
+            <div id="booking-step2" class="hidden space-y-4">
+                <button onclick="hideStep2()" class="text-sm text-zinc-500 mb-2 underline">← 返回選擇理療</button>
+                <div class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800">選擇日期與時段的功能已就緒</div>
+                <button class="w-full py-4 bg-[#D4AF37] text-black font-bold rounded-2xl">確認送出預約</button>
+            </div>
         </div>
     </main>
 
     <nav class="fixed bottom-0 w-full bg-[#0A0A0A] border-t border-zinc-900 flex justify-around p-4">
-        <button onclick="switchPage('home')" class="tab-btn active flex flex-col items-center text-xs"><i class="fa-solid fa-house mb-1"></i>首頁</button>
-        <button onclick="switchPage('records')" class="tab-btn flex flex-col items-center text-xs"><i class="fa-solid fa-file-lines mb-1"></i>紀錄</button>
-        <button onclick="switchPage('booking')" class="tab-btn flex flex-col items-center text-xs"><i class="fa-solid fa-calendar mb-1"></i>預約</button>
+        <button onclick="navTo('page-home')" class="nav-btn flex flex-col items-center text-xs"><i class="fa-solid fa-house mb-1"></i>首頁</button>
+        <button onclick="navTo('page-records')" class="nav-btn flex flex-col items-center text-xs"><i class="fa-solid fa-file-lines mb-1"></i>紀錄</button>
+        <button onclick="navTo('page-booking')" class="nav-btn flex flex-col items-center text-xs"><i class="fa-solid fa-calendar mb-1"></i>預約</button>
     </nav>
 
     <script>
-        function switchPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        // 頁面切換
+        function navTo(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
         }
-        async function initLiff() {
-            try {
-                await liff.init({ liffId: "2010173212-2gFbVMbf" });
-                if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    document.getElementById('user-name').innerText = profile.displayName;
-                    document.getElementById('user-avatar').src = profile.pictureUrl;
-                }
-            } catch (err) { console.error(err); }
+        // 預約階段切換
+        function showStep2() {
+            document.getElementById('booking-step1').classList.add('hidden');
+            document.getElementById('booking-step2').classList.remove('hidden');
         }
-        initLiff();
+        function hideStep2() {
+            document.getElementById('booking-step1').classList.remove('hidden');
+            document.getElementById('booking-step2').classList.add('hidden');
+        }
     </script>
 </body>
 </html>
