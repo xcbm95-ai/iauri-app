@@ -22,8 +22,8 @@
             <p class="text-[10px] tracking-[0.2em] text-[#D4AF37] uppercase font-light">M E M B E R</p>
             <h1 class="text-xl font-bold tracking-wide mt-0.5">耳顏所會員系統</h1>
         </div>
-        <div class="relative w-10 h-10 rounded-full border border-[#D4AF37]/30 overflow-hidden bg-zinc-900">
-            <img id="user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="頭像" class="w-full h-full object-cover">
+        <div class="w-10 h-10 rounded-full border border-[#D4AF37]/30 flex items-center justify-center bg-zinc-900">
+            <i class="fa-solid fa-crown text-[#D4AF37] text-lg"></i>
         </div>
     </header>
 
@@ -33,8 +33,8 @@
             <div class="bg-gradient-to-br from-zinc-900 via-zinc-900 to-black rounded-3xl p-6 border border-zinc-800/80 shadow-2xl relative overflow-hidden backdrop-blur-md">
                 <div class="flex items-start justify-between">
                     <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#AA7C11] flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-crown text-black text-xl"></i>
+                        <div class="w-14 h-14 rounded-full border border-[#D4AF37]/30 overflow-hidden bg-zinc-900 shadow-lg">
+                            <img id="user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="頭像" class="w-full h-full object-cover">
                         </div>
                         <div>
                             <h2 id="user-name" class="text-lg font-bold tracking-wide">訪客用戶</h2>
@@ -162,38 +162,13 @@
 
                 <div class="space-y-3">
                     <label class="text-xs text-zinc-400 font-light tracking-wide">選擇預約時段</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <label class="relative flex items-center justify-center p-3 bg-zinc-900/40 rounded-xl border border-zinc-800/60 cursor-pointer select-none transition-all">
-                            <input type="radio" name="time" value="10:00" class="hidden peer" checked>
-                            <span class="text-sm font-medium text-zinc-300 peer-checked:text-amber-500">10:00</span>
-                            <div class="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-amber-500/50 bg-amber-500/[0.02] pointer-events-none"></div>
-                        </label>
-                        <label class="relative flex items-center justify-center p-3 bg-zinc-900/40 rounded-xl border border-zinc-800/60 cursor-pointer select-none transition-all">
-                            <input type="radio" name="time" value="13:30" class="hidden peer">
-                            <span class="text-sm font-medium text-zinc-300 peer-checked:text-amber-500">13:30</span>
-                            <div class="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-amber-500/50 bg-amber-500/[0.02] pointer-events-none"></div>
-                        </label>
-                        <label class="relative flex items-center justify-center p-3 bg-zinc-900/40 rounded-xl border border-zinc-800/60 cursor-pointer select-none transition-all">
-                            <input type="radio" name="time" value="15:00" class="hidden peer">
-                            <span class="text-sm font-medium text-zinc-300 peer-checked:text-amber-500">15:00</span>
-                            <div class="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-amber-500/50 bg-amber-500/[0.02] pointer-events-none"></div>
-                        </label>
-                        <label class="relative flex items-center justify-center p-3 bg-zinc-900/40 rounded-xl border border-zinc-800/60 cursor-pointer select-none transition-all">
-                            <input type="radio" name="time" value="16:30" class="hidden peer">
-                            <span class="text-sm font-medium text-zinc-300 peer-checked:text-amber-500">16:30</span>
-                            <div class="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-amber-500/50 bg-amber-500/[0.02] pointer-events-none"></div>
-                        </label>
-                        <label class="relative flex items-center justify-center p-3 bg-zinc-900/40 rounded-xl border border-zinc-800/60 cursor-pointer select-none transition-all">
-                            <input type="radio" name="time" value="19:00" class="hidden peer">
-                            <span class="text-sm font-medium text-zinc-300 peer-checked:text-amber-500">19:00</span>
-                            <div class="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-amber-500/50 bg-amber-500/[0.02] pointer-events-none"></div>
-                        </label>
-                    </div>
+                    <div id="time-slots-container" class="grid grid-cols-3 gap-3">
+                        </div>
                 </div>
 
                 <input type="hidden" id="selected-service" value="免費兩個月瘦小臉計畫">
                 <input type="hidden" id="selected-date" value="">
-                <input type="hidden" id="selected-time" value="10:00">
+                <input type="hidden" id="selected-time" value="">
 
                 <button type="submit" class="w-full bg-gradient-to-r from-[#AA7C11] via-[#D4AF37] to-[#AA7C11] hover:opacity-90 text-black font-bold py-4 rounded-xl shadow-xl transition-all tracking-wide text-sm">
                     確認送出預約
@@ -252,10 +227,22 @@
             document.querySelectorAll('nav button').forEach(el => el.classList.remove('nav-active'));
             document.getElementById(`nav-${tabId}`).classList.add('nav-active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // 如果切換到預約分頁，重新更新一次時段，防止跨時段的時間差
+            if (tabId === 'booking') {
+                renderTimeSlots();
+            }
         }
 
         // 模擬理療紀錄資料庫
         let appointmentRecords = [];
+
+        // 全域定義營業時段清單（改為30分鐘為一格選項）
+        const ALL_TIME_SLOTS = [
+            "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", 
+            "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", 
+            "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"
+        ];
 
         // 自動渲染未來 7 天的預約日期
         function generateDates() {
@@ -296,18 +283,87 @@
                         activeParent.classList.remove('border-zinc-800/60');
                         activeParent.classList.add('border-amber-500/50', 'bg-amber-500/[0.02]');
                     }
+                    // 日期一換，必須立刻動態重新渲染時間格（如果是今天就要隱藏過去時段）
+                    renderTimeSlots();
                 });
 
                 dateContainer.appendChild(dateBtn);
             }
+            // 初始生成當天時段
+            renderTimeSlots();
         }
 
-        // 綁定療程項目與時段的隱藏欄位同步
+        // 動態渲染時間段邏輯（含30分鐘分格 + 已過時段自動不顯示）
+        function renderTimeSlots() {
+            const slotsContainer = document.getElementById('time-slots-container');
+            slotsContainer.innerHTML = '';
+
+            const selectedDateStr = document.getElementById('selected-date').value;
+            const now = new Date();
+            
+            // 格式化今天的年月日字串 (YYYY-MM-DD)
+            const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const isToday = (selectedDateStr === todayStr);
+
+            let firstValidSlot = null;
+
+            ALL_TIME_SLOTS.forEach(slot => {
+                // 如果是今天，需要比對目前時間，過期則不顯示
+                if (isToday) {
+                    const [slotHour, slotMinute] = slot.split(':').map(Number);
+                    const slotTime = new Date();
+                    slotTime.setHours(slotHour, slotMinute, 0, 0);
+
+                    // 如果此時段已經過去，直接跳過不渲染
+                    if (now >= slotTime) {
+                        return;
+                    }
+                }
+
+                if (!firstValidSlot) {
+                    firstValidSlot = slot;
+                }
+
+                // 渲染可預約的時段按鈕
+                const slotLabel = document.createElement('label');
+                slotLabel.className = "relative flex items-center justify-center p-3 bg-zinc-900/40 rounded-xl border border-zinc-800/60 cursor-pointer select-none transition-all";
+                slotLabel.innerHTML = `
+                    <input type="radio" name="time" value="${slot}" class="hidden peer">
+                    <span class="text-sm font-medium text-zinc-300 peer-checked:text-amber-500">${slot}</span>
+                    <div class="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-amber-500/50 bg-amber-500/[0.02] pointer-events-none"></div>
+                `;
+
+                // 綁定點擊事件，即時更新隱藏欄位
+                slotLabel.querySelector('input').addEventListener('change', function(e) {
+                    if (e.target.checked) {
+                        document.getElementById('selected-time').value = e.target.value;
+                    }
+                });
+
+                slotsContainer.appendChild(slotLabel);
+            });
+
+            // 處理今天所有時段皆已過去的特殊狀況
+            if (!firstValidSlot) {
+                slotsContainer.innerHTML = `
+                    <div class="col-span-3 bg-zinc-900/20 border border-zinc-900 rounded-xl p-4 text-center text-xs text-zinc-500 font-light">
+                        今日可預約時段已全部結束，請選擇其他日期。
+                    </div>`;
+                document.getElementById('selected-time').value = "";
+                return;
+            }
+
+            // 預設自動勾選第一個可選的有效時段
+            const firstInput = slotsContainer.querySelector('input[name="time"]');
+            if (firstInput) {
+                firstInput.checked = true;
+                document.getElementById('selected-time').value = firstValidSlot;
+            }
+        }
+
+        // 綁定療程項目的隱藏欄位同步
         document.querySelectorAll('input[name="service"]').forEach(input => {
             input.addEventListener('change', (e) => { document.getElementById('selected-service').value = e.target.value; });
-        });
-        document.querySelectorAll('input[name="time"]').forEach(input => {
-            input.addEventListener('change', (e) => { document.getElementById('selected-time').value = e.target.value; });
         });
 
         // 檢查並渲染小臉計畫進度條
@@ -354,6 +410,7 @@
             const time = document.getElementById('selected-time').value;
 
             if (!date) { alert('請選擇預約日期！'); return; }
+            if (!time) { alert('請選擇有效的預約時段！'); return; }
 
             // 新增至本地紀錄
             appointmentRecords.unshift({ service, date, time });
@@ -361,21 +418,9 @@
 
             // 重設表單狀態與畫面更新
             document.querySelectorAll('input[name="service"]')[0].checked = true;
-            document.querySelectorAll('input[name="time"]')[0].checked = true;
             document.getElementById('selected-service').value = '免費兩個月瘦小臉計畫';
-            document.getElementById('selected-time').value = '10:00';
-            document.querySelectorAll('input[name="booking_date_radio"]').forEach((btn, idx) => {
-                const parent = btn.parentElement;
-                parent.classList.remove('border-amber-500/50', 'bg-amber-500/[0.02]');
-                parent.classList.add('border-zinc-800/60');
-                if(idx === 0) {
-                    btn.checked = true;
-                    parent.classList.remove('border-zinc-800/60');
-                    parent.classList.add('border-amber-500/50', 'bg-amber-500/[0.02]');
-                    document.getElementById('selected-date').value = btn.value;
-                }
-            });
-
+            
+            generateDates(); // 重新產生日期與時段格
             checkFreePlanStatus();
             loadRecords();
             showTab('home');
