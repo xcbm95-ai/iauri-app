@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="bg-[#0A0A0A]">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0A0A0A"/>
+    <title>耳顏所會員系統</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        /* 隱藏滾動條但保持功能 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-[#0A0A0A] text-[#F5F5F5] antialiased min-h-screen flex flex-col justify-between pb-20 select-none">
+
+    <div class="fixed inset-0 opacity-30 pointer-events-none z-0">
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-[#D4AF37] opacity-10 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#C9A227] opacity-10 blur-[120px] rounded-full"></div>
+    </div>
+
+    <main class="relative z-10 flex-1 p-4 no-scrollbar overflow-y-auto">
+        
+        <header class="relative z-10 pb-4 flex items-center justify-between border-b border-zinc-800/50 mb-4">
+            <div>
+                <div class="text-xs tracking-[0.35em] uppercase text-[#C9A227] font-medium">MEMBER</div>
+                <h1 class="text-xl font-light mt-1 text-white tracking-wide">耳顏所會員系統</h1>
+            </div>
+            <div class="relative">
+                <img id="user-avatar" class="w-10 h-10 rounded-full border border-[#D4AF37]/40 p-0.5 bg-zinc-900" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User Avatar" />
+                <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#0A0A0A]"></div>
+            </div>
+        </header>
+
+        <section id="page-home" class="page-content space-y-4">
+            <div class="bg-gradient-to-br from-zinc-900 via-zinc-900 to-black p-5 rounded-2xl border border-zinc-800/80 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 blur-[40px] rounded-full"></div>
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700">
+                        <span class="text-lg text-[#D4AF37]">👑</span>
+                    </div>
+                    <div>
+                        <h2 id="user-name" class="text-lg font-medium text-white">載入中...</h2>
+                        <p class="text-xs text-[#D4AF37] font-light mt-0.5">黃金會員</p>
+                    </div>
+                </div>
+
+                <div id="free-plan-progress-box" class="mt-5 pt-4 border-t border-zinc-800/60">
+                    <div class="flex justify-between items-center text-xs mb-2">
+                        <span id="free-plan-count-text" class="text-zinc-400 font-light">小臉養成計畫 (已預約 0/8 次)</span>
+                        <span id="free-plan-percent-text" class="text-[#D4AF37] font-medium">0%</span>
+                    </div>
+                    <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+                        <div id="free-plan-bar" class="bg-gradient-to-r from-[#D4AF37] to-[#C9A227] h-full w-[0%] transition-all duration-500 rounded-full"></div>
+                    </div>
+                </div>
+
+                <div class="mt-5 pt-4 border-t border-zinc-800/60 grid grid-cols-3 gap-2 text-center">
+                    <div>
+                        <div class="text-lg font-semibold text-white">0</div>
+                        <div class="text-[10px] text-zinc-400 mt-1">累積點數</div>
+                    </div>
+                    <div>
+                        <div class="text-lg font-semibold text-white">0</div>
+                        <div class="text-[10px] text-zinc-400 mt-1">到店次數</div>
+                    </div>
+                    <div>
+                        <div class="text-lg font-semibold text-white">0</div>
+                        <div class="text-[10px] text-zinc-400 mt-1">可換獎勵</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="switchTab('booking')" class="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 text-left active:scale-[0.98] transition-transform">
+                    <div class="text-lg mb-1">📅</div>
+                    <div class="text-sm font-medium text-white">立即預約</div>
+                </button>
+                <button onclick="switchTab('member')" class="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 text-left active:scale-[0.98] transition-transform">
+                    <div class="text-lg mb-1">💳</div>
+                    <div class="text-sm font-medium text-white">會員卡</div>
+                </button>
+                <button id="btn-face-record" onclick="switchTab('records')" class="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 text-left active:scale-[0.98] transition-transform">
+                    <div class="text-lg mb-1">📄</div>
+                    <div class="text-sm font-medium text-white">小臉紀錄</div>
+                </button>
+                <button onclick="alert('功能開發中，敬請期待！')" class="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 text-left active:scale-[0.98] transition-transform">
+                    <div class="text-lg mb-1">🔗</div>
+                    <div class="text-sm font-medium text-white">推薦好友</div>
+                </button>
+            </div>
+        </section>
+
+        <section id="page-records" class="page-content hidden space-y-4">
+            <h3 class="text-base font-medium text-white tracking-wide">您的理療紀錄</h3>
+            <div id="records-container" class="space-y-3">
+                <div class="bg-zinc-900/60 border border-zinc-800/80 p-6 rounded-xl text-center text-zinc-500 text-sm">
+                    目前尚無前往理療的歷史紀錄。
+                </div>
+            </div>
+        </section>
+
+        <section id="page-booking" class="page-content hidden space-y-4">
+            <h3 class="text-base font-medium text-white tracking-wide">線上預約服務</h3>
+            
+            <div class="space-y-2">
+                <label class="text-xs text-zinc-400 block">選擇療程項目</label>
+                <div class="grid grid-cols-1 gap-2">
+                    <div id="option-free-plan" onclick="selectService(this, '0', '免費兩個月瘦小臉計畫')" class="service-option border-2 border-dashed border-[#D4AF37] bg-[#D4AF37]/5 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]">
+                        <div>
+                            <div class="text-sm font-semibold text-white flex items-center">
+                                免費兩個月瘦小臉計畫 <span class="ml-2 text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded-full animate-pulse">新客禮</span>
+                            </div>
+                            <div class="text-xs text-zinc-400 mt-0.5">專屬加入會員免費體驗計畫 (限做 8 次)</div>
+                        </div>
+                        <div class="text-sm font-bold text-[#D4AF37]">免費</div>
+                    </div>
+                    
+                    <div onclick="selectService(this, '400', '精準局部體驗')" class="service-option bg-zinc-900 border border-zinc-800 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]">
+                        <div>
+                            <div class="text-sm font-medium text-white">精準局部體驗</div>
+                            <div class="text-xs text-zinc-400 mt-0.5">針對特定不適點加強</div>
+                        </div>
+                        <div class="text-sm font-medium text-[#D4AF37]">$400</div>
+                    </div>
+                    <div onclick="selectService(this, '800', '全息平衡調理')" class="service-option bg-zinc-900 border border-zinc-800 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]">
+                        <div>
+                            <div class="text-sm font-medium text-white">全息平衡調理</div>
+                            <div class="text-xs text-zinc-400 mt-0.5">全身性耳穴全息舒緩與平衡</div>
+                        </div>
+                        <div class="text-sm font-medium text-[#D4AF37]">$800</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs text-zinc-400 block">選擇預約日期</label>
+                <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar" id="date-picker-container"></div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs text-zinc-400 block">選擇預約時段</label>
+                <div class="grid grid-cols-3 gap-2" id="time-picker-container">
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">10:00</div>
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">13:30</div>
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">15:00</div>
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">16:30</div>
+                    <div onclick="selectTime(this)" class="time-option bg-zinc-900 border border-zinc-800 p-2.5 rounded-lg text-center text-sm text-zinc-300 cursor-pointer">19:00</div>
+                </div>
+            </div>
+
+            <button onclick="submitBooking()" class="w-full bg-gradient-to-r from-[#D4AF37] to-[#C9A227] text-black font-medium p-3.5 rounded-xl text-sm mt-4 active:scale-[0.98] transition-transform shadow-lg shadow-[#D4AF37]/10">
+                確認送出預約
+            </button>
+        </section>
+
+        <section id="page-member" class="page-content hidden space-y-4">
+            <h3 class="text-base font-medium text-white tracking-wide">專屬電子會員卡</h3>
+            <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl text-center space-y-4 relative overflow-hidden">
+                <div class="text-xs text-zinc-500 tracking-[0.2em]">IAURI EAR THERAPY CARD</div>
+                <div class="bg-white p-4 rounded-lg inline-block mx-auto">
+                    <div class="w-48 h-12 bg-[repeating-linear-gradient(90deg,black,black_2px,white_2px,white_8px,black_8px,black_10px)]"></div>
+                </div>
+                <div class="text-sm font-mono text-zinc-400 tracking-widest">ID: 888-2026-LIFF</div>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-900 py-2 px-6 flex justify-between items-center z-50 shadow-2xl">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center space-y-1 text-[#D4AF37]">
+            <span class="text-xl">🏠</span>
+            <span class="text-[10px] font-medium">首頁</span>
+        </button>
+        <button onclick="switchTab('records')" id="nav-records" class="nav-btn flex flex-col items-center space-y-1 text-zinc-500">
+            <span class="text-xl">📋</span>
+            <span class="text-[10px] font-medium">紀錄</span>
+        </button>
+        <button onclick="switchTab('booking')" id="nav-booking" class="nav-btn flex flex-col items-center space-y-1 text-zinc-500">
+            <span class="text-xl">📅</span>
+            <span class="text-[10px] font-medium">預約</span>
+        </button>
+        <button onclick="switchTab('member')" id="nav-member" class="nav-btn flex flex-col items-center space-y-1 text-zinc-500">
+            <span class="text-xl">👤</span>
+            <span class="text-[10px] font-medium">會員</span>
+        </button>
+    </nav>
+
+    <script>
+        let selectedServiceItem = null;
+        let selectedServiceName = '';
+        let selectedDateItem = null;
+        let selectedTimeItem = null;
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`page-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('text-[#D4AF37]');
+                el.classList.add('text-zinc-500');
+            });
+            document.getElementById(`nav-${tabId}`).classList.remove('text-zinc-500');
+            document.getElementById(`nav-${tabId}`).classList.add('text-[#D4AF37]');
+        }
+
+        function selectService(element, price, name) {
+            document.querySelectorAll('.service-option').forEach(el => {
+                el.classList.remove('border-[#D4AF37]', 'bg-zinc-800/80', 'bg-[#D4AF37]/10');
+                if(el.id === 'option-free-plan') {
+                    el.className = "service-option border-2 border-dashed border-[#D4AF37] bg-[#D4AF37]/5 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]";
+                } else {
+                    el.className = "service-option bg-zinc-900 border border-zinc-800 p-3 rounded-xl flex justify-between items-center cursor-pointer active:scale-[0.99]";
+                }
+            });
+            
+            element.classList.add('border-[#D4AF37]', 'bg-[#D4AF37]/10');
+            selectedServiceItem = price;
+            selectedServiceName = name;
+        }
+
+        function selectDate(element, dateStr) {
+            document.querySelectorAll('.date-option').forEach(el => {
+                el.classList.remove('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+                el.classList.add('border-zinc-800', 'bg-zinc-900/50', 'text-zinc-400');
+            });
+            element.classList.remove('border-zinc-800', 'bg-zinc-900/50', 'text-zinc-400');
+            element.classList.add('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+            selectedDateItem = dateStr;
+        }
+
+        function selectTime(element) {
+            document.querySelectorAll('.time-option').forEach(el => {
+                el.classList.remove('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+                el.classList.add('border-zinc-800', 'bg-zinc-900');
+            });
+            element.classList.remove('border-zinc-800', 'bg-zinc-900');
+            element.classList.add('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+            selectedTimeItem = element.innerText;
+        }
+
+        function generateDates() {
+            const container = document.getElementById('date-picker-container');
+            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+            container.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                const month = d.getMonth() + 1;
+                const date = d.getDate();
+                const dayName = weekDays[d.getDay()];
+                const fullDateStr = `${d.getFullYear()}-${String(month).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
+
+                const dateEl = document.createElement('div');
+                dateEl.className = "date-option flex-shrink-0 w-14 bg-zinc-900/50 border border-zinc-800 p-2 rounded-xl text-center cursor-pointer active:scale-[0.95] text-zinc-400";
+                dateEl.onclick = function() { selectDate(this, fullDateStr); };
+                dateEl.innerHTML = `
+                    <div class="text-[10px] opacity-70">周${dayName}</div>
+                    <div class="text-sm font-medium mt-0.5">${month}/${date}</div>
+                `;
+                container.appendChild(dateEl);
+            }
+        }
+
+        // 核心檢查：計算累計預約次數，並動態控制進度條或隱藏
+        function checkFreePlanStatus() {
+            // 從本地資料庫抓取目前的預約次數（如果沒有，預設就是 0）
+            let currentCount = parseInt(localStorage.getItem('free_plan_count') || '0');
+            
+            const progressBox = document.getElementById('free-plan-progress-box');
+            const recordBtn = document.getElementById('btn-face-record');
+            const freeOption = document.getElementById('option-free-plan');
+            
+            const countText = document.getElementById('free-plan-count-text');
+            const percentText = document.getElementById('free-plan-percent-text');
+            const progressBar = document.getElementById('free-plan-bar');
+
+            if (currentCount >= 8) {
+                // 做滿 8 次，全部隱藏
+                if (progressBox) progressBox.style.display = 'none';
+                if (recordBtn) recordBtn.style.display = 'none';
+                if (freeOption) freeOption.style.display = 'none';
+            } else {
+                // 未滿 8 次，正常顯示並動態更新進度條
+                if (progressBox) progressBox.style.display = 'block';
+                if (recordBtn) recordBtn.style.display = 'block';
+                if (freeOption) freeOption.style.display = 'flex';
+
+                // 計算百分比（做 1 次 = 12.5% ... 做 8 次 = 100%）
+                let percent = Math.round((currentCount / 8) * 100);
+                
+                if (countText) countText.innerText = `小臉養成計畫 (已預約 ${currentCount}/8 次)`;
+                if (percentText) percentText.innerText = `${percent}%`;
+                if (progressBar) progressBar.style.width = `${percent}%`;
+            }
+        }
+
+        // 送出預約
+        function submitBooking() {
+            if (!selectedServiceItem) { alert('請選擇預約療程項目！'); return; }
+            if (!selectedDateItem) { alert('請選擇預約日期！'); return; }
+            if (!selectedTimeItem) { alert('請選擇預約時段！'); return; }
+
+            alert(`【預約成功！】\n療程：${selectedServiceName}\n時間：${selectedDateItem} ${selectedTimeItem}\n\n期待您的光臨！`);
+            
+            // 如果預約的是免費小臉計畫，計數器 +1
+            if (selectedServiceName === '免費兩個月瘦小臉計畫') {
+                let currentCount = parseInt(localStorage.getItem('free_plan_count') || '0');
+                currentCount += 1;
+                localStorage.setItem('free_plan_count', currentCount.toString());
+            }
+
+            const newRecord = {
+                service: selectedServiceName,
+                date: selectedDateItem,
+                time: selectedTimeItem,
+                status: '已預約成功'
+            };
+            let localRecords = JSON.parse(localStorage.getItem('iauri_records') || '[]');
+            localRecords.unshift(newRecord);
+            localStorage.setItem('iauri_records', JSON.stringify(localRecords));
+
+            // 重新刷新進度條狀態與紀錄
+            checkFreePlanStatus();
+            loadRecords();
+
+            // 重設欄位並回首頁
+            selectedServiceItem = null;
+            selectedServiceName = '';
+            selectedDateItem = null;
+            selectedTimeItem = null;
+            switchTab('home');
+        }
+
+        // 載入紀錄
+        function loadRecords() {
+            const container = document.getElementById('records-container');
+            const localRecords = JSON.parse(localStorage.getItem('iauri_records') || '[]');
+            
+            if (localRecords.length > 0) {
+                container.innerHTML = '';
+                localRecords.forEach(r => {
+                    const el = document.createElement('div');
+                    el.className = "bg-zinc-900/90 border border-zinc-800 p-4 rounded-xl flex justify-between items-center";
+                    el.innerHTML = `
+                        <div>
+                            <div class="text-sm font-medium text-white">${r.service}</div>
+                            <div class="text-xs text-zinc-400 mt-1">📅 ${r.date} &nbsp; ⏰ ${r.time}</div>
+                        </div>
+                        <span class="text-xs bg-amber-500/10 text-[#D4AF37] border border-[#D4AF37]/20 px-2 py-1 rounded-md">${r.status}</span>
+                    `;
+                    container.appendChild(el);
+                });
+            }
+        }
+
+        // LINE LIFF 初始化
+        function initializeLiff() {
+            liff.init({ liffId: "2010175024-xxxxxx" }) 
+                .then(() => {
+                    if (liff.isLoggedIn()) {
+                        liff.getProfile().then(profile => {
+                            document.getElementById('user-name').innerText = profile.displayName;
+                            if (profile.pictureUrl) {
+                                document.getElementById('user-avatar').src = profile.pictureUrl;
+                            }
+                        });
+                    } else {
+                        document.getElementById('user-name').innerText = "測試體驗官";
+                    }
+                })
+                .catch((err) => {
+                    console.log("LIFF 失敗：", err);
+                    document.getElementById('user-name').innerText = "訪客用戶";
+                });
+        }
+
+        window.onload = function() {
+            generateDates();
+            checkFreePlanStatus(); // 載入時依據預約次數渲染進度條
+            loadRecords();
+            initializeLiff();
+        };
+    </script>
+</body>
+</html>
