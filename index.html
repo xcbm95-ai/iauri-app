@@ -11,7 +11,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #0A0A0A; color: #F5F5F5; }
         .tab-content.hidden { display: none; }
-        .nav-active { color: #D4AF37 !important; }
+        .selected-item { border-color: #D4AF37 !important; background-color: #18181b; }
     </style>
 </head>
 <body class="pb-24">
@@ -52,40 +52,37 @@
 
         <div id="records-tab" class="tab-content hidden space-y-6">
             <h2 class="text-lg font-bold">小臉紀錄</h2>
-            <div class="grid grid-cols-1 gap-4">
-                <button onclick="showSubTab('normal-list')" class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left">
-                    <i class="fa-solid fa-file-lines text-[#D4AF37] text-xl mb-2"></i>
-                    <h3 class="font-bold">一般調理紀錄</h3>
-                </button>
-            </div>
+            <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-left"><i class="fa-solid fa-file-lines text-[#D4AF37] text-xl mb-2"></i><h3 class="font-bold">一般調理紀錄</h3></div>
         </div>
 
         <div id="booking-tab" class="tab-content hidden space-y-6">
             <h2 class="text-lg font-bold">預約新理療</h2>
             <div class="space-y-3">
-                <div class="p-4 bg-zinc-900 rounded-2xl border border-[#D4AF37] cursor-pointer">
-                    <div class="flex justify-between items-center">
-                        <p class="font-bold">免費兩個月瘦小臉計畫</p>
-                        <p class="text-sm text-[#D4AF37]">免費</p>
-                    </div>
-                    <p class="text-[10px] text-zinc-400 mt-1">專屬加入會員免費體驗計畫 (限做 8 次)</p>
+                <div onclick="selectService(this)" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 cursor-pointer">
+                    <div class="flex justify-between items-center"><p class="font-bold">免費兩個月瘦小臉計畫</p><p class="text-sm text-[#D4AF37]">免費</p></div>
                 </div>
-                <div class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 cursor-pointer">
-                    <div class="flex justify-between items-center">
-                        <p class="font-bold">精準局部體驗</p>
-                        <p class="text-sm">$400</p>
-                    </div>
-                    <p class="text-[10px] text-zinc-400 mt-1">針對特定不適加強</p>
+                <div onclick="selectService(this)" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 cursor-pointer">
+                    <div class="flex justify-between items-center"><p class="font-bold">精準局部體驗</p><p class="text-sm">$400</p></div>
                 </div>
-                <div class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 cursor-pointer">
-                    <div class="flex justify-between items-center">
-                        <p class="font-bold">全息平衡調理</p>
-                        <p class="text-sm">$800</p>
-                    </div>
-                    <p class="text-[10px] text-zinc-400 mt-1">全身性耳穴全息舒緩與平衡</p>
+                <div onclick="selectService(this)" class="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 cursor-pointer">
+                    <div class="flex justify-between items-center"><p class="font-bold">全息平衡調理</p><p class="text-sm">$800</p></div>
                 </div>
             </div>
-            <button class="w-full py-4 bg-[#D4AF37] text-black font-bold rounded-2xl mt-6">確認送出預約</button>
+            
+            <div id="booking-details" class="hidden space-y-4">
+                <p class="text-sm font-bold">選擇預約日期</p>
+                <div class="flex space-x-2 overflow-x-auto pb-2">
+                    <div class="min-w-[60px] p-2 bg-zinc-900 rounded-xl text-center border border-zinc-800"><p class="text-[10px]">今天</p><p class="font-bold">5/27</p></div>
+                    <div class="min-w-[60px] p-2 bg-zinc-900 rounded-xl text-center border border-zinc-800"><p class="text-[10px]">週四</p><p class="font-bold">5/28</p></div>
+                </div>
+                <p class="text-sm font-bold">選擇預約時段</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <button class="p-2 bg-zinc-900 rounded-xl text-xs border border-zinc-800">10:00</button>
+                    <button class="p-2 bg-zinc-900 rounded-xl text-xs border border-zinc-800">13:30</button>
+                    <button class="p-2 bg-zinc-900 rounded-xl text-xs border border-zinc-800">15:00</button>
+                </div>
+                <button class="w-full py-4 bg-[#D4AF37] text-black font-bold rounded-2xl">確認送出預約</button>
+            </div>
         </div>
     </main>
 
@@ -100,9 +97,10 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`${tabId}-tab`).classList.remove('hidden');
         }
-        function showSubTab(subTabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`${subTabId}-tab`).classList.remove('hidden');
+        function selectService(el) {
+            document.querySelectorAll('#booking-tab > div:first-of-type > div').forEach(d => d.classList.remove('selected-item'));
+            el.classList.add('selected-item');
+            document.getElementById('booking-details').classList.remove('hidden');
         }
         async function initializeLiff() {
             try {
