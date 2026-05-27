@@ -12,31 +12,30 @@
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #0A0A0A; color: #F5F5F5; }
         .tab-content.hidden { display: none; }
         .selected-item { border-color: #D4AF37 !important; background-color: #18181b; }
-        /* 隱藏捲軸 */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="pb-24">
 
-    <header class="p-4 border-b border-zinc-900 sticky top-0 bg-[#0A0A0A]/90 backdrop-blur-md z-50 flex justify-between items-center">
-        <div>
-            <p class="text-[10px] tracking-[0.2em] text-[#D4AF37] uppercase font-light">iAuri member</p>
-            <h1 class="text-xl font-bold tracking-wide">耳顏所會員系統</h1>
-        </div>
-        <div class="w-10 h-10 rounded-full border border-[#D4AF37]/30 overflow-hidden bg-zinc-800">
-            <img id="user-avatar" src="" alt="頭像" class="w-full h-full object-cover">
-        </div>
+    <header class="p-4 border-b border-zinc-900 sticky top-0 bg-[#0A0A0A]/90 backdrop-blur-md z-50">
+        <p class="text-[10px] tracking-[0.2em] text-[#D4AF37] uppercase font-light">iAuri member</p>
+        <h1 class="text-xl font-bold tracking-wide">耳顏所會員系統</h1>
     </header>
 
     <main class="max-w-md w-full mx-auto px-4 py-6">
+        
         <div id="home-tab" class="tab-content space-y-6">
             <div class="bg-gradient-to-br from-zinc-900 to-black rounded-3xl p-6 border border-zinc-800">
-                <div class="flex items-center space-x-3 mb-6">
-                    <span class="text-3xl text-[#D4AF37]"><i class="fa-solid fa-crown"></i></span>
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-14 h-14 rounded-full border-2 border-[#D4AF37]/50 overflow-hidden bg-zinc-800 shrink-0">
+                        <img id="user-avatar" src="" alt="頭像" class="w-full h-full object-cover">
+                    </div>
                     <div>
-                        <h2 id="user-name" class="text-lg font-bold">載入中...</h2>
-                        <p class="text-xs text-[#D4AF37]">黃金會員</p>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-2xl text-[#D4AF37]"><i class="fa-solid fa-crown"></i></span>
+                            <h2 id="user-name" class="text-lg font-bold">載入中...</h2>
+                        </div>
+                        <p class="text-xs text-[#D4AF37] mt-1">黃金會員</p>
                     </div>
                 </div>
                 <div class="space-y-2">
@@ -103,7 +102,6 @@
             const timeContainer = document.getElementById('time-container');
             const now = new Date();
             
-            // 生成未來 7 天
             for (let i = 0; i < 7; i++) {
                 const d = new Date();
                 d.setDate(now.getDate() + i);
@@ -113,7 +111,6 @@
                 dateContainer.appendChild(div);
             }
 
-            // 生成時段 (10:00 - 20:00, 排除已過一小時)
             const threshold = new Date(now.getTime() + 60 * 60 * 1000);
             for (let h = 10; h < 20; h++) {
                 for (let m = 0; m < 60; m += 30) {
