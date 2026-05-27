@@ -36,6 +36,16 @@ body{
     backdrop-filter:blur(18px);
 }
 
+.free-service-card{
+    background:
+    linear-gradient(145deg,rgba(212,175,55,.22),rgba(255,255,255,.04)),
+    linear-gradient(145deg,#17150f,#0f0f10);
+    border:1px solid rgba(212,175,55,.55);
+    box-shadow:
+    0 0 0 1px rgba(212,175,55,.15),
+    0 20px 60px rgba(212,175,55,.12);
+}
+
 .gold-card{
     background:linear-gradient(145deg,rgba(212,175,55,.22),rgba(255,255,255,.035)),#101010;
     border:1px solid rgba(212,175,55,.35);
@@ -256,24 +266,34 @@ body{
 
     <div id="booking-step1" class="booking-step active space-y-4">
 
-        <button onclick="selectService('免費兩個月瘦小臉計畫')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
+        <button id="free-service-option" onclick="selectService('免費兩個月瘦小臉計畫')" class="w-full text-left free-service-card rounded-[1.8rem] p-6 smooth">
             <div class="flex items-center justify-between gap-4">
-                <div>
+                <div class="min-w-0">
                     <p class="font-black text-xl mb-2">免費兩個月瘦小臉計畫</p>
                     <p class="text-sm text-zinc-500">FREE FACE PLAN</p>
                 </div>
-                <p class="red-price text-3xl font-black">$ 0</p>
+                <p class="red-price text-5xl font-black shrink-0">$ 0</p>
             </div>
         </button>
 
         <button onclick="selectService('精準局部體驗 $400')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
-            <p class="font-black text-xl mb-2">精準局部體驗 $400</p>
-            <p class="text-sm text-zinc-500">LOCAL EXPERIENCE</p>
+            <div class="flex items-center justify-between gap-4">
+                <div class="min-w-0">
+                    <p class="font-black text-xl mb-2">精準局部體驗</p>
+                    <p class="text-sm text-zinc-500">LOCAL EXPERIENCE</p>
+                </div>
+                <p class="text-3xl font-black shrink-0">$400</p>
+            </div>
         </button>
 
         <button onclick="selectService('全息平衡調理 $800')" class="w-full text-left glass-card rounded-[1.8rem] p-6">
-            <p class="font-black text-xl mb-2">全息平衡調理 $800</p>
-            <p class="text-sm text-zinc-500">FULL BALANCE</p>
+            <div class="flex items-center justify-between gap-4">
+                <div class="min-w-0">
+                    <p class="font-black text-xl mb-2">全息平衡調理</p>
+                    <p class="text-sm text-zinc-500">FULL BALANCE</p>
+                </div>
+                <p class="text-3xl font-black shrink-0">$800</p>
+            </div>
         </button>
     </div>
 
@@ -383,6 +403,7 @@ function navTo(pageId){
     document.getElementById(pageId).classList.add('active');
 
     if(pageId==='page-booking'){
+        updateFreeServiceOption();
         setupDateButtons();
         autoSelectToday();
     }
@@ -444,6 +465,16 @@ function updateFreeFaceProgress(){
     area.style.display='block';
     countText.textContent=memberState.freeFaceUsedCount+' / '+memberState.freeFaceTotalCount+' 次';
     bar.style.width=percent+'%';
+}
+
+function updateFreeServiceOption(){
+    const option=document.getElementById('free-service-option');
+
+    if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
+        option.style.display='none';
+    }else{
+        option.style.display='block';
+    }
 }
 
 function updatePointsUI(){
@@ -646,6 +677,7 @@ function updateUserUI(profile){
 }
 
 updateFreeFaceProgress();
+updateFreeServiceOption();
 updatePointsUI();
 setupDateButtons();
 initLiff();
