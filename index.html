@@ -125,10 +125,6 @@ body{
     background:rgba(255,255,255,.055);
 }
 
-.tag-btn.selected-slot{
-    background:#D4AF37!important;
-}
-
 .qr-box canvas,
 .qr-box img{
     width:96px!important;
@@ -1051,6 +1047,10 @@ function selectTime(button){
 }
 
 function filterTimeButtons(){
+    if(!bookingState.date){
+        return;
+    }
+
     const now=new Date();
     const minimumTime=new Date(now.getTime()+60*60*1000);
 
@@ -1059,7 +1059,10 @@ function filterTimeButtons(){
         const currentCount=getBookingCount(bookingState.date,btn.dataset.time);
         const slotLimit=getSlotLimit(bookingState.date,btn.dataset.time);
 
-        if(slotDate.getTime()<minimumTime.getTime()||currentCount>=slotLimit){
+        const isPastOrTooSoon=slotDate.getTime()<=minimumTime.getTime();
+        const isFull=currentCount>=slotLimit;
+
+        if(isPastOrTooSoon||isFull){
             btn.style.display='none';
         }else{
             btn.style.display='block';
@@ -1100,6 +1103,16 @@ function submitBooking(){
 
     if(!bookingState.time){
         alert('請選擇時間');
+        return;
+    }
+
+    const slotDate=getSlotDateTime(bookingState.date,bookingState.time);
+    const minimumTime=new Date(new Date().getTime()+60*60*1000);
+
+    if(slotDate.getTime()<=minimumTime.getTime()){
+        alert('此時段已過或距離現在不足 1 小時，請重新選擇時間。');
+        bookingState.time=null;
+        filterTimeButtons();
         return;
     }
 
