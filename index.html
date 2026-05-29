@@ -8,6 +8,8 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 <style>
@@ -569,12 +571,27 @@ body{
 </nav>
 
 <script>
+const firebaseConfig = {
+    apiKey: "AIzaSyDO77Pw12IXXeHECJy3YSTcCV9ikok1ev8",
+    authDomain: "iauri-member.firebaseapp.com",
+    projectId: "iauri-member",
+    storageBucket: "iauri-member.firebasestorage.app",
+    messagingSenderId: "787600565952",
+    appId: "1:787600565952:web:460864719a5f543844ef25",
+    measurementId: "G-T8GK6SPK7K"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 const urlParams=new URLSearchParams(window.location.search);
 const isStaffMode=urlParams.get('mode')==='staff';
 const staffTargetUid=urlParams.get('uid');
 
 const memberState={
     lineUserId:'test-user',
+    displayName:'測試會員',
+    photoUrl:'',
     freeFaceUsedCount:1,
     freeFaceTotalCount:8,
     pointsTotal:0
@@ -594,6 +611,52 @@ const staffRecordState={
 const bookingCapacitySettings={
     defaultLimit:2
 };
+
+async function getMemberRef(uid){
+    return db.collection('members').doc(uid);
+}
+
+async function loadMemberFromFirebase(uid){
+    const ref = db.collection('members').doc(uid);
+    const snap = await ref.get();
+
+    if(!snap.exists){
+        await ref.set({
+            lineUserId: uid,
+            displayName: memberState.displayName || '會員',
+            photoUrl: memberState.photoUrl || '',
+            freeFaceUsedCount: 1,
+            freeFaceTotalCount: 8,
+            pointsTotal: 0,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, {merge:true});
+
+        memberState.freeFaceUsedCount = 1;
+        memberState.pointsTotal = 0;
+        return;
+    }
+
+    const data = snap.data();
+
+    memberState.displayName = data.displayName || memberState.displayName || '會員';
+    memberState.photoUrl = data.photoUrl || memberState.photoUrl || '';
+    memberState.freeFaceUsedCount = Number(data.freeFaceUsedCount || 1);
+    memberState.freeFaceTotalCount = Number(data.freeFaceTotalCount || 8);
+    memberState.pointsTotal = Number(data.pointsTotal || 0);
+}
+
+async function saveMemberToFirebase(){
+    await db.collection('members').doc(memberState.lineUserId).set({
+        lineUserId: memberState.lineUserId,
+        displayName: memberState.displayName,
+        photoUrl: memberState.photoUrl,
+        freeFaceUsedCount: memberState.freeFaceUsedCount,
+        freeFaceTotalCount: memberState.freeFaceTotalCount,
+        pointsTotal: memberState.pointsTotal,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, {merge:true});
+}
 
 function navTo(pageId){
     document.querySelectorAll('.page-content').forEach(page=>{
@@ -628,14 +691,6 @@ function openRescue(){
     }
 }
 
-function getCountKey(){return 'iauriFreeFaceCount_'+memberState.lineUserId;}
-function getPointsKey(){return 'iauriPoints_'+memberState.lineUserId;}
-function getBookingCountKey(date,time){return 'iauriBookingCount_'+date+'_'+time;}
-function getSlotLimitKey(date,time){return 'iauriSlotLimit_'+date+'_'+time;}
-function getPointsRecordTitleKey(){return 'iauriPointsRecordTitle_'+memberState.lineUserId;}
-function getPointsRecordDateKey(){return 'iauriPointsRecordDate_'+memberState.lineUserId;}
-function getPointsRecordValueKey(){return 'iauriPointsRecordValue_'+memberState.lineUserId;}
-
 function getMissionKey(){
     const today=new Date();
     const y=today.getFullYear();
@@ -644,25 +699,11 @@ function getMissionKey(){
     return 'iauriMissionShare_'+memberState.lineUserId+'_'+y+m+d;
 }
 
-function getStoredFreeFaceCount(){
-    const saved=localStorage.getItem(getCountKey());
-    return saved===null?memberState.freeFaceUsedCount:Number(saved);
-}
-
-function saveFreeFaceCount(count){
-    localStorage.setItem(getCountKey(),String(count));
-    memberState.freeFaceUsedCount=count;
-}
-
-function getStoredPoints(){
-    const saved=localStorage.getItem(getPointsKey());
-    return saved===null?0:Number(saved);
-}
-
-function savePoints(points){
-    localStorage.setItem(getPointsKey(),String(points));
-    memberState.pointsTotal=points;
-}
+function getBookingCountKey(date,time){return 'iauriBookingCount_'+date+'_'+time;}
+function getSlotLimitKey(date,time){return 'iauriSlotLimit_'+date+'_'+time;}
+function getPointsRecordTitleKey(){return 'iauriPointsRecordTitle_'+memberState.lineUserId;}
+function getPointsRecordDateKey(){return 'iauriPointsRecordDate_'+memberState.lineUserId;}
+function getPointsRecordValueKey(){return 'iauriPointsRecordValue_'+memberState.lineUserId;}
 
 function getSlotLimit(date,time){
     const customLimit=localStorage.getItem(getSlotLimitKey(date,time));
@@ -679,11 +720,11 @@ function addBookingCount(date,time){
     localStorage.setItem(getBookingCountKey(date,time),String(current+1));
 }
 
-function addPoints(value,title){
-    const current=getStoredPoints();
-    const next=current+value;
+async function addPoints(value,title){
+    memberState.pointsTotal = Number(memberState.pointsTotal || 0) + value;
+    await saveMemberToFirebase();
+
     const now=new Date();
-    savePoints(next);
     localStorage.setItem(getPointsRecordTitleKey(),title);
     localStorage.setItem(getPointsRecordDateKey(),now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate());
     localStorage.setItem(getPointsRecordValueKey(),'+'+value);
@@ -691,27 +732,22 @@ function addPoints(value,title){
     updatePointsRecordUI();
 }
 
-function enterStaffMode(uid){
+async function enterStaffMode(uid){
     memberState.lineUserId=uid;
     document.body.classList.remove('pb-28');
     document.getElementById('bottom-nav').style.display='none';
+    await loadMemberFromFirebase(uid);
     navTo('page-staff-record');
 }
 
 function updateStaffRecordUI(){
-    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
     document.getElementById('staff-target-id').textContent=memberState.lineUserId;
     document.getElementById('staff-current-count').textContent=memberState.freeFaceUsedCount+' / '+memberState.freeFaceTotalCount;
 }
 
 function updateStaffFreeCategory(){
     const btn=document.getElementById('staff-free-category');
-    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
-    if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
-        btn.style.display='none';
-    }else{
-        btn.style.display='block';
-    }
+    btn.style.display=memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount?'none':'block';
 }
 
 function openStaffCategory(category){
@@ -748,11 +784,10 @@ function toggleStaffChoice(button,value){
 }
 
 function updateStaffSelectedSummary(){
-    const text=staffRecordState.choices.length+' 項';
-    document.getElementById('staff-selected-summary').textContent=text;
+    document.getElementById('staff-selected-summary').textContent=staffRecordState.choices.length+' 項';
 }
 
-function completeStaffRecord(){
+async function completeStaffRecord(){
     if(!staffRecordState.category){
         alert('請選擇服務分類');
         return;
@@ -763,28 +798,69 @@ function completeStaffRecord(){
         return;
     }
 
-    if(staffRecordState.category==='free'){
-        memberState.freeFaceUsedCount=getStoredFreeFaceCount();
+    const memberRef = db.collection('members').doc(memberState.lineUserId);
 
-        if(memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount){
-            alert('此會員已完成 8 次免費小臉體驗。');
-            updateStaffRecordUI();
-            updateStaffFreeCategory();
-            return;
-        }
+    try{
+        await db.runTransaction(async transaction=>{
+            const memberDoc = await transaction.get(memberRef);
 
-        saveFreeFaceCount(memberState.freeFaceUsedCount+1);
+            let currentCount = 1;
+            let totalCount = 8;
+
+            if(memberDoc.exists){
+                const data = memberDoc.data();
+                currentCount = Number(data.freeFaceUsedCount || 1);
+                totalCount = Number(data.freeFaceTotalCount || 8);
+            }
+
+            let nextCount = currentCount;
+
+            if(staffRecordState.category === 'free'){
+                if(currentCount >= totalCount){
+                    throw new Error('此會員已完成 8 次免費小臉體驗。');
+                }
+                nextCount = currentCount + 1;
+            }
+
+            transaction.set(memberRef,{
+                lineUserId: memberState.lineUserId,
+                freeFaceUsedCount: nextCount,
+                freeFaceTotalCount: totalCount,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            },{merge:true});
+
+            const recordRef = db.collection('treatment_records').doc();
+            transaction.set(recordRef,{
+                customerLineUserId: memberState.lineUserId,
+                therapistLineUserId: 'test-therapist',
+                therapistDisplayName: '測試調理師',
+                category: getStaffCategoryName(staffRecordState.category),
+                categoryCode: staffRecordState.category,
+                items: staffRecordState.choices,
+                sessionNumber: staffRecordState.category === 'free' ? nextCount : null,
+                status: 'completed',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            memberState.freeFaceUsedCount = nextCount;
+            memberState.freeFaceTotalCount = totalCount;
+        });
+
         updateStaffRecordUI();
         updateStaffFreeCategory();
+
+        alert(
+            '已完成本次調理紀錄\n\n'+
+            '分類：'+getStaffCategoryName(staffRecordState.category)+'\n'+
+            '細項：'+staffRecordState.choices.join('、')+'\n'+
+            '目前進度：'+memberState.freeFaceUsedCount+' / '+memberState.freeFaceTotalCount
+        );
+
+        backStaffCategory();
+
+    }catch(error){
+        alert(error.message || '送出失敗，請稍後再試。');
     }
-
-    alert(
-        '已完成本次調理紀錄\n\n'+
-        '分類：'+getStaffCategoryName(staffRecordState.category)+'\n'+
-        '細項：'+staffRecordState.choices.join('、')
-    );
-
-    backStaffCategory();
 }
 
 function getStaffCategoryName(category){
@@ -804,20 +880,22 @@ function closeNameEditor(){
     document.getElementById('name-editor').style.display='none';
 }
 
-function saveCustomName(){
+async function saveCustomName(){
     const input=document.getElementById('custom-name-input');
     const name=input.value.trim();
     if(!name){
         alert('請輸入顯示名稱');
         return;
     }
-    localStorage.setItem('iauriCustomName',name);
+
+    memberState.displayName = name;
+    await saveMemberToFirebase();
+
     document.getElementById('user-name').textContent=name;
     closeNameEditor();
 }
 
 function updateFreeFaceProgress(){
-    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
     const area=document.getElementById('free-face-progress-area');
     const countText=document.getElementById('free-face-count');
     const bar=document.getElementById('free-face-progress-bar');
@@ -835,13 +913,11 @@ function updateFreeFaceProgress(){
 
 function updateFreeServiceOption(){
     const option=document.getElementById('free-service-option');
-    memberState.freeFaceUsedCount=getStoredFreeFaceCount();
     option.style.display=memberState.freeFaceUsedCount>=memberState.freeFaceTotalCount?'none':'block';
 }
 
 function updatePointsUI(){
-    memberState.pointsTotal=getStoredPoints();
-    document.getElementById('points-total').textContent=memberState.pointsTotal;
+    document.getElementById('points-total').textContent=memberState.pointsTotal || 0;
 }
 
 function updatePointsRecordUI(){
@@ -914,7 +990,7 @@ async function completeShareMission(){
     }
 
     localStorage.setItem(missionKey,'done');
-    addPoints(5,'每日分享任務');
+    await addPoints(5,'每日分享任務');
     updateMissionUI();
     alert('任務完成，已獲得 +5 積分。');
 }
@@ -1083,7 +1159,7 @@ function submitBooking(){
 
 async function initLiff(){
     if(isStaffMode&&staffTargetUid){
-        enterStaffMode(staffTargetUid);
+        await enterStaffMode(staffTargetUid);
         return;
     }
 
@@ -1096,8 +1172,20 @@ async function initLiff(){
         }
 
         const profile=await liff.getProfile();
+
         memberState.lineUserId=profile.userId;
-        updateUserUI(profile);
+        memberState.displayName=profile.displayName || '會員';
+        memberState.photoUrl=profile.pictureUrl || '';
+
+        await loadMemberFromFirebase(memberState.lineUserId);
+
+        document.getElementById('user-name').textContent=memberState.displayName;
+        if(memberState.photoUrl){
+            document.getElementById('user-avatar').src=memberState.photoUrl;
+        }
+
+        await saveMemberToFirebase();
+
         updateFreeFaceProgress();
         updateFreeServiceOption();
         updatePointsUI();
@@ -1105,24 +1193,15 @@ async function initLiff(){
 
     }catch(err){
         console.error('LIFF INIT ERROR:',err);
+
+        await loadMemberFromFirebase(memberState.lineUserId);
+
         document.getElementById('user-name').textContent='測試會員';
         updateFreeFaceProgress();
         updateFreeServiceOption();
         updatePointsUI();
         renderMemberQr();
     }
-}
-
-function updateUserUI(profile){
-    const savedName=localStorage.getItem('iauriCustomName');
-
-    if(savedName){
-        document.getElementById('user-name').textContent=savedName;
-    }else{
-        document.getElementById('user-name').textContent=profile.displayName;
-    }
-
-    document.getElementById('user-avatar').src=profile.pictureUrl;
 }
 
 updatePointsUI();
