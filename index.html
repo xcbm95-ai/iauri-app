@@ -185,7 +185,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, query, where, getDocs, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyDO77Pw12IXXeHECJy3YSTcCV9ikok1ev8",authDomain:"iauri-member.firebaseapp.com",projectId:"iauri-member",storageBucket:"iauri-member.firebasestorage.app",messagingSenderId:"787600565952",appId:"1:787600565952:web:460864719a5f543844ef25",measurementId:"G-T8GK6SPK7K"};
-const LIFF_ID="2007418706-BR1a6j7x",SHARE_URL="https://lin.ee/vxi3sZ4",app=initializeApp(firebaseConfig),db=getFirestore(app);
+const LIFF_ID="2010173212-2gFbVMbf",SHARE_URL="https://lin.ee/vxi3sZ4",app=initializeApp(firebaseConfig),db=getFirestore(app);
 let profile=null,member=null,memberRef=null,isTherapist=false,staffTargetUid=null,staffTargetData=null;
 const $=id=>document.getElementById(id);
 const nowText=()=>new Date().toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
@@ -329,7 +329,8 @@ async function boot(){
   }catch(e){
     console.error(e);
     $("memberName").innerText="LINE讀取失敗";
-    alert("系統讀取失敗，請確認是否從 LINE LIFF 入口開啟，或重新整理一次。");
+    $("memberPhoto").src="https://dummyimage.com/300x300/111111/d4af37&text=IAURI";
+    // 不跳出阻擋式錯誤，避免顧客卡死；真正原因通常是 LIFF ID 或 LINE Developers Endpoint / Scope 設定。
   }finally{showLoading(false);}
 }
 boot();
