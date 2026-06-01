@@ -30,7 +30,7 @@
     .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:84px;background:rgba(0,0,0,.96);border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-around;z-index:50}
     .nav-btn{width:25%;display:flex;flex-direction:column;align-items:center;gap:5px;color:#eee;font-size:14px;background:none;border:0}.nav-btn.active{color:var(--gold)}.nav-emoji{font-size:22px}
     .rescue{border:1px solid rgba(255,122,26,.8);box-shadow:0 0 26px rgba(255,122,26,.35);border-radius:22px;padding:9px 22px;color:#ffb16b}
-    .grid-card{height:154px;padding:26px;border-radius:28px;background:linear-gradient(145deg,#18181e,#0c0c0f);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;justify-content:space-between;text-align:left}
+    .grid-card{min-height:142px;padding:26px;border-radius:28px;background:linear-gradient(145deg,#18181e,#0c0c0f);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;justify-content:flex-end;text-align:left;overflow:hidden}.grid-card-title{font-size:28px;font-weight:900;line-height:1.08;word-break:keep-all}.grid-card-sub{color:var(--muted);letter-spacing:.22em;margin-top:8px;font-size:13px}
     .grid-card.feature{background:linear-gradient(145deg,rgba(212,175,55,.28),#111);border-color:rgba(212,175,55,.45)}
     .chip{padding:12px 16px;border-radius:16px;background:#18181b;border:1px solid rgba(255,255,255,.09);color:#fff}.chip.active{background:var(--gold);color:#000;font-weight:900}
     .wheel-wrap{position:relative;width:min(82vw,340px);height:min(82vw,340px);margin:0 auto}
@@ -39,11 +39,11 @@
     .wheel-center{position:absolute;width:106px;height:106px;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;background:radial-gradient(circle,#fff4b5,#D4AF37,#6b4a00);border:6px solid rgba(255,255,255,.3);box-shadow:0 0 32px rgba(212,175,55,.7)}
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;display:none;align-items:center;justify-content:center;padding:22px;backdrop-filter:blur(10px)}.modal.show{display:flex}
     .record-card{padding:18px;border-radius:24px;margin-bottom:16px;background:linear-gradient(145deg,#151515,#060606);border:1px solid rgba(212,175,55,.18)}
-    .qr-box canvas,.qr-box img{width:132px!important;height:132px!important;border-radius:18px;background:#fff;padding:8px}
-    .reward-card{margin-top:22px;padding:20px;border-radius:28px;background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(255,255,255,.035));border:1px solid rgba(212,175,55,.28);box-shadow:0 0 28px rgba(212,175,55,.12)}
+    .qr-box canvas,.qr-box img{width:132px!important;height:132px!important;border-radius:18px;background:#fff;padding:8px;cursor:pointer}.qr-large canvas,.qr-large img{width:min(76vw,320px)!important;height:min(76vw,320px)!important;border-radius:28px;background:#fff;padding:14px}
+    .reward-card{margin-top:22px;padding:22px;border-radius:30px;background:radial-gradient(circle at 85% 15%,rgba(255,230,120,.28),transparent 35%),linear-gradient(135deg,rgba(212,175,55,.28),rgba(255,255,255,.04));border:1px solid rgba(255,219,92,.55);box-shadow:0 0 26px rgba(212,175,55,.32),inset 0 0 24px rgba(255,255,255,.035);position:relative;overflow:hidden}.reward-card:before{content:'REWARD';position:absolute;right:18px;top:14px;color:rgba(212,175,55,.12);font-size:34px;font-weight:900;letter-spacing:.08em}.reward-card:after{content:'✦';position:absolute;right:24px;bottom:20px;color:#D4AF37;font-size:28px;filter:drop-shadow(0 0 12px #D4AF37)}
     .reward-title{letter-spacing:.35em;color:var(--gold);font-size:12px;margin-bottom:10px}.reward-prize{font-size:28px;font-weight:900}
     .small{font-size:12px}.loading-banner{position:fixed;top:0;left:0;right:0;background:#111;color:#D4AF37;padding:8px 12px;font-size:12px;text-align:center;z-index:200;display:none}
-    @media (max-width:390px){.big-title{font-size:38px}.grid-card{height:140px;padding:22px}.page{padding-left:16px;padding-right:16px}.wheel-center{width:92px;height:92px}.qr-box canvas,.qr-box img{width:116px!important;height:116px!important}}
+    @media (max-width:390px){.big-title{font-size:38px}.grid-card{min-height:136px;padding:20px}.grid-card-title{font-size:26px}.page{padding-left:16px;padding-right:16px}.wheel-center{width:92px;height:92px}.qr-box canvas,.qr-box img{width:116px!important;height:116px!important}}
   </style>
 </head>
 <body>
@@ -87,7 +87,7 @@
         <div id="memberQr" class="qr-box shrink-0"></div>
       </div>
 
-      <div class="mt-6 dark-card p-5">
+      <div class="mt-6 dark-card p-5 text-right">
         <div class="title-en mb-3">IAURI POINTS</div>
         <div id="pointsText" class="text-5xl font-black">0</div>
         <div class="text-white/50 mt-2">會員積分</div>
@@ -100,10 +100,10 @@
     <div class="title-en mb-3">QUICK ACCESS</div>
     <h2 class="text-4xl font-black mb-5">會員服務</h2>
     <div class="grid grid-cols-2 gap-4">
-      <button class="grid-card" onclick="showPage('points')"><div class="text-4xl gold">◎</div><div><div class="text-3xl font-black">積分</div><div class="muted tracking-[.25em] mt-1">POINTS</div></div></button>
-      <button class="grid-card feature" onclick="showPage('booking')"><div class="flex justify-between"><div class="text-4xl gold">▣</div><div class="btn-gold pill px-5 py-2">START</div></div><div><div class="text-3xl font-black">預約調理</div><div class="muted tracking-[.25em] mt-1">BOOKING</div></div></button>
-      <button class="grid-card" onclick="showPage('records')"><div class="text-4xl gold">▤</div><div><div class="text-3xl font-black">消費紀錄</div><div class="muted tracking-[.25em] mt-1">HISTORY</div></div></button>
-      <button class="grid-card" onclick="shareFriend()"><div class="text-4xl gold">＋</div><div><div class="text-3xl font-black">分享好友</div><div class="muted tracking-[.25em] mt-1">SHARE</div></div></button>
+      <button class="grid-card" onclick="showPage('points')"><div><div class="grid-card-title">積分</div><div class="grid-card-sub">POINTS</div></div></button>
+      <button class="grid-card feature" onclick="showPage('booking')"><div class="flex justify-end mb-6"><div class="btn-gold pill px-5 py-2">START</div></div><div><div class="grid-card-title">預約調理</div><div class="grid-card-sub">BOOKING</div></div></button>
+      <button class="grid-card" onclick="showPage('records')"><div><div class="grid-card-title">消費紀錄</div><div class="grid-card-sub">HISTORY</div></div></button>
+      <button class="grid-card" onclick="shareFriend()"><div><div class="grid-card-title">分享好友</div><div class="grid-card-sub">SHARE</div></div></button>
     </div>
   </div>
 
@@ -165,7 +165,17 @@
         <button onclick="staffRedeemReward()" class="btn-dark rounded-2xl p-5 text-xl">核銷獎勵</button>
         <button onclick="staffAddReferralPoints()" class="btn-dark rounded-2xl p-5 text-xl">帶朋友來店<br><span class="text-sm">+200點</span></button>
       </div>
-      <div class="card p-5"><div class="text-2xl font-black mb-4">POINTS 折抵</div><div class="grid grid-cols-3 gap-3"><button onclick="staffRedeemPoints(100)" class="chip">100</button><button onclick="staffRedeemPoints(300)" class="chip">300</button><button onclick="staffRedeemPoints(500)" class="chip">500</button></div></div>
+      <div class="card p-5 mb-5"><div class="text-2xl font-black mb-4">POINTS 折抵</div><div class="grid grid-cols-3 gap-3"><button onclick="staffRedeemPoints(100)" class="chip">100</button><button onclick="staffRedeemPoints(300)" class="chip">300</button><button onclick="staffRedeemPoints(500)" class="chip">500</button></div></div>
+      <div class="card p-5">
+        <div class="title-en mb-3">CARE RECORD</div>
+        <div class="text-3xl font-black mb-4">調理紀錄</div>
+        <div class="text-white/60 mb-3">第一層分類</div>
+        <div id="staffMainItems" class="grid grid-cols-2 gap-3 mb-5"></div>
+        <div class="text-white/60 mb-3">第二層細項（可多選）</div>
+        <div id="staffSubItems" class="grid grid-cols-1 gap-3 mb-5"></div>
+        <input id="staffAmount" type="number" inputmode="numeric" placeholder="本次金額，例如 800" class="w-full mb-4 p-4 rounded-2xl bg-[#171717] border border-white/10 text-white text-xl">
+        <button onclick="staffSubmitTreatmentRecord()" class="btn-gold rounded-2xl w-full p-5 text-xl">送出完整調理紀錄</button>
+      </div>
     </div>
   </div>
 
@@ -179,6 +189,7 @@
 </div>
 
 <div id="resultModal" class="modal"><div class="card p-7 w-full max-w-[420px] text-center"><div class="gold text-5xl font-black mb-5">恭喜中獎！</div><div class="flex justify-center items-center gap-3 mb-5"><img id="resultPhoto" class="w-14 h-14 rounded-full border border-[#D4AF37]" src=""><div class="text-left"><div id="resultName" class="text-2xl font-black"></div><div id="resultTime" class="text-white/50"></div></div></div><div id="resultPrize" class="mx-auto w-[230px] h-[230px] rounded-full bg-[#fff6cf] text-[#5b006d] text-4xl font-black flex items-center justify-center leading-tight mb-7"></div><button onclick="closeResultAndReload()" class="btn-gold pill w-full h-[64px] text-2xl">太棒了！</button></div></div>
+<div id="qrModal" class="modal"><div class="card p-6 w-full max-w-[420px] text-center"><div class="title-en mb-4">MEMBER QR</div><div id="memberQrLarge" class="qr-large flex justify-center"></div><div class="text-white/60 mt-5 leading-relaxed">請讓調理師掃描此 QR Code</div><button onclick="closeQrModal()" class="btn-gold pill w-full h-[58px] text-xl mt-6">關閉</button></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -241,7 +252,7 @@ function renderHome(){
   const qrUrl=`${location.origin}${location.pathname}?mode=staff&uid=${encodeURIComponent(profile.userId)}`;
   $("memberQr").innerHTML="";
   if(window.QRCode){
-    QRCode.toCanvas(qrUrl,{width:132,margin:1},(err,canvas)=>{ if(!err){$("memberQr").appendChild(canvas);} else renderQrImage(qrUrl); });
+    QRCode.toCanvas(qrUrl,{width:132,margin:1},(err,canvas)=>{ if(!err){canvas.onclick=()=>openQrModal(qrUrl);$("memberQr").appendChild(canvas);} else renderQrImage(qrUrl); });
   }else renderQrImage(qrUrl);
 
   if(member.latestPrize&&member.latestPrizeRedeemed===false){
@@ -261,9 +272,13 @@ function renderQrImage(qrUrl){
   const qrImg=document.createElement("img");
   qrImg.alt="會員 QR Code";
   qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=132x132&margin=8&data=${encodeURIComponent(qrUrl)}`;
+  qrImg.onclick=()=>openQrModal(qrUrl);
   qrImg.onerror=()=>{$("memberQr").innerHTML=`<div class="text-xs text-white/70 break-all max-w-[132px]">${qrUrl}</div>`;};
   $("memberQr").appendChild(qrImg);
 }
+window.openQrModal=function(qrUrl){$("memberQrLarge").innerHTML="";if(window.QRCode){QRCode.toCanvas(qrUrl,{width:320,margin:1},(err,canvas)=>{if(!err)$("memberQrLarge").appendChild(canvas);else renderLargeQrImg(qrUrl);});}else renderLargeQrImg(qrUrl);$("qrModal").classList.add("show");};
+function renderLargeQrImg(qrUrl){const img=document.createElement("img");img.src=`https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=8&data=${encodeURIComponent(qrUrl)}`;$("memberQrLarge").appendChild(img);}
+window.closeQrModal=function(){$("qrModal").classList.remove("show");};
 
 const services=[{name:"兩個月瘦小臉計畫",sub:"FREE FACE PLAN",price:"$ 0",free:true},{name:"精準局部體驗",sub:"LOCAL EXPERIENCE",price:"$400"},{name:"全息平衡調理",sub:"FULL BALANCE",price:"$800"},{name:"訂製服務",sub:"CUSTOM SERVICE",price:"✦",custom:true}];
 let selectedBookingService="";
@@ -299,6 +314,31 @@ function weightedPrize(){let pool=prizes.filter(p=>p.name!==lastPrizeName);const
 window.startSpin=async function(){if(spinning||Number(member.remainingDrawCount||0)<=0)return;spinning=true;$("spinBtn").disabled=true;$("spinBtn").innerText="轉動中...";const prize=weightedPrize();lastPrizeName=prize.name;currentRotate+=360*12+(360-prize.angle);$("wheel").style.transform=`rotate(${currentRotate}deg)`;setTimeout(async()=>{await updateDoc(memberRef,{remainingDrawCount:increment(-1),latestPrize:prize.name,latestPrizeRedeemed:false,updatedAt:Date.now()});await addDoc(collection(db,"draw_records"),{lineUserId:profile.userId,displayName:member.displayName,photoUrl:member.photoUrl,prize:prize.name,createdAt:Date.now()});$("resultPhoto").src=member.photoUrl||profile.pictureUrl;$("resultName").innerText=member.displayName||profile.displayName;$("resultTime").innerText=nowText();$("resultPrize").innerHTML=prize.name.replace("指定","<br>指定").replace("體驗券","體驗券<br>");$("resultModal").classList.add("show");},8400);};
 window.closeResultAndReload=function(){location.reload();};
 
+const careCatalog={
+  "兩個月瘦小臉計畫":["本次小臉調理完成"],
+  "美容":["基礎面部緊緻","晶亮放鬆","頂級面部緊緻","奢華緊緻小V臉","煥采微循環維護"],
+  "舒緩":["肩頸放鬆","放鬆好眠","美體輕盈管理","舒緩上半身日常緊繃","舒緩下半身日常緊繃","深層夜間好眠","深層釋壓方案","內在平衡美學","經期前後舒活","體態輕盈管理"],
+  "訂製服務":["訂製調理","指定部位加強","其他客製需求"]
+};
+let staffMainItem="兩個月瘦小臉計畫",staffSelectedItems=[];
+function renderStaffCareForm(){
+  if(!$('staffMainItems')||!$('staffSubItems'))return;
+  $('staffMainItems').innerHTML=Object.keys(careCatalog).map(k=>`<button onclick="staffSelectMain('${k}')" class="chip ${staffMainItem===k?'active':''}">${k}</button>`).join('');
+  $('staffSubItems').innerHTML=(careCatalog[staffMainItem]||[]).map(i=>`<button onclick="staffToggleSub('${i}')" class="chip ${staffSelectedItems.includes(i)?'active':''}">${i}</button>`).join('');
+}
+window.staffSelectMain=function(name){staffMainItem=name;staffSelectedItems=[];renderStaffCareForm();};
+window.staffToggleSub=function(item){staffSelectedItems=staffSelectedItems.includes(item)?staffSelectedItems.filter(x=>x!==item):[...staffSelectedItems,item];renderStaffCareForm();};
+window.staffSubmitTreatmentRecord=async function(){
+  if(!requireStaff())return;
+  const amount=Number(($('staffAmount')?.value||0));
+  const items=staffSelectedItems.length?staffSelectedItems:[`${staffMainItem}完成`];
+  const patch={points:increment(5),pointsTotal:increment(5),updatedAt:Date.now()};
+  if(staffMainItem==='兩個月瘦小臉計畫')patch.freeFaceUsedCount=increment(1);
+  await updateDoc(doc(db,'members',staffTargetUid),patch);
+  await addDoc(collection(db,'treatment_records'),{lineUserId:staffTargetUid,mainItem:staffMainItem,items,amount,therapistId:profile.userId,therapistName:profile.displayName,pointsAdded:5,createdAt:Date.now()});
+  alert('已送出調理紀錄，並增加 5 POINTS');location.reload();
+};
+
 async function loadStaffTarget(){
   const params=new URLSearchParams(location.search);
   if(params.get("mode")!=="staff")return;
@@ -308,7 +348,7 @@ async function loadStaffTarget(){
   if(!staffTargetUid){$("staffDenied").classList.remove("hidden");$("staffDenied").innerHTML="<div class='text-3xl font-black'>缺少會員資料</div>";return;}
   const ref=doc(db,"members",staffTargetUid),snap=await getDoc(ref);
   if(!snap.exists()){$("staffDenied").classList.remove("hidden");$("staffDenied").innerHTML="<div class='text-3xl font-black'>找不到會員</div>";return;}
-  staffTargetData=snap.data();$("staffPanel").classList.remove("hidden");$("staffMemberPhoto").src=staffTargetData.photoUrl||"";$("staffMemberName").innerText=staffTargetData.displayName||"會員";$("staffMemberInfo").innerText=`${staffTargetData.freeFaceUsedCount||0}/8・${staffTargetData.points||0} POINTS`;$("staffRewardInfo").innerHTML=staffTargetData.latestPrize&&staffTargetData.latestPrizeRedeemed===false?`IAURI PRIVILEGE：${staffTargetData.latestPrize}（尚未兌換）`:"目前無未兌換獎勵";
+  staffTargetData=snap.data();$("staffPanel").classList.remove("hidden");renderStaffCareForm();$("staffMemberPhoto").src=staffTargetData.photoUrl||"";$("staffMemberName").innerText=staffTargetData.displayName||"會員";$("staffMemberInfo").innerText=`${staffTargetData.freeFaceUsedCount||0}/8・${staffTargetData.points||0} POINTS`;$("staffRewardInfo").innerHTML=staffTargetData.latestPrize&&staffTargetData.latestPrizeRedeemed===false?`IAURI PRIVILEGE：${staffTargetData.latestPrize}（尚未兌換）`:"目前無未兌換獎勵";
 }
 function requireStaff(){if(!isTherapist){alert("無權限");return false;}if(!staffTargetUid){alert("缺少會員");return false;}return true;}
 window.staffCompleteTreatment=async function(){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{freeFaceUsedCount:increment(1),points:increment(5),pointsTotal:increment(5),updatedAt:Date.now()});await addDoc(collection(db,"treatment_records"),{lineUserId:staffTargetUid,mainItem:"兩個月瘦小臉計畫",items:["本次調理完成"],amount:0,therapistId:profile.userId,therapistName:profile.displayName,pointsAdded:5,createdAt:Date.now()});alert("已完成本次調理，並增加 5 POINTS");location.reload();};
