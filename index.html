@@ -145,7 +145,7 @@
     </div>
   </div>
 
-  <div id="page-points" class="page"><button class="text-white/60 text-xl mb-7 bg-transparent border-0" onclick="showPage('home')">← 返回首頁</button><div class="title-en mb-3">IAURI POINTS</div><h2 class="text-5xl font-black mb-6">積分紀錄</h2><div class="card p-6 mb-6"><div class="text-white/50">目前積分</div><div id="pointsPageText" class="text-6xl font-black gold mt-2">0</div></div><div class="dark-card p-5 leading-loose"><div class="text-2xl font-black mb-3">獲取方式</div>分享好友 +10<br>完成調理 +5<br>帶朋友來店 +200</div></div>
+  <div id="page-points" class="page"><button class="text-white/60 text-xl mb-7 bg-transparent border-0" onclick="showPage('home')">← 返回首頁</button><div class="title-en mb-3">IAURI POINTS</div><h2 class="text-5xl font-black mb-6">積分紀錄</h2><div class="card p-6 mb-6"><div class="text-white/50">目前積分</div><div id="pointsPageText" class="text-6xl font-black gold mt-2">0</div></div><div class="dark-card p-5 leading-loose"><div class="text-2xl font-black mb-3">獲取方式</div>完成調理 +5<br>帶朋友來店 +200</div></div>
 
   <div id="page-records" class="page"><button class="text-white/60 text-xl mb-7 bg-transparent border-0" onclick="showPage('home')">← 返回首頁</button><div class="title-en mb-3">IAURI CARE HISTORY</div><h2 class="text-5xl font-black mb-6">消費紀錄</h2><div id="recordsList"></div></div>
 
@@ -306,7 +306,8 @@ async function renderRecords(){
 window.showPage=async function(name){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));$("page-"+name).classList.add("active");document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.nav===name));if(name==="booking")renderBooking();if(name==="records")await renderRecords();};
 window.openRescue=function(){const h=new Date().getHours();if(!(h>=20||h<2)){alert("救援功能開放時間為晚上 8 點至凌晨 2 點");return;}showPage("rescue");};
 window.editDisplayName=async function(){const name=prompt("請輸入會員顯示名稱",member.displayName||"");if(!name)return;await updateDoc(memberRef,{displayName:name,updatedAt:Date.now()});location.reload();};
-window.shareFriend=async function(){const text="我在 IAURI 抽中了專屬獎勵✨";try{if(navigator.share)await navigator.share({title:"IAURI BEAUTY CLUB",text,url:SHARE_URL});else{await navigator.clipboard.writeText(`${text}\n${SHARE_URL}`);alert("分享文字已複製");}await updateDoc(memberRef,{points:increment(10),pointsTotal:increment(10),updatedAt:Date.now()});await addDoc(collection(db,"points_records"),{lineUserId:profile.userId,type:"share",points:10,createdAt:Date.now()});location.reload();}catch(e){}};
+window.shareFriend=async function(){const text="我在 IAURI 抽中了專屬獎勵✨";try{if(navigator.share)await navigator.share({title:"IAURI BEAUTY CLUB",text,url:SHARE_URL});else{await navigator.clipboard.writeText(`${text}
+${SHARE_URL}`);alert("分享文字已複製");}}catch(e){}};
 
 const prizes=[{name:"體驗券400元",weight:24,angle:30},{name:"國際大師指定體驗",weight:18,angle:90},{name:"體驗券800元",weight:22,angle:150},{name:"三人同行五折",weight:18,angle:210},{name:"體驗券1500元",weight:8,angle:270},{name:"兩人同行八折",weight:20,angle:330}];
 let spinning=false,currentRotate=0,lastPrizeName="";
