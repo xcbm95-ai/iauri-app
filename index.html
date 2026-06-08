@@ -207,13 +207,13 @@
         <div id="staffRewardInfo" class="text-white/70"></div>
       </div>
       <div class="grid grid-cols-2 gap-3 mb-5">
-        <button onclick="staffCompleteTreatment()" class="btn-gold rounded-2xl p-5 text-xl">完成調理<br><span class="text-sm">+1 / +5點</span></button>
+        <button onclick="scrollToCareRecord()" class="btn-gold rounded-2xl p-5 text-xl">填寫調理<br><span class="text-sm">正式紀錄</span></button>
         <button onclick="staffUnlockDraw(1)" class="btn-dark rounded-2xl p-5 text-xl">開啟抽獎<br><span class="text-sm">+1 次</span></button>
         <button onclick="staffRedeemReward()" class="btn-dark rounded-2xl p-5 text-xl">核銷獎勵</button>
         <button onclick="staffAddReferralPoints()" class="btn-dark rounded-2xl p-5 text-xl">帶朋友來店<br><span class="text-sm">+100點</span></button>
       </div>
       <div class="card p-5 mb-5"><div class="text-2xl font-black mb-4">POINTS 折抵</div><div class="grid grid-cols-3 gap-3"><button onclick="staffRedeemPoints(100)" class="chip">100</button><button onclick="staffRedeemPoints(300)" class="chip">300</button><button onclick="staffRedeemPoints(500)" class="chip">500</button></div></div>
-      <div class="card p-5">
+      <div id="careRecordBox" class="card p-5">
         <div class="title-en mb-3">CARE RECORD</div>
         <div class="text-3xl font-black mb-4">調理紀錄</div>
         <div class="text-white/60 mb-3">第一層分類</div>
@@ -560,16 +560,26 @@ window.scrollToCareRecord=function(){
   if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
 };
 
-function dateStringFromOffset(offset){
-  const d=new Date();
-  d.setDate(d.getDate()+offset);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+function iauriLocalDateString(dateObj){
+  const y=dateObj.getFullYear();
+  const m=String(dateObj.getMonth()+1).padStart(2,"0");
+  const d=String(dateObj.getDate()).padStart(2,"0");
+  return `${y}-${m}-${d}`;
 }
 
-function bookingDateInSevenDays(dateStr){
-  const allow=[];
-  for(let i=-7;i<=7;i++)allow.push(dateStringFromOffset(i));
-  return allow.includes(dateStr);
+function iauriDateFromOffset(offset){
+  const d=new Date();
+  d.setHours(12,0,0,0);
+  d.setDate(d.getDate()+offset);
+  return iauriLocalDateString(d);
+}
+
+function iauriSevenDayDateSet(){
+  const set=new Set();
+  for(let i=-7;i<=7;i++){
+    set.add(iauriDateFromOffset(i));
+  }
+  return set;
 }
 
 async function renderStaffBookings(){
@@ -578,22 +588,27 @@ async function renderStaffBookings(){
   try{
     $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">讀取七天預約中...</div>`;
 
+    const allowedDates=iauriSevenDayDateSet();
     const snap=await getDocs(collection(db,"bookings"));
     const rows=[];
 
     snap.forEach(d=>{
       const data={id:d.id,...d.data()};
-      if(bookingDateInSevenDays(data.date||""))rows.push(data);
+      if(allowedDates.has(String(data.date||"")))rows.push(data);
     });
 
-    rows.sort((a,b)=>String((a.date||"")+" "+(a.time||"")).localeCompare(String((b.date||"")+" "+(b.time||""))));
+    rows.sort((a,b)=>{
+      const aa=String(a.date||"")+" "+String(a.time||"");
+      const bb=String(b.date||"")+" "+String(b.time||"");
+      return aa.localeCompare(bb);
+    });
 
     const completed=rows.filter(r=>r.status==="completed").length;
     $("bookingStatTotal").innerText=rows.length;
     $("bookingStatCompleted").innerText=completed;
 
     if(!rows.length){
-      $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">七天內尚無預約</div>`;
+      $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">前後七天內尚無預約</div>`;
       return;
     }
 
@@ -602,6 +617,8 @@ async function renderStaffBookings(){
       const statusText=status==="completed"?"已完成":status==="arrived"?"已到店":status==="cancelled"?"已取消":"待服務";
       const disabled=status==="completed"||status==="cancelled";
       const statusClass=status==="completed"?"text-green-400":status==="arrived"?"gold":status==="cancelled"?"text-red-400":"text-white/60";
+      const price=Number(r.price||0);
+
       return `
         <div class="dark-card p-5 ${disabled?'opacity-70':''}">
           <div class="flex items-center gap-4 mb-4">
@@ -612,20 +629,24 @@ async function renderStaffBookings(){
             </div>
             <div class="${statusClass} text-lg font-black">${statusText}</div>
           </div>
+
           <div class="flex justify-between gap-3 items-end mb-4">
             <div>
               <div class="text-xl font-black">${r.serviceName||'未命名項目'}</div>
               <div class="text-white/45 mt-1">${r.category||''}${r.tier?'｜'+r.tier:''}</div>
             </div>
-            <div class="gold text-2xl font-black">$${Number(r.price||0).toLocaleString()}</div>
+            <div class="gold text-2xl font-black">${price?('$'+price.toLocaleString()):'$0'}</div>
           </div>
+
           <div class="grid grid-cols-3 gap-3">
             <button onclick="markBookingArrived('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>已到店</button>
-            <button onclick="completeBookingFromList('${r.id}')" class="btn-gold rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>完成調理</button>
+            <button onclick="completeBookingFromList('${r.id}')" class="btn-gold rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>完成</button>
             <button onclick="cancelBooking('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>取消</button>
           </div>
-        </div>`;
+        </div>
+      `;
     }).join("");
+
   }catch(e){
     console.error(e);
     $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-red-400">預約讀取失敗：${e.message||e}</div>`;
@@ -634,14 +655,22 @@ async function renderStaffBookings(){
 
 window.markBookingArrived=async function(id){
   if(!isTherapist){alert("無權限");return;}
-  await updateDoc(doc(db,"bookings",id),{status:"arrived",arrivedAt:Date.now(),arrivedBy:profile.userId});
+  await updateDoc(doc(db,"bookings",id),{
+    status:"arrived",
+    arrivedAt:Date.now(),
+    arrivedBy:profile.userId
+  });
   await renderStaffBookings();
 };
 
 window.cancelBooking=async function(id){
   if(!isTherapist){alert("無權限");return;}
   if(!confirm("確定取消這筆預約？"))return;
-  await updateDoc(doc(db,"bookings",id),{status:"cancelled",cancelledAt:Date.now(),cancelledBy:profile.userId});
+  await updateDoc(doc(db,"bookings",id),{
+    status:"cancelled",
+    cancelledAt:Date.now(),
+    cancelledBy:profile.userId
+  });
   await renderStaffBookings();
 };
 
@@ -650,14 +679,28 @@ window.completeBookingFromList=async function(id){
 
   const bookingRef=doc(db,"bookings",id);
   const snap=await getDoc(bookingRef);
-  if(!snap.exists()){alert("找不到這筆預約");return;}
+
+  if(!snap.exists()){
+    alert("找不到這筆預約");
+    return;
+  }
 
   const data=snap.data();
-  if(data.status==="completed"){alert("這筆預約已完成");return;}
+
+  if(data.status==="completed"){
+    alert("這筆預約已完成");
+    return;
+  }
 
   const memberDocRef=doc(db,"members",data.lineUserId);
-  const patch={points:increment(5),pointsTotal:increment(5),updatedAt:Date.now()};
 
+  const patch={
+    points:increment(5),
+    pointsTotal:increment(5),
+    updatedAt:Date.now()
+  };
+
+  // 只有免費八次方案才增加免費次數；正式菜單不加免費進度
   if(data.serviceName==="兩個月瘦小臉計畫" || data.category==="免費方案"){
     patch.freeFaceUsedCount=increment(1);
   }
@@ -683,8 +726,14 @@ window.completeBookingFromList=async function(id){
     createdAt:Date.now()
   });
 
-  await updateDoc(bookingRef,{status:"completed",completedAt:Date.now(),completedBy:profile.userId,therapistName:profile.displayName});
-  alert("已完成調理，並寫入消費紀錄");
+  await updateDoc(bookingRef,{
+    status:"completed",
+    completedAt:Date.now(),
+    completedBy:profile.userId,
+    therapistName:profile.displayName
+  });
+
+  alert("已完成，並寫入消費紀錄");
   await renderStaffBookings();
 };
 
@@ -700,7 +749,7 @@ async function loadStaffTarget(){
   staffTargetData=snap.data();$("staffPanel").classList.remove("hidden");renderStaffCareForm();$("staffMemberPhoto").src=staffTargetData.photoUrl||"";$("staffMemberName").innerText=staffTargetData.displayName||"會員";$("staffMemberInfo").innerText=`${staffTargetData.freeFaceUsedCount||0}/8・${staffTargetData.points||0} POINTS`;$("staffRewardInfo").innerHTML=staffTargetData.latestPrize&&staffTargetData.latestPrizeRedeemed===false?`IAURI PRIVILEGE：${staffTargetData.latestPrize}（尚未兌換）`:"目前無未兌換獎勵";
 }
 function requireStaff(){if(!isTherapist){alert("無權限");return false;}if(!staffTargetUid){alert("缺少會員");return false;}return true;}
-window.staffCompleteTreatment=async function(){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{freeFaceUsedCount:increment(1),points:increment(5),pointsTotal:increment(5),updatedAt:Date.now()});await addDoc(collection(db,"treatment_records"),{lineUserId:staffTargetUid,mainItem:"兩個月瘦小臉計畫",items:["本次調理完成"],amount:0,therapistId:profile.userId,therapistName:profile.displayName,pointsAdded:5,createdAt:Date.now()});alert("已完成本次調理，並增加 5 POINTS");location.reload();};
+window.staffCompleteTreatment=function(){scrollToCareRecord();};
 window.staffUnlockDraw=async function(count){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{remainingDrawCount:increment(count),updatedAt:Date.now()});await addDoc(collection(db,"draw_unlocks"),{lineUserId:staffTargetUid,therapistId:profile.userId,count,createdAt:Date.now()});alert(`已開啟 ${count} 次抽獎資格`);location.reload();};
 window.staffRedeemReward=async function(){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{latestPrizeRedeemed:true,updatedAt:Date.now()});alert("已核銷獎勵");location.reload();};
 window.staffAddReferralPoints=async function(){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{points:increment(100),pointsTotal:increment(100),updatedAt:Date.now()});await addDoc(collection(db,"points_records"),{lineUserId:staffTargetUid,type:"referral_visit",points:100,therapistId:profile.userId,createdAt:Date.now()});alert("已新增帶朋友來店 +100 POINTS");location.reload();};
