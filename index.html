@@ -157,11 +157,11 @@
     <div id="staffPanel" class="hidden">
 
       <div class="card p-5 mb-5">
-        <div class="title-en mb-3">TODAY BOOKINGS</div>
-        <div class="text-3xl font-black mb-2">今日預約名單</div>
-        <div class="text-white/50 leading-relaxed mb-5">顯示今天所有顧客預約，可標記到店或完成調理。</div>
+        <div class="title-en mb-3">BOOKING MANAGER</div>
+        <div class="text-3xl font-black mb-2">七天預約管理</div>
+        <div class="text-white/50 leading-relaxed mb-5">顯示最近七天預約，可標記到店、完成或取消。</div>
 
-        <div class="grid grid-cols-3 gap-3 mb-5">
+        <div class="grid grid-cols-2 gap-3 mb-5">
           <div class="dark-card p-4 text-center">
             <div class="text-white/45 small">今日預約</div>
             <div id="bookingStatTotal" class="gold text-3xl font-black mt-1">0</div>
@@ -169,12 +169,7 @@
           <div class="dark-card p-4 text-center">
             <div class="text-white/45 small">已完成</div>
             <div id="bookingStatCompleted" class="gold text-3xl font-black mt-1">0</div>
-          </div>
-          <div class="dark-card p-4 text-center">
-            <div class="text-white/45 small">今日營收</div>
-            <div id="bookingStatRevenue" class="gold text-2xl font-black mt-1">$0</div>
-          </div>
-        </div>
+          </div>        </div>
 
         <div id="staffBookingList" class="space-y-4">
           <div class="dark-card p-5 text-white/50">讀取今日預約中...</div>
@@ -454,68 +449,143 @@ function todayDateString(){
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 }
 
-async function renderStaffBookings(){
-  if(!isTherapist || !$("staffBookingList"))return;
 
-  const today=todayDateString();
+async function renderStaffBookings(){
+  if(!isTherapist || !$("staffBookingList")) return;
 
   try{
-    const qy=query(collection(db,"bookings"),where("date","==",today));
-    const snap=await getDocs(qy);
+
+    const snap = await getDocs(collection(db,"bookings"));
+
     const rows=[];
-    snap.forEach(d=>rows.push({id:d.id,...d.data()}));
-    rows.sort((a,b)=>String(a.time||"").localeCompare(String(b.time||"")));
+
+    snap.forEach(d=>{
+      rows.push({
+        id:d.id,
+        ...d.data()
+      });
+    });
+
+    rows.sort((a,b)=>{
+      const da=(a.date||"")+" "+(a.time||"");
+      const db=(b.date||"")+" "+(b.time||"");
+      return da.localeCompare(db);
+    });
 
     const total=rows.length;
     const completed=rows.filter(r=>r.status==="completed").length;
-    const revenue=rows
-      .filter(r=>r.status==="completed")
-      .reduce((sum,r)=>sum+Number(r.price||0),0);
 
     $("bookingStatTotal").innerText=total;
     $("bookingStatCompleted").innerText=completed;
-    $("bookingStatRevenue").innerText="$"+revenue.toLocaleString();
 
     if(!rows.length){
-      $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">今日尚無預約</div>`;
+      $("staffBookingList").innerHTML=`
+        <div class="dark-card p-5 text-white/50">
+          尚無預約
+        </div>
+      `;
       return;
     }
 
-    $("staffBookingList").innerHTML=rows.map(r=>{
+    $("staffBookingList").innerHTML = rows.map(r=>{
+
       const status=r.status||"pending";
-      const statusText=status==="completed"?"已完成":status==="arrived"?"已到店":status==="cancelled"?"已取消":"待服務";
-      const statusClass=status==="completed"?"text-white/35":status==="arrived"?"gold":"text-white/60";
-      const disabled=status==="completed"||status==="cancelled";
+
+      let statusText="待服務";
+      let statusColor="text-white/50";
+
+      if(status==="arrived"){
+        statusText="已到店";
+        statusColor="gold";
+      }
+
+      if(status==="completed"){
+        statusText="已完成";
+        statusColor="text-green-400";
+      }
+
+      if(status==="cancelled"){
+        statusText="已取消";
+        statusColor="text-red-400";
+      }
 
       return `
-        <div class="dark-card p-5 ${status==="completed"?"opacity-60":""}">
-          <div class="flex items-center gap-4 mb-4">
-            <img src="${r.photoUrl||'https://dummyimage.com/120x120/111111/d4af37&text=IAURI'}" class="w-16 h-16 rounded-full border border-[#D4AF37] object-cover">
-            <div class="flex-1 min-w-0">
-              <div class="text-2xl font-black truncate">${r.displayName||"會員"}</div>
-              <div class="text-white/50 mt-1">${r.date||""}　${r.time||""}</div>
+
+      <div class="dark-card p-5 mb-4">
+
+        <div class="flex items-center gap-4 mb-4">
+
+          <img
+            src="${r.photoUrl||''}"
+            class="w-16 h-16 rounded-full border border-[#D4AF37] object-cover"
+          >
+
+          <div class="flex-1">
+
+            <div class="text-2xl font-black">
+              ${r.displayName||'會員'}
             </div>
-            <div class="${statusClass} text-lg font-black">${statusText}</div>
+
+            <div class="text-white/50 mt-1">
+              ${r.date||''}　${r.time||''}
+            </div>
+
           </div>
 
-          <div class="flex justify-between gap-3 items-end mb-4">
-            <div>
-              <div class="text-xl font-black">${r.serviceName||"未命名項目"}</div>
-              <div class="text-white/45 mt-1">${r.category||""}${r.tier?`｜${r.tier}`:""}</div>
-            </div>
-            <div class="gold text-2xl font-black">$${Number(r.price||0).toLocaleString()}</div>
+          <div class="${statusColor} text-lg font-black">
+            ${statusText}
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
-            <button onclick="markBookingArrived('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>已到店</button>
-            <button onclick="completeBookingFromList('${r.id}')" class="btn-gold rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>完成調理</button>
-          </div>
         </div>
+
+        <div class="text-xl font-black mb-2">
+          ${r.serviceName||''}
+        </div>
+
+        <div class="text-white/50 mb-5">
+          ${r.category||''}
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+
+          <button
+            onclick="markBookingArrived('${r.id}')"
+            class="btn-dark rounded-2xl p-4"
+          >
+            已到店
+          </button>
+
+          <button
+            onclick="completeBookingFromList('${r.id}')"
+            class="btn-gold rounded-2xl p-4"
+          >
+            完成調理
+          </button>
+
+          <button
+            onclick="cancelBooking('${r.id}')"
+            class="btn-dark rounded-2xl p-4"
+          >
+            取消
+          </button>
+
+        </div>
+
+      </div>
+
       `;
-    }).join("");
+
+    }).join('');
+
   }catch(e){
+
     console.error(e);
-    $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">預約讀取失敗，請確認 Firebase 權限</div>`;
+
+    $("staffBookingList").innerHTML=`
+      <div class="dark-card p-5 text-red-400">
+        預約讀取失敗
+      </div>
+    `;
   }
 }
 
@@ -527,6 +597,21 @@ window.markBookingArrived=async function(id){
     arrivedBy:profile.userId
   });
   await renderStaffBookings();
+};
+
+
+window.cancelBooking=async function(id){
+
+  await updateDoc(
+    doc(db,"bookings",id),
+    {
+      status:"cancelled",
+      cancelledAt:Date.now()
+    }
+  );
+
+  await renderStaffBookings();
+
 };
 
 window.completeBookingFromList=async function(id){
