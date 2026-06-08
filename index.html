@@ -175,25 +175,47 @@
     <div id="staffDenied" class="card p-7 text-center hidden"><div class="text-3xl font-black mb-3">無權限</div><div class="text-white/60">此頁面僅限白名單調理師使用</div></div>
     <div id="staffPanel" class="hidden">
 
+      
       <div class="card p-5 mb-5">
-        <div class="title-en mb-3">BOOKING MANAGER</div>
-        <div class="text-3xl font-black mb-2">七天預約管理</div>
-        <div class="text-white/50 leading-relaxed mb-5">顯示前後七天所有預約，可標記到店、完成或取消。</div>
+        <div class="title-en mb-3">BOOKING TIMELINE</div>
+        <div class="text-3xl font-black mb-5">調理師預約工作台</div>
 
-        <div class="grid grid-cols-2 gap-3 mb-5">
-          <div class="dark-card p-4 text-center">
-            <div class="text-white/45 small">七天預約</div>
-            <div id="bookingStatTotal" class="gold text-3xl font-black mt-1">0</div>
+        <div id="bookingDateTabs" class="flex gap-3 overflow-x-auto pb-2 mb-5"></div>
+
+        <div class="grid grid-cols-4 gap-3 mb-5">
+          <div class="dark-card p-3 text-center">
+            <div class="small text-white/50">待服務</div>
+            <div id="statPending" class="gold text-2xl font-black mt-1">0</div>
           </div>
-          <div class="dark-card p-4 text-center">
-            <div class="text-white/45 small">已完成</div>
-            <div id="bookingStatCompleted" class="gold text-3xl font-black mt-1">0</div>
+          <div class="dark-card p-3 text-center">
+            <div class="small text-white/50">已到店</div>
+            <div id="statArrived" class="gold text-2xl font-black mt-1">0</div>
+          </div>
+          <div class="dark-card p-3 text-center">
+            <div class="small text-white/50">進行中</div>
+            <div id="statServing" class="gold text-2xl font-black mt-1">0</div>
+          </div>
+          <div class="dark-card p-3 text-center">
+            <div class="small text-white/50">已完成</div>
+            <div id="statCompleted" class="gold text-2xl font-black mt-1">0</div>
           </div>
         </div>
 
-        <div id="staffBookingList" class="space-y-4">
-          <div class="dark-card p-5 text-white/50">讀取七天預約中...</div>
+        <div id="bookingStatusTabs" class="flex gap-3 overflow-x-auto pb-2 mb-5">
+          <button class="chip active" data-status="all">全部</button>
+          <button class="chip" data-status="pending">待服務</button>
+          <button class="chip" data-status="arrived">已到店</button>
+          <button class="chip" data-status="completed">已完成</button>
+          <button class="chip" data-status="cancelled">已取消</button>
         </div>
+
+        <div id="currentServingBox" class="mb-5 hidden"></div>
+
+        <div id="staffBookingList" class="space-y-5">
+          <div class="dark-card p-5 text-white/50">讀取預約中...</div>
+        </div>
+      </div>
+
       </div>
 
       <div class="card p-5 mb-5">
@@ -795,6 +817,176 @@ async function boot(){
     // 不跳出阻擋式錯誤，避免顧客卡死；真正原因通常是 LIFF ID 或 LINE Developers Endpoint / Scope 設定。
   }finally{showLoading(false);}
 }
+
+let bookingSelectedDate="";
+let bookingSelectedStatus="all";
+
+function buildBookingDateTabs(){
+  if(!$("bookingDateTabs")) return;
+  const days=["日","一","二","三","四","五","六"];
+  let html="";
+  for(let i=0;i<7;i++){
+    const d=new Date();
+    d.setDate(d.getDate()+i);
+    const yyyy=d.getFullYear();
+    const mm=String(d.getMonth()+1).padStart(2,"0");
+    const dd=String(d.getDate()).padStart(2,"0");
+    const value=`${yyyy}-${mm}-${dd}`;
+    if(i===0) bookingSelectedDate=value;
+    html+=`<button onclick="selectBookingTimelineDate('${value}',this)" class="chip ${i===0?'active':''}">
+      ${mm}/${dd}<br><span class='small'>${days[d.getDay()]}</span>
+    </button>`;
+  }
+  $("bookingDateTabs").innerHTML=html;
+
+  document.querySelectorAll("#bookingStatusTabs .chip").forEach(btn=>{
+    btn.onclick=()=>{
+      document.querySelectorAll("#bookingStatusTabs .chip").forEach(x=>x.classList.remove("active"));
+      btn.classList.add("active");
+      bookingSelectedStatus=btn.dataset.status;
+      renderStaffBookings();
+    };
+  });
+}
+
+window.selectBookingTimelineDate=function(date,btn){
+  bookingSelectedDate=date;
+  document.querySelectorAll("#bookingDateTabs .chip").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  renderStaffBookings();
+};
+
+function bookingCardHtml(r){
+  const status=r.status||"pending";
+  const statusText=iauriBookingStatusText(status);
+  const statusClass=status==="completed"?"text-green-400":
+                    status==="arrived"?"gold":
+                    status==="cancelled"?"text-red-400":"text-white/70";
+
+  return `
+  <div class="dark-card p-5 ${status==='completed'?'opacity-70':''}">
+    <div class="flex justify-between items-start gap-3 mb-4">
+      <div>
+        <div class="text-2xl font-black">${r.displayName||'會員'}</div>
+        <div class="text-white/45 mt-1">${r.time||''}</div>
+      </div>
+      <div class="${statusClass} font-black">${statusText}</div>
+    </div>
+
+    <div class="text-xl font-black mb-2">${r.serviceName||''}</div>
+
+    <div class="text-white/45 mb-4">
+      ${r.category||''}${r.tier?'｜'+r.tier:''}
+    </div>
+
+    <details class="mb-4">
+      <summary class="cursor-pointer text-[#D4AF37]">查看會員資訊</summary>
+      <div class="mt-4 flex items-center gap-4">
+        <img src="${r.photoUrl||''}" class="w-16 h-16 rounded-full border border-[#D4AF37] object-cover">
+        <div>
+          <div>${r.displayName||''}</div>
+          <div class="small text-white/45">${r.lineUserId||''}</div>
+        </div>
+      </div>
+    </details>
+
+    ${status==="completed"||status==="cancelled" ? "" : `
+    <div class="grid grid-cols-3 gap-3">
+      <button onclick="markBookingArrived('${r.id}')" class="btn-dark rounded-2xl p-4">已到店</button>
+      <button onclick="completeBookingFromList('${r.id}')" class="btn-gold rounded-2xl p-4">完成</button>
+      <button onclick="cancelBooking('${r.id}')" class="btn-dark rounded-2xl p-4">取消</button>
+    </div>
+    `}
+  </div>`;
+}
+
+const oldRenderStaffBookings = renderStaffBookings;
+
+renderStaffBookings=function(){
+  if(!isTherapist || !$("staffBookingList")) return;
+
+  if(iauriBookingUnsub) iauriBookingUnsub();
+
+  iauriBookingUnsub=onSnapshot(
+    collection(db,"bookings"),
+    snap=>{
+      const all=[];
+
+      snap.forEach(d=>{
+        const data={id:d.id,...d.data()};
+        if(String(data.date||"")===bookingSelectedDate){
+          all.push(data);
+        }
+      });
+
+      all.sort((a,b)=>String(a.time||"").localeCompare(String(b.time||"")));
+
+      $("statPending").innerText=all.filter(v=>v.status==="pending").length;
+      $("statArrived").innerText=all.filter(v=>v.status==="arrived").length;
+      $("statServing").innerText=all.filter(v=>v.status==="serving").length;
+      $("statCompleted").innerText=all.filter(v=>v.status==="completed").length;
+
+      const serving=all.filter(v=>v.status==="arrived");
+
+      $("currentServingBox").classList.toggle("hidden",!serving.length);
+
+      $("currentServingBox").innerHTML=serving.length?`
+        <div class="card p-5">
+          <div class="title-en mb-3">NOW SERVING</div>
+          <div class="text-2xl font-black mb-4">目前服務中</div>
+          ${serving.map(v=>bookingCardHtml(v)).join("")}
+        </div>
+      `:"";
+
+      let rows=all;
+
+      if(bookingSelectedStatus!=="all"){
+        rows=rows.filter(v=>(v.status||"pending")===bookingSelectedStatus);
+      }
+
+      const activeRows=rows.filter(v=>v.status!=="completed");
+      const completedRows=rows.filter(v=>v.status==="completed");
+
+      const grouped={};
+
+      activeRows.forEach(v=>{
+        if(!grouped[v.time]) grouped[v.time]=[];
+        grouped[v.time].push(v);
+      });
+
+      let html="";
+
+      Object.keys(grouped).sort().forEach(time=>{
+        html+=`
+        <div>
+          <div class="gold text-2xl font-black mb-3">${time}</div>
+          <div class="space-y-4">
+            ${grouped[time].map(v=>bookingCardHtml(v)).join("")}
+          </div>
+        </div>`;
+      });
+
+      if(completedRows.length && bookingSelectedStatus==="all"){
+        html+=`
+        <details class="mt-6">
+          <summary class="text-xl font-black gold cursor-pointer">已完成紀錄 (${completedRows.length})</summary>
+          <div class="space-y-4 mt-4">
+            ${completedRows.map(v=>bookingCardHtml(v)).join("")}
+          </div>
+        </details>`;
+      }
+
+      if(!html){
+        html=`<div class="dark-card p-5 text-white/50">本日尚無預約</div>`;
+      }
+
+      $("staffBookingList").innerHTML=html;
+    }
+  );
+};
+
+
+buildBookingDateTabs();
 boot();
 </script>
 </body>
