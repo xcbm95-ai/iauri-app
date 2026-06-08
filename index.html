@@ -195,6 +195,7 @@
           <div class="dark-card p-5 text-white/50">讀取七天預約中...</div>
         </div>
       </div>
+
       <div class="card p-5 mb-5">
         <div class="flex items-center gap-4 mb-4"><img id="staffMemberPhoto" class="w-20 h-20 rounded-full border border-[#D4AF37] object-cover" src=""><div><div id="staffMemberName" class="text-3xl font-black">會員</div><div id="staffMemberInfo" class="muted mt-1">0/8・0 POINTS</div></div></div>
         <div id="staffRewardInfo" class="text-white/70"></div>
@@ -244,7 +245,9 @@ import {
   query,
   where,
   getDocs,
-  increment
+  increment,
+  serverTimestamp,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -587,79 +590,99 @@ function iauriDateFromOffset(offset){
   return iauriLocalDateString(d);
 }
 
-function iauriSevenDayDateSet(){
+function iauriBookingDateSet(){
   const set=new Set();
-  for(let i=-7;i<=7;i++){
-    set.add(iauriDateFromOffset(i));
-  }
+  for(let i=-7;i<=7;i++)set.add(iauriDateFromOffset(i));
   return set;
 }
 
-async function renderStaffBookings(){
+function iauriBookingStatusText(status){
+  if(status==="completed")return "已完成";
+  if(status==="arrived")return "已到店";
+  if(status==="cancelled")return "已取消";
+  return "待服務";
+}
+
+function iauriBookingStatusClass(status){
+  if(status==="completed")return "text-green-400";
+  if(status==="arrived")return "gold";
+  if(status==="cancelled")return "text-red-400";
+  return "text-white/60";
+}
+
+let iauriBookingUnsub=null;
+
+function renderStaffBookings(){
   if(!isTherapist || !$("staffBookingList"))return;
 
+  $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">讀取七天預約中...</div>`;
+
+  const allowedDates=iauriBookingDateSet();
+
   try{
-    $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">讀取七天預約中...</div>`;
+    if(iauriBookingUnsub)iauriBookingUnsub();
 
-    const allowedDates=iauriSevenDayDateSet();
-    const snap=await getDocs(collection(db,"bookings"));
-    const rows=[];
+    iauriBookingUnsub=onSnapshot(
+      collection(db,"bookings"),
+      snap=>{
+        const rows=[];
+        snap.forEach(d=>{
+          const data={id:d.id,...d.data()};
+          if(allowedDates.has(String(data.date||"")))rows.push(data);
+        });
 
-    snap.forEach(d=>{
-      const data={id:d.id,...d.data()};
-      if(allowedDates.has(String(data.date||"")))rows.push(data);
-    });
+        rows.sort((a,b)=>{
+          const aa=String(a.date||"")+" "+String(a.time||"");
+          const bb=String(b.date||"")+" "+String(b.time||"");
+          return aa.localeCompare(bb);
+        });
 
-    rows.sort((a,b)=>{
-      const aa=String(a.date||"")+" "+String(a.time||"");
-      const bb=String(b.date||"")+" "+String(b.time||"");
-      return aa.localeCompare(bb);
-    });
+        $("bookingStatTotal").innerText=rows.length;
+        $("bookingStatCompleted").innerText=rows.filter(r=>r.status==="completed").length;
 
-    const completed=rows.filter(r=>r.status==="completed").length;
-    $("bookingStatTotal").innerText=rows.length;
-    $("bookingStatCompleted").innerText=completed;
+        if(!rows.length){
+          $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">前後七天內尚無預約</div>`;
+          return;
+        }
 
-    if(!rows.length){
-      $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-white/50">前後七天內尚無預約</div>`;
-      return;
-    }
+        $("staffBookingList").innerHTML=rows.map(r=>{
+          const status=r.status||"pending";
+          const disabled=status==="completed"||status==="cancelled";
+          const price=Number(r.price||0);
 
-    $("staffBookingList").innerHTML=rows.map(r=>{
-      const status=r.status||"pending";
-      const statusText=status==="completed"?"已完成":status==="arrived"?"已到店":status==="cancelled"?"已取消":"待服務";
-      const disabled=status==="completed"||status==="cancelled";
-      const statusClass=status==="completed"?"text-green-400":status==="arrived"?"gold":status==="cancelled"?"text-red-400":"text-white/60";
-      const price=Number(r.price||0);
+          return `
+            <div class="dark-card p-5 ${disabled?'opacity-70':''}">
+              <div class="flex items-center gap-4 mb-4">
+                <img src="${r.photoUrl||'https://dummyimage.com/120x120/111111/d4af37&text=IAURI'}" class="w-16 h-16 rounded-full border border-[#D4AF37] object-cover">
+                <div class="flex-1 min-w-0">
+                  <div class="text-2xl font-black truncate">${r.displayName||'會員'}</div>
+                  <div class="text-white/50 mt-1">${r.date||''}　${r.time||''}</div>
+                </div>
+                <div class="${iauriBookingStatusClass(status)} text-lg font-black">${iauriBookingStatusText(status)}</div>
+              </div>
 
-      return `
-        <div class="dark-card p-5 ${disabled?'opacity-70':''}">
-          <div class="flex items-center gap-4 mb-4">
-            <img src="${r.photoUrl||'https://dummyimage.com/120x120/111111/d4af37&text=IAURI'}" class="w-16 h-16 rounded-full border border-[#D4AF37] object-cover">
-            <div class="flex-1 min-w-0">
-              <div class="text-2xl font-black truncate">${r.displayName||'會員'}</div>
-              <div class="text-white/50 mt-1">${r.date||''}　${r.time||''}</div>
+              <div class="flex justify-between gap-3 items-end mb-4">
+                <div>
+                  <div class="text-xl font-black">${r.serviceName||'未命名項目'}</div>
+                  <div class="text-white/45 mt-1">${r.category||''}${r.tier?'｜'+r.tier:''}</div>
+                </div>
+                <div class="gold text-2xl font-black">${price?('$'+price.toLocaleString()):'$0'}</div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-3">
+                <button onclick="markBookingArrived('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>已到店</button>
+                <button onclick="completeBookingFromList('${r.id}')" class="btn-gold rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>完成</button>
+                <button onclick="cancelBooking('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>取消</button>
+              </div>
             </div>
-            <div class="${statusClass} text-lg font-black">${statusText}</div>
-          </div>
-
-          <div class="flex justify-between gap-3 items-end mb-4">
-            <div>
-              <div class="text-xl font-black">${r.serviceName||'未命名項目'}</div>
-              <div class="text-white/45 mt-1">${r.category||''}${r.tier?'｜'+r.tier:''}</div>
-            </div>
-            <div class="gold text-2xl font-black">${price?('$'+price.toLocaleString()):'$0'}</div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-3">
-            <button onclick="markBookingArrived('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>已到店</button>
-            <button onclick="completeBookingFromList('${r.id}')" class="btn-gold rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>完成</button>
-            <button onclick="cancelBooking('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'disabled':''}>取消</button>
-          </div>
-        </div>
-      `;
-    }).join("");
-
+          `;
+        }).join("");
+      },
+      err=>{
+        console.error(err);
+        $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-red-400">預約讀取失敗：${err.message||err}</div>`;
+      }
+    );
   }catch(e){
     console.error(e);
     $("staffBookingList").innerHTML=`<div class="dark-card p-5 text-red-400">預約讀取失敗：${e.message||e}</div>`;
@@ -673,7 +696,6 @@ window.markBookingArrived=async function(id){
     arrivedAt:Date.now(),
     arrivedBy:profile.userId
   });
-  await renderStaffBookings();
 };
 
 window.cancelBooking=async function(id){
@@ -684,7 +706,6 @@ window.cancelBooking=async function(id){
     cancelledAt:Date.now(),
     cancelledBy:profile.userId
   });
-  await renderStaffBookings();
 };
 
 window.completeBookingFromList=async function(id){
@@ -692,21 +713,12 @@ window.completeBookingFromList=async function(id){
 
   const bookingRef=doc(db,"bookings",id);
   const snap=await getDoc(bookingRef);
-
-  if(!snap.exists()){
-    alert("找不到這筆預約");
-    return;
-  }
+  if(!snap.exists()){alert("找不到這筆預約");return;}
 
   const data=snap.data();
-
-  if(data.status==="completed"){
-    alert("這筆預約已完成");
-    return;
-  }
+  if(data.status==="completed"){alert("這筆預約已完成");return;}
 
   const memberDocRef=doc(db,"members",data.lineUserId);
-
   const patch={
     points:increment(5),
     pointsTotal:increment(5),
@@ -746,7 +758,6 @@ window.completeBookingFromList=async function(id){
   });
 
   alert("已完成，並寫入消費紀錄");
-  await renderStaffBookings();
 };
 
 async function loadStaffTarget(){
@@ -776,6 +787,7 @@ async function boot(){
     renderHome();
     renderBooking();
     await loadStaffTarget();
+    renderStaffBookings();
   }catch(e){
     console.error(e);
     $("memberName").innerText="LINE讀取失敗";
