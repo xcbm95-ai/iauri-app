@@ -42,6 +42,12 @@
     .qr-box canvas,.qr-box img{width:132px!important;height:132px!important;border-radius:18px;background:#fff;padding:8px;cursor:pointer}.qr-large canvas,.qr-large img{width:min(76vw,320px)!important;height:min(76vw,320px)!important;border-radius:28px;background:#fff;padding:14px}
     .reward-card{margin-top:22px;padding:22px;border-radius:30px;background:radial-gradient(circle at 85% 15%,rgba(255,230,120,.28),transparent 35%),linear-gradient(135deg,rgba(212,175,55,.28),rgba(255,255,255,.04));border:1px solid rgba(255,219,92,.55);box-shadow:0 0 26px rgba(212,175,55,.32),inset 0 0 24px rgba(255,255,255,.035);position:relative;overflow:hidden}.reward-card:before{content:'REWARD';position:absolute;right:18px;top:14px;color:rgba(212,175,55,.12);font-size:34px;font-weight:900;letter-spacing:.08em}.reward-card:after{content:'✦';position:absolute;right:24px;bottom:20px;color:#D4AF37;font-size:28px;filter:drop-shadow(0 0 12px #D4AF37)}
     .reward-title{letter-spacing:.35em;color:var(--gold);font-size:12px;margin-bottom:10px}.reward-prize{font-size:28px;font-weight:900}
+
+    .welcome-card{margin-top:28px;padding:26px;border-radius:32px;background:radial-gradient(circle at 50% 0%,rgba(212,175,55,.24),transparent 36%),linear-gradient(145deg,rgba(212,175,55,.18),rgba(5,5,5,.96));border:1px solid rgba(212,175,55,.45);box-shadow:0 0 36px rgba(212,175,55,.22);text-align:center}
+    .welcome-avatar{width:112px;height:112px;border-radius:999px;object-fit:cover;border:3px solid var(--gold);box-shadow:0 0 28px rgba(212,175,55,.35);margin:0 auto 18px}
+    .menu-price-card{padding:18px;border-radius:22px;background:linear-gradient(145deg,#17171c,#080808);border:1px solid rgba(255,255,255,.08);margin-bottom:12px}
+    .menu-price-card.active{background:linear-gradient(145deg,rgba(212,175,55,.95),rgba(212,175,55,.72));color:#050505;font-weight:900}
+
     .small{font-size:12px}.loading-banner{position:fixed;top:0;left:0;right:0;background:#111;color:#D4AF37;padding:8px 12px;font-size:12px;text-align:center;z-index:200;display:none}
     @media (max-width:390px){.big-title{font-size:38px}.grid-card{min-height:136px;padding:20px}.grid-card-title{font-size:26px}.page{padding-left:16px;padding-right:16px}.wheel-center{width:92px;height:92px}.qr-box canvas,.qr-box img{width:116px!important;height:116px!important}}
   </style>
@@ -67,6 +73,16 @@
           </div>
           <div class="text-white/60 text-lg mt-1">一般會員 GENERAL</div>
         </div>
+      </div>
+
+      <div id="welcomeBox" class="welcome-card hidden">
+        <img id="welcomePhoto" class="welcome-avatar" src="https://dummyimage.com/300x300/111111/d4af37&text=IAURI" alt="welcome">
+        <div class="title-en mb-4">WELCOME GIFT</div>
+        <div class="text-3xl font-black leading-tight">歡迎 <span id="welcomeName" class="gold">會員</span><br>加入 IAURI BEAUTY CLUB</div>
+        <div class="mt-6 text-white/70">恭喜獲得</div>
+        <div class="gold text-3xl font-black mt-2">免費八次瘦小臉服務</div>
+        <div class="text-white/60 leading-relaxed mt-5">透過耳顏所專屬調理方案<br>逐步完成你的輪廓緊緻計畫</div>
+        <button onclick="completeWelcome()" class="btn-gold pill w-full h-[64px] text-2xl mt-7">立即開始</button>
       </div>
 
       <div id="freeFaceBox" class="mt-8">
@@ -200,6 +216,35 @@ const LIFF_ID="2010173212-2gFbVMbf",SHARE_URL="https://lin.ee/vxi3sZ4",app=initi
 let profile=null,member=null,memberRef=null,isTherapist=false,staffTargetUid=null,staffTargetData=null;
 const $=id=>document.getElementById(id);
 const nowText=()=>new Date().toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
+
+const OFFICIAL_MENU=[
+  {category:"小臉美容",english:"FACE BEAUTY",items:[
+    {tier:"400",serviceName:"基礎拉提瘦小臉",price:400},
+    {tier:"800",serviceName:"高級拉提瘦小臉",price:800},
+    {tier:"1500",serviceName:"VIP 拉提",price:1500}
+  ]},
+  {category:"舒緩美容",english:"BODY BALANCE",items:[
+    {tier:"400",serviceName:"身體平衡（一個部位）",price:400},
+    {tier:"800",serviceName:"身體平衡（三個部位）",price:800},
+    {tier:"1500",serviceName:"全身舒緩",price:1500}
+  ]},
+  {category:"眼周美容",english:"EYE BEAUTY",items:[
+    {tier:"400",serviceName:"眼睛保養",price:400},
+    {tier:"800",serviceName:"眼周管理",price:800},
+    {tier:"1500",serviceName:"臉部對稱平衡",price:1500}
+  ]},
+  {category:"Q彈美容",english:"HORMONE BALANCE",items:[
+    {tier:"400",serviceName:"Q臉",price:400},
+    {tier:"800",serviceName:"Q彈",price:800},
+    {tier:"1500",serviceName:"超Q彈",price:1500}
+  ]},
+  {category:"睡覺美容",english:"SLEEP BEAUTY",items:[
+    {tier:"400",serviceName:"減壓放鬆",price:400},
+    {tier:"800",serviceName:"一夜好眠",price:800},
+    {tier:"1500",serviceName:"三天三夜",price:1500}
+  ]}
+];
+
 function showLoading(show){$("loadingBanner").style.display=show?"block":"none";}
 
 async function initLiff(){
@@ -215,7 +260,7 @@ async function ensureMember(){
   memberRef=doc(db,"members",profile.userId);
   const snap=await getDoc(memberRef);
   if(!snap.exists()){
-    await setDoc(memberRef,{lineUserId:profile.userId,displayName:profile.displayName,photoUrl:profile.pictureUrl||"",points:0,pointsTotal:0,freeFaceUsedCount:0,freeFaceTotalCount:8,remainingDrawCount:1,welcomeDrawGranted:true,latestPrize:"",latestPrizeRedeemed:true,createdAt:Date.now(),updatedAt:Date.now()});
+    await setDoc(memberRef,{lineUserId:profile.userId,displayName:profile.displayName,photoUrl:profile.pictureUrl||"",points:0,pointsTotal:0,freeFaceUsedCount:0,freeFaceTotalCount:8,remainingDrawCount:0,welcomeDrawGranted:false,welcomeCompleted:false,latestPrize:"",latestPrizeRedeemed:true,createdAt:Date.now(),updatedAt:Date.now()});
   }else{
     const d=snap.data(),patch={};
     if(d.points===undefined&&d.pointsTotal!==undefined)patch.points=Number(d.pointsTotal)||0;
@@ -224,7 +269,7 @@ async function ensureMember(){
     if(d.freeFaceTotalCount===undefined)patch.freeFaceTotalCount=8;
     if(d.remainingDrawCount===undefined)patch.remainingDrawCount=0;
     if(d.latestPrizeRedeemed===undefined)patch.latestPrizeRedeemed=true;
-    if(d.welcomeDrawGranted===undefined){patch.welcomeDrawGranted=true;patch.remainingDrawCount=Number(d.remainingDrawCount||0)+1;}
+    if(d.welcomeCompleted===undefined)patch.welcomeCompleted=false;
     if(profile.pictureUrl && (!d.photoUrl || String(d.photoUrl).includes("dummyimage") || String(d.photoUrl).includes("IAURI")))patch.photoUrl=profile.pictureUrl;
     if(profile.displayName && (!d.displayName || d.displayName==="測試會員" || d.displayName==="讀取中"))patch.displayName=profile.displayName;
     if(Object.keys(patch).length)await updateDoc(memberRef,{...patch,updatedAt:Date.now()});
@@ -242,8 +287,12 @@ async function checkTherapist(){
 function renderHome(){
   $("memberPhoto").src=member.photoUrl||profile.pictureUrl||"https://dummyimage.com/300x300/111111/d4af37&text=IAURI";
   $("memberName").innerText=member.displayName||profile.displayName||"會員";
+  $("welcomePhoto").src=member.photoUrl||profile.pictureUrl||"https://dummyimage.com/300x300/111111/d4af37&text=IAURI";
+  $("welcomeName").innerText=member.displayName||profile.displayName||"會員";
   const used=Number(member.freeFaceUsedCount||0),total=Number(member.freeFaceTotalCount||8);
-  $("freeFaceBox").style.display=used>=total?"none":"block";
+  const showWelcome=member.welcomeCompleted===false && used===0;
+  $("welcomeBox").classList.toggle("hidden",!showWelcome);
+  $("freeFaceBox").style.display=(used>=total||showWelcome)?"none":"block";
   $("freeFaceText").innerText=`${used}/${total}次`;
   $("freeFaceBar").style.width=`${Math.min(100,(used/total)*100)}%`;
   const pts=Number(member.points||member.pointsTotal||0);
@@ -260,7 +309,7 @@ function renderHome(){
   }else $("rewardArea").innerHTML="";
 
   if(Number(member.remainingDrawCount||0)>0){
-    // draw hidden until therapist unlock
+    $("drawEntryArea").innerHTML=`<button onclick="showPage('draw')" class="btn-gold pill w-full h-[72px] text-2xl mt-6">幸運轉轉樂</button>`;
     $("drawLockedBox").classList.add("hidden");$("drawGameBox").style.display="block";
   }else{
     $("drawEntryArea").innerHTML="";
@@ -280,15 +329,18 @@ window.openQrModal=function(qrUrl){$("memberQrLarge").innerHTML="";if(window.QRC
 function renderLargeQrImg(qrUrl){const img=document.createElement("img");img.src=`https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=8&data=${encodeURIComponent(qrUrl)}`;$("memberQrLarge").appendChild(img);}
 window.closeQrModal=function(){$("qrModal").classList.remove("show");};
 
-const services=[{name:"兩個月瘦小臉計畫",sub:"FREE FACE PLAN",price:"$ 0",free:true},{name:"精準局部體驗",sub:"LOCAL EXPERIENCE",price:"$400"},{name:"全息平衡調理",sub:"FULL BALANCE",price:"$800"},{name:"訂製服務",sub:"CUSTOM SERVICE",price:"✦",custom:true}];
-let selectedBookingService="", selectedBookingDate="", selectedBookingTime="";
+let selectedBookingCategory="", selectedBookingService="", selectedBookingPrice=0, selectedBookingTier="", selectedBookingDate="", selectedBookingTime="";
 function renderBooking(){
+  selectedBookingCategory="";
   selectedBookingService="";
+  selectedBookingPrice=0;
+  selectedBookingTier="";
   selectedBookingDate="";
   selectedBookingTime="";
   $("bookingDateBox")?.classList.add("hidden");
   $("bookingTimeBox")?.classList.add("hidden");
-  $("serviceList").innerHTML=services.filter(s=>!(s.free&&Number(member?.freeFaceUsedCount||0)>=8)).map(s=>`<button onclick="selectBookingService('${s.name.replace(/'/g,"\\'")}')" class="w-full text-left ${s.custom?'dark-card':'card'} p-6 flex items-center justify-between ${s.free?'ring-1 ring-[#D4AF37]/45':''}"><div><div class="text-3xl font-black">${s.name}</div><div class="muted tracking-[.05em] mt-2">${s.sub}</div></div><div class="${s.free?'text-[#ff3d67] text-5xl':'text-4xl'} font-black">${s.price}</div></button>`).join("");
+  const freeCard=Number(member?.freeFaceUsedCount||0)<8 ? `<button onclick="selectBookingFree()" class="w-full text-left card p-6 flex items-center justify-between ring-1 ring-[#D4AF37]/45"><div><div class="text-3xl font-black">兩個月瘦小臉計畫</div><div class="muted tracking-[.05em] mt-2">FREE FACE PLAN</div></div><div class="text-[#ff3d67] text-5xl font-black">$ 0</div></button>` : "";
+  $("serviceList").innerHTML=freeCard+OFFICIAL_MENU.map(m=>`<div class="card p-5"><button onclick="selectBookingCategory('${m.category}')" class="w-full text-left bg-transparent border-0 text-white"><div class="flex justify-between items-end"><div><div class="text-3xl font-black">${m.category}</div><div class="muted tracking-[.12em] mt-2">${m.english}</div></div><div class="gold text-xl">選擇</div></div></button><div id="bookingItems-${m.category}" class="mt-4 hidden">${m.items.map(i=>`<button onclick="selectBookingItem('${m.category}','${i.tier}','${i.serviceName}',${i.price},this)" class="menu-price-card w-full text-left"><span class="text-2xl font-black">${i.serviceName}</span><span class="float-right gold text-2xl font-black">$${i.price}</span><div class="clear-both"></div></button>`).join("")}</div></div>`).join("");
   renderDates();
   renderTimes();
 }
@@ -307,10 +359,32 @@ function renderDates(){
     dbox.innerHTML+=`<button onclick="selectBookingDate('${value}',this)" class="chip">${label}</button>`;
   }
 }
-window.selectBookingService=function(name){
-  selectedBookingService=name;
+window.selectBookingFree=function(){
+  selectedBookingCategory="免費方案";
+  selectedBookingService="兩個月瘦小臉計畫";
+  selectedBookingTier="0";
+  selectedBookingPrice=0;
   selectedBookingDate="";
   selectedBookingTime="";
+  document.querySelectorAll(".menu-price-card").forEach(b=>b.classList.remove("active"));
+  $("bookingDateBox").classList.remove("hidden");
+  $("bookingTimeBox").classList.remove("hidden");
+  setTimeout(()=>$("bookingDateBox").scrollIntoView({behavior:"smooth",block:"start"}),80);
+}
+window.selectBookingCategory=function(category){
+  document.querySelectorAll("[id^='bookingItems-']").forEach(el=>el.classList.add("hidden"));
+  const box=$("bookingItems-"+category);
+  if(box)box.classList.remove("hidden");
+}
+window.selectBookingItem=function(category,tier,serviceName,price,btn){
+  selectedBookingCategory=category;
+  selectedBookingService=serviceName;
+  selectedBookingTier=tier;
+  selectedBookingPrice=price;
+  selectedBookingDate="";
+  selectedBookingTime="";
+  document.querySelectorAll(".menu-price-card").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
   $("bookingDateBox").classList.remove("hidden");
   $("bookingTimeBox").classList.remove("hidden");
   document.querySelectorAll("#dateOptions .chip,#timeOptions .chip").forEach(b=>b.classList.remove("active"));
@@ -332,8 +406,9 @@ function renderTimes(){
   const box=$("timeOptions");
   box.innerHTML="";
   const now=new Date(),threshold=new Date(now.getTime()+60*60*1000),slots=[];
-  for(let h=10;h<26;h++){
+  for(let h=10;h<=21;h++){
     for(const m of [0,30]){
+      if(h===21 && m>30)continue;
       const label=`${String(h%24).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
       slots.push({h,m,label});
     }
@@ -345,7 +420,6 @@ function renderTimes(){
       slotDate.setFullYear(y,mo-1,d);
     }
     slotDate.setHours(s.h>=24?s.h-24:s.h,s.m,0,0);
-    if(s.h>=24)slotDate.setDate(slotDate.getDate()+1);
     if(!selectedBookingDate || slotDate<=threshold)return;
     box.innerHTML+=`<button onclick="selectBookingTime('${s.label}',this)" class="chip">${s.label}</button>`;
   });
@@ -359,7 +433,10 @@ window.confirmBooking=async function(){
       lineUserId:profile?.userId||"guest",
       displayName:member?.displayName||profile?.displayName||"會員",
       photoUrl:member?.photoUrl||profile?.pictureUrl||"",
+      category:selectedBookingCategory,
+      tier:selectedBookingTier,
       serviceName:selectedBookingService,
+      price:selectedBookingPrice,
       date:selectedBookingDate,
       time:selectedBookingTime,
       status:"pending",
@@ -384,6 +461,7 @@ async function renderRecords(){
 window.showPage=async function(name){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));$("page-"+name).classList.add("active");document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.nav===name));if(name==="booking")renderBooking();if(name==="records")await renderRecords();};
 window.openRescue=function(){const h=new Date().getHours();if(!(h>=20||h<2)){alert("救援功能開放時間為晚上 8 點至凌晨 2 點");return;}showPage("rescue");};
 window.editDisplayName=async function(){const name=prompt("請輸入會員顯示名稱",member.displayName||"");if(!name)return;await updateDoc(memberRef,{displayName:name,updatedAt:Date.now()});location.reload();};
+window.completeWelcome=async function(){await updateDoc(memberRef,{welcomeCompleted:true,updatedAt:Date.now()});member.welcomeCompleted=true;renderHome();};
 window.shareFriend=async function(){const text="我在 IAURI 抽中了專屬獎勵✨";try{if(navigator.share)await navigator.share({title:"IAURI BEAUTY CLUB",text,url:SHARE_URL});else{await navigator.clipboard.writeText(`${text}
 ${SHARE_URL}`);alert("分享文字已複製");}}catch(e){}};
 
@@ -393,12 +471,11 @@ function weightedPrize(){let pool=prizes.filter(p=>p.name!==lastPrizeName);const
 window.startSpin=async function(){if(spinning||Number(member.remainingDrawCount||0)<=0)return;spinning=true;$("spinBtn").disabled=true;$("spinBtn").innerText="轉動中...";const prize=weightedPrize();lastPrizeName=prize.name;currentRotate+=360*12+(360-prize.angle);$("wheel").style.transform=`rotate(${currentRotate}deg)`;setTimeout(async()=>{await updateDoc(memberRef,{remainingDrawCount:increment(-1),latestPrize:prize.name,latestPrizeRedeemed:false,updatedAt:Date.now()});await addDoc(collection(db,"draw_records"),{lineUserId:profile.userId,displayName:member.displayName,photoUrl:member.photoUrl,prize:prize.name,createdAt:Date.now()});$("resultPhoto").src=member.photoUrl||profile.pictureUrl;$("resultName").innerText=member.displayName||profile.displayName;$("resultTime").innerText=nowText();$("resultPrize").innerHTML=prize.name.replace("指定","<br>指定").replace("體驗券","體驗券<br>");$("resultModal").classList.add("show");},8400);};
 window.closeResultAndReload=function(){location.reload();};
 
-const careCatalog={
-  "兩個月瘦小臉計畫":["本次小臉調理完成"],
-  "美容":["基礎面部緊緻","晶亮放鬆","頂級面部緊緻","奢華緊緻小V臉","煥采微循環維護"],
-  "舒緩":["肩頸放鬆","放鬆好眠","美體輕盈管理","舒緩上半身日常緊繃","舒緩下半身日常緊繃","深層夜間好眠","深層釋壓方案","內在平衡美學","經期前後舒活","體態輕盈管理"],
-  "訂製服務":["訂製調理","指定部位加強","其他客製需求"]
-};
+const careCatalog=Object.fromEntries(OFFICIAL_MENU.map(m=>[
+  m.category,
+  m.items.map(i=>`${i.tier}｜${i.serviceName}`)
+]));
+careCatalog["兩個月瘦小臉計畫"]=["本次小臉調理完成"];
 let staffMainItem="兩個月瘦小臉計畫",staffSelectedItems=[];
 function renderStaffCareForm(){
   if(!$('staffMainItems')||!$('staffSubItems'))return;
@@ -409,12 +486,14 @@ window.staffSelectMain=function(name){staffMainItem=name;staffSelectedItems=[];r
 window.staffToggleSub=function(item){staffSelectedItems=staffSelectedItems.includes(item)?staffSelectedItems.filter(x=>x!==item):[...staffSelectedItems,item];renderStaffCareForm();};
 window.staffSubmitTreatmentRecord=async function(){
   if(!requireStaff())return;
-  const amount=Number(($('staffAmount')?.value||0));
+  const selectedFirst=staffSelectedItems[0]||'';
+  const matched=(OFFICIAL_MENU.find(m=>m.category===staffMainItem)?.items||[]).find(i=>selectedFirst.includes(i.serviceName));
+  const amount=Number(($('staffAmount')?.value||0)) || Number(matched?.price||0);
   const items=staffSelectedItems.length?staffSelectedItems:[`${staffMainItem}完成`];
   const patch={points:increment(5),pointsTotal:increment(5),updatedAt:Date.now()};
   if(staffMainItem==='兩個月瘦小臉計畫')patch.freeFaceUsedCount=increment(1);
   await updateDoc(doc(db,'members',staffTargetUid),patch);
-  await addDoc(collection(db,'treatment_records'),{lineUserId:staffTargetUid,mainItem:staffMainItem,items,amount,therapistId:profile.userId,therapistName:profile.displayName,pointsAdded:5,createdAt:Date.now()});
+  await addDoc(collection(db,'treatment_records'),{lineUserId:staffTargetUid,category:staffMainItem,mainItem:staffMainItem,serviceName:matched?.serviceName||items.join('、'),tier:matched?.tier||'',items,amount,therapistId:profile.userId,therapistName:profile.displayName,pointsAdded:5,createdAt:Date.now()});
   alert('已送出調理紀錄，並增加 5 POINTS');location.reload();
 };
 
