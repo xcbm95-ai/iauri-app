@@ -1,610 +1,458 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>IAURI MEMBER</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-
-<style>
-
-body{
-background:#050505;
-color:white;
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-margin:0;
-padding:0;
-overflow-x:hidden;
-}
-
-.app-bg{
-min-height:100vh;
-background:
-radial-gradient(circle at top right,rgba(212,175,55,.18),transparent 35%),
-linear-gradient(#050505,#000);
-padding:28px 20px 120px;
-}
-
-.gold{
-color:#D4AF37;
-}
-
-.big-title{
-font-size:64px;
-font-weight:900;
-line-height:1;
-margin-top:18px;
-}
-
-.card{
-background:
-linear-gradient(145deg,
-rgba(212,175,55,.14),
-rgba(20,20,20,.95));
-border:1px solid rgba(212,175,55,.28);
-border-radius:34px;
-padding:22px;
-margin-bottom:24px;
-box-shadow:
-0 0 30px rgba(212,175,55,.08);
-backdrop-filter:blur(20px);
-}
-
-.avatar{
-width:112px;
-height:112px;
-border-radius:50%;
-overflow:hidden;
-border:4px solid #D4AF37;
-background:#111;
-}
-
-.avatar img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-.progress{
-width:100%;
-height:18px;
-background:#000;
-border-radius:999px;
-overflow:hidden;
-}
-
-.progress-bar{
-height:100%;
-background:#D4AF37;
-border-radius:999px;
-}
-
-.bottom-nav{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:92px;
-background:rgba(0,0,0,.95);
-border-top:1px solid rgba(255,255,255,.08);
-display:flex;
-justify-content:space-around;
-align-items:center;
-z-index:999;
-backdrop-filter:blur(20px);
-}
-
-.nav-item{
-display:flex;
-flex-direction:column;
-align-items:center;
-font-size:15px;
-color:white;
-gap:4px;
-}
-
-.rescue-btn{
-width:102px;
-height:102px;
-border-radius:28px;
-background:
-radial-gradient(circle,
-rgba(255,140,0,.35),
-rgba(0,0,0,.95));
-border:2px solid rgba(255,120,50,.7);
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-margin-top:-44px;
-box-shadow:
-0 0 35px rgba(255,80,0,.4);
-}
-
-.qr-box img{
-width:132px;
-height:132px;
-border-radius:18px;
-background:white;
-padding:8px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:18px;
-}
-
-.grid-card{
-min-height:160px;
-border-radius:28px;
-padding:24px;
-background:
-linear-gradient(145deg,
-#151515,
-#060606);
-border:1px solid rgba(255,255,255,.08);
-display:flex;
-flex-direction:column;
-justify-content:flex-end;
-}
-
-.grid-card.feature{
-background:
-linear-gradient(145deg,
-rgba(212,175,55,.24),
-#111);
-border:1px solid rgba(212,175,55,.4);
-box-shadow:
-0 0 26px rgba(212,175,55,.2);
-}
-
-.reward-card{
-margin-top:20px;
-padding:24px;
-border-radius:30px;
-background:
-radial-gradient(circle at top right,
-rgba(255,255,150,.35),
-rgba(212,175,55,.22),
-#111);
-border:2px solid rgba(255,235,120,.5);
-box-shadow:
-0 0 45px rgba(255,220,100,.3);
-position:relative;
-overflow:hidden;
-}
-
-.reward-card::after{
-content:"REWARD";
-position:absolute;
-right:18px;
-top:8px;
-font-size:58px;
-font-weight:900;
-color:rgba(255,255,255,.08);
-}
-
-.service-card{
-padding:22px;
-border-radius:28px;
-margin-bottom:18px;
-background:
-linear-gradient(145deg,
-rgba(212,175,55,.14),
-#111);
-border:1px solid rgba(212,175,55,.25);
-}
-
-.date-row,.time-row{
-display:flex;
-gap:14px;
-overflow:auto;
-padding-bottom:6px;
-}
-
-.chip{
-min-width:88px;
-padding:18px;
-border-radius:22px;
-background:#18181b;
-border:1px solid rgba(255,255,255,.08);
-text-align:center;
-}
-
-.booking-btn{
-width:100%;
-height:74px;
-border:none;
-border-radius:999px;
-background:#D4AF37;
-font-size:28px;
-font-weight:900;
-margin-top:28px;
-}
-
-.modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.85);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:9999;
-}
-
-.modal img{
-width:82vw;
-max-width:420px;
-border-radius:26px;
-background:white;
-padding:14px;
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>耳顏所會員系統</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    :root{
+      --black:#030303;
+      --gold:#D4AF37;
+      --pink:#ff3d67;
+      --orange:#ff7a1a;
+      --muted:#9a9aa3;
+    }
+    *{box-sizing:border-box;font-family:'Noto Sans TC',sans-serif;-webkit-tap-highlight-color:transparent}
+    body{margin:0;background:#000;color:#fff;overflow-x:hidden}
+    .app-bg{min-height:100vh;background:radial-gradient(circle at 80% 0%,rgba(212,175,55,.16),transparent 34%),linear-gradient(180deg,#020202,#000)}
+    .page{display:none;padding:34px 20px 108px}.page.active{display:block}.gold{color:var(--gold)}.muted{color:var(--muted)}
+    .title-en{letter-spacing:.42em;color:var(--gold);font-size:12px;font-weight:400}
+    .big-title{font-size:44px;line-height:1.06;font-weight:900;letter-spacing:-.05em}
+    .card{background:linear-gradient(135deg,rgba(212,175,55,.16),rgba(255,255,255,.035));border:1px solid rgba(212,175,55,.25);box-shadow:0 0 34px rgba(212,175,55,.10);border-radius:34px}
+    .dark-card{background:linear-gradient(135deg,#15151a,#090909);border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.38);border-radius:28px}
+    .btn-gold{background:linear-gradient(180deg,#f4d45d,#d4af37);color:#050505;font-weight:900;box-shadow:0 0 22px rgba(212,175,55,.3)}
+    .btn-dark{background:#171717;border:1px solid rgba(255,255,255,.08);color:#fff}.pill{border-radius:999px}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:84px;background:rgba(0,0,0,.96);border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-around;z-index:50}
+    .nav-btn{width:25%;display:flex;flex-direction:column;align-items:center;gap:5px;color:#eee;font-size:14px;background:none;border:0}.nav-btn.active{color:var(--gold)}.nav-emoji{font-size:22px}
+    .rescue{border:1px solid rgba(255,122,26,.8);box-shadow:0 0 26px rgba(255,122,26,.35);border-radius:22px;padding:9px 22px;color:#ffb16b}
+    .grid-card{min-height:142px;padding:26px;border-radius:28px;background:linear-gradient(145deg,#18181e,#0c0c0f);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;justify-content:flex-end;text-align:left;overflow:hidden}.grid-card-title{font-size:28px;font-weight:900;line-height:1.08;word-break:keep-all}.grid-card-sub{color:var(--muted);letter-spacing:.22em;margin-top:8px;font-size:13px}
+    .grid-card.feature{background:linear-gradient(145deg,rgba(212,175,55,.28),#111);border-color:rgba(212,175,55,.45)}
+    .chip{padding:12px 16px;border-radius:16px;background:#18181b;border:1px solid rgba(255,255,255,.09);color:#fff}.chip.active{background:var(--gold);color:#000;font-weight:900}
+    .wheel-wrap{position:relative;width:min(82vw,340px);height:min(82vw,340px);margin:0 auto}
+    .wheel-pointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);z-index:5;width:0;height:0;border-left:24px solid transparent;border-right:24px solid transparent;border-top:48px solid var(--gold);filter:drop-shadow(0 0 12px rgba(212,175,55,.9))}
+    .wheel{width:100%;height:100%;border-radius:50%;overflow:hidden;border:9px solid var(--gold);box-shadow:0 0 55px rgba(212,175,55,.55);transition:transform 8.4s cubic-bezier(.08,.82,.12,1);background:#111}
+    .wheel-center{position:absolute;width:106px;height:106px;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;background:radial-gradient(circle,#fff4b5,#D4AF37,#6b4a00);border:6px solid rgba(255,255,255,.3);box-shadow:0 0 32px rgba(212,175,55,.7)}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;display:none;align-items:center;justify-content:center;padding:22px;backdrop-filter:blur(10px)}.modal.show{display:flex}
+    .record-card{padding:18px;border-radius:24px;margin-bottom:16px;background:linear-gradient(145deg,#151515,#060606);border:1px solid rgba(212,175,55,.18)}
+    .qr-box canvas,.qr-box img{width:132px!important;height:132px!important;border-radius:18px;background:#fff;padding:8px;cursor:pointer}.qr-large canvas,.qr-large img{width:min(76vw,320px)!important;height:min(76vw,320px)!important;border-radius:28px;background:#fff;padding:14px}
+    .reward-card{margin-top:22px;padding:22px;border-radius:30px;background:radial-gradient(circle at 85% 15%,rgba(255,230,120,.28),transparent 35%),linear-gradient(135deg,rgba(212,175,55,.28),rgba(255,255,255,.04));border:1px solid rgba(255,219,92,.55);box-shadow:0 0 26px rgba(212,175,55,.32),inset 0 0 24px rgba(255,255,255,.035);position:relative;overflow:hidden}.reward-card:before{content:'REWARD';position:absolute;right:18px;top:14px;color:rgba(212,175,55,.12);font-size:34px;font-weight:900;letter-spacing:.08em}.reward-card:after{content:'✦';position:absolute;right:24px;bottom:20px;color:#D4AF37;font-size:28px;filter:drop-shadow(0 0 12px #D4AF37)}
+    .reward-title{letter-spacing:.35em;color:var(--gold);font-size:12px;margin-bottom:10px}.reward-prize{font-size:28px;font-weight:900}
+    .small{font-size:12px}.loading-banner{position:fixed;top:0;left:0;right:0;background:#111;color:#D4AF37;padding:8px 12px;font-size:12px;text-align:center;z-index:200;display:none}
+    @media (max-width:390px){.big-title{font-size:38px}.grid-card{min-height:136px;padding:20px}.grid-card-title{font-size:26px}.page{padding-left:16px;padding-right:16px}.wheel-center{width:92px;height:92px}.qr-box canvas,.qr-box img{width:116px!important;height:116px!important}}
+  </style>
 </head>
-
 <body>
-
+<div id="loadingBanner" class="loading-banner">系統讀取中...</div>
 <div class="app-bg">
 
-<div class="gold" style="letter-spacing:10px;font-size:14px;">
-IAURI BEAUTY CLUB
-</div>
+  <div id="page-home" class="page active">
+    <header class="mb-8">
+      <div class="title-en mb-4">IAURI BEAUTY CLUB</div>
+      <h1 class="big-title">耳顏所會員系統</h1>
+    </header>
 
-<div class="big-title">
-耳顏所會員系統
-</div>
+    <section class="card p-5 mb-8">
+      <div class="flex items-center gap-5">
+        <img id="memberPhoto" class="w-[108px] h-[108px] rounded-full object-cover border-2 border-[#D4AF37]" src="https://dummyimage.com/300x300/111111/d4af37&text=IAURI" alt="member">
+        <div class="flex-1 min-w-0">
+          <div class="title-en mb-2">MEMBER</div>
+          <div class="flex items-center gap-3">
+            <div id="memberName" class="text-4xl font-black truncate">讀取中</div>
+            <button onclick="editDisplayName()" class="w-11 h-11 rounded-full border border-[#D4AF37]/40 gold bg-transparent">✎</button>
+          </div>
+          <div class="text-white/60 text-lg mt-1">一般會員 GENERAL</div>
+        </div>
+      </div>
 
-<div class="card">
+      <div id="freeFaceBox" class="mt-8">
+        <div class="flex justify-between items-end mb-3">
+          <div class="text-xl font-bold">兩個月瘦小臉計畫</div>
+          <div id="freeFaceText" class="gold text-xl font-black">0/8次</div>
+        </div>
+        <div class="h-4 bg-black/55 rounded-full overflow-hidden">
+          <div id="freeFaceBar" class="h-full rounded-full bg-[#D4AF37]" style="width:0%"></div>
+        </div>
+      </div>
 
-<div style="display:flex;gap:18px;align-items:center;">
+      <div class="mt-8 flex items-end justify-between gap-4">
+        <div>
+          <div class="title-en mb-2">MEMBER QR</div>
+          <div class="text-white/55 leading-relaxed">調理師掃描後可快速完成紀錄</div>
+        </div>
+        <div id="memberQr" class="qr-box shrink-0"></div>
+      </div>
 
-<div class="avatar">
-<img id="avatarImg" src="https://i.imgur.com/7YVvB6o.jpeg">
-</div>
+      <div class="mt-6 dark-card p-5 text-right">
+        <div class="title-en mb-3">IAURI POINTS</div>
+        <div id="pointsText" class="text-5xl font-black">0</div>
+        <div class="text-white/50 mt-2">會員積分</div>
+      </div>
 
-<div style="flex:1;">
+      <div id="rewardArea"></div>
+      <div id="drawEntryArea"></div>
+    </section>
 
-<div class="gold" style="letter-spacing:8px;font-size:14px;">
-MEMBER
-</div>
+    <div class="title-en mb-3">QUICK ACCESS</div>
+    <h2 class="text-4xl font-black mb-5">會員服務</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <button class="grid-card" onclick="showPage('points')"><div><div class="grid-card-title">積分</div><div class="grid-card-sub">POINTS</div></div></button>
+      <button class="grid-card feature" onclick="showPage('booking')"><div class="flex justify-end mb-6"><div class="btn-gold pill px-5 py-2">START</div></div><div><div class="grid-card-title">預約調理</div><div class="grid-card-sub">BOOKING</div></div></button>
+      <button class="grid-card" onclick="showPage('records')"><div><div class="grid-card-title">消費紀錄</div><div class="grid-card-sub">HISTORY</div></div></button>
+      <button class="grid-card" onclick="shareFriend()"><div><div class="grid-card-title">分享好友</div><div class="grid-card-sub">SHARE</div></div></button>
+    </div>
+  </div>
 
-<div id="memberName"
-style="font-size:64px;font-weight:900;">
-讀取中
-</div>
+  <div id="page-booking" class="page">
+    <button class="text-white/60 text-xl mb-7 bg-transparent border-0" onclick="showPage('home')">← 返回首頁</button>
+    <div class="title-en mb-3">RESERVATION</div>
+    <h2 class="text-5xl font-black mb-8">預約調理</h2>
+    <div id="serviceList" class="space-y-4"></div>
+    <div id="bookingDateBox" class="card p-5 mt-6 hidden"><div class="text-2xl font-black mb-4">選擇日期 DATE</div><div id="dateOptions" class="flex gap-3 overflow-x-auto pb-2"></div></div>
+    <div id="bookingTimeBox" class="card p-5 mt-6 hidden"><div class="text-2xl font-black mb-2">選擇時間 TIME</div><div class="muted mb-4">營業時間 10:00 - 02:00</div><div id="timeOptions" class="grid grid-cols-3 gap-3"></div><button id="confirmBookingBtn" onclick="confirmBooking()" class="btn-gold pill w-full mt-6 py-5 text-2xl">確認預約</button></div>
+  </div>
 
-<div style="font-size:24px;color:#aaa;">
-一般會員 GENERAL
-</div>
+  <div id="page-draw" class="page">
+    <button class="text-white/60 text-xl mb-7 bg-transparent border-0" onclick="showPage('home')">← 返回首頁</button>
+    <div class="text-center"><h2 class="gold text-5xl font-black mb-2" style="text-shadow:0 0 22px rgba(212,175,55,.45)">幸運轉轉樂</h2><div class="text-[#f2d36d] text-lg mb-8">人人有獎・好禮轉回家</div></div>
+    <div id="drawLockedBox" class="card p-8 text-center hidden"><div class="text-3xl font-black mb-3">目前沒有抽獎資格</div><div class="text-white/60 leading-loose">請由調理師開啟抽獎機會</div></div>
+    <div id="drawGameBox">
+      <div class="wheel-wrap mb-10">
+        <div class="wheel-pointer"></div>
+        <div id="wheel" class="wheel">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <path d="M50 50 L50 0 A50 50 0 0 1 93.3 25 Z" fill="#5a0b7c"/>
+            <path d="M50 50 L93.3 25 A50 50 0 0 1 93.3 75 Z" fill="#ff3d67"/>
+            <path d="M50 50 L93.3 75 A50 50 0 0 1 50 100 Z" fill="#c88716"/>
+            <path d="M50 50 L50 100 A50 50 0 0 1 6.7 75 Z" fill="#4c076b"/>
+            <path d="M50 50 L6.7 75 A50 50 0 0 1 6.7 25 Z" fill="#c88716"/>
+            <path d="M50 50 L6.7 25 A50 50 0 0 1 50 0 Z" fill="#6f1ea3"/>
+            <text x="67" y="17" fill="white" font-size="5" font-weight="900" text-anchor="middle">體驗券</text><text x="67" y="24" fill="white" font-size="6" font-weight="900" text-anchor="middle">400元</text>
+            <text x="83" y="49" fill="white" font-size="5" font-weight="900" text-anchor="middle">國際大師</text><text x="83" y="56" fill="white" font-size="5" font-weight="900" text-anchor="middle">指定體驗</text>
+            <text x="67" y="82" fill="white" font-size="5" font-weight="900" text-anchor="middle">體驗券</text><text x="67" y="89" fill="white" font-size="6" font-weight="900" text-anchor="middle">800元</text>
+            <text x="33" y="82" fill="white" font-size="5" font-weight="900" text-anchor="middle">三人同行</text><text x="33" y="89" fill="white" font-size="6" font-weight="900" text-anchor="middle">五折</text>
+            <text x="17" y="49" fill="white" font-size="5" font-weight="900" text-anchor="middle">體驗券</text><text x="17" y="56" fill="white" font-size="6" font-weight="900" text-anchor="middle">1500元</text>
+            <text x="33" y="17" fill="white" font-size="5" font-weight="900" text-anchor="middle">兩人同行</text><text x="33" y="24" fill="white" font-size="6" font-weight="900" text-anchor="middle">八折</text>
+          </svg>
+        </div>
+        <div class="wheel-center"></div>
+      </div>
+      <button id="spinBtn" onclick="startSpin()" class="btn-gold w-full h-[76px] pill text-3xl">開始轉轉樂</button>
+    </div>
+  </div>
 
-</div>
+  <div id="page-points" class="page"><button class="text-white/60 text-xl mb-7 bg-transparent border-0" onclick="showPage('home')">← 返回首頁</button><div class="title-en mb-3">IAURI POINTS</div><h2 class="text-5xl font-black mb-6">積分紀錄</h2><div class="card p-6 mb-6"><div class="text-white/50">目前積分</div><div id="pointsPageText" class="text-6xl font-black gold mt-2">0</div></div><div class="dark-card p-5 leading-loose"><div class="text-2xl font-black mb-3">獲取方式</div>完成調理 +5<br>帶朋友來店 +200</div></div>
 
-</div>
+  <div id="page-records" class="page"><button class="text-white/60 text-xl mb-7 bg-transparent border-0" onclick="showPage('home')">← 返回首頁</button><div class="title-en mb-3">IAURI CARE HISTORY</div><h2 class="text-5xl font-black mb-6">消費紀錄</h2><div id="recordsList"></div></div>
 
-<div style="margin-top:30px;
-display:flex;
-justify-content:space-between;
-align-items:center;">
+  <div id="page-rescue" class="page"><button class="text-white/60 text-xl mb-7 bg-transparent border-0" onclick="showPage('home')">← 返回首頁</button><div class="title-en mb-3">EMERGENCY CARE</div><h2 class="text-5xl font-black mb-6">救援</h2><div class="card p-7 text-center"><div class="text-5xl mb-5">🔥</div><div class="text-3xl font-black mb-3">夜間救援服務</div><div class="text-white/60 mb-6">開放時間 20:00 - 02:00</div><button class="btn-gold pill w-full h-[64px] text-2xl">一鍵呼叫</button></div></div>
 
-<div style="font-size:28px;font-weight:900;">
-兩個月瘦小臉計畫
-</div>
-
-<div id="progressText"
-class="gold"
-style="font-size:32px;font-weight:900;">
-0/8次
-</div>
-
-</div>
-
-<div class="progress" style="margin-top:16px;">
-<div id="progressBar" class="progress-bar" style="width:0%"></div>
-</div>
-
-<div style="margin-top:36px;
-display:flex;
-justify-content:space-between;
-align-items:center;">
-
-<div>
-
-<div class="gold"
-style="letter-spacing:8px;font-size:14px;">
-MEMBER QR
-</div>
-
-<div style="margin-top:14px;
-font-size:20px;
-line-height:1.7;
-color:#ccc;">
-調理師掃描後可快速完成紀錄
-</div>
-
-</div>
-
-<div class="qr-box">
-<img
-id="memberQr"
-src="https://api.qrserver.com/v1/create-qr-code/?size=132x132&data=IAURI">
-</div>
-
-</div>
-
-<div style="margin-top:28px;
-background:linear-gradient(145deg,#080812,#000);
-border-radius:30px;
-padding:24px;">
-
-<div class="gold"
-style="letter-spacing:8px;font-size:14px;">
-IAURI POINTS
-</div>
-
-<div style="text-align:right;margin-top:10px;">
-
-<div id="pointsText"
-style="font-size:78px;font-weight:900;">
-0
-</div>
-
-<div style="font-size:24px;color:#bbb;">
-會員積分
-</div>
-
-</div>
-
-</div>
-
-<div class="reward-card">
-
-<div class="gold"
-style="letter-spacing:8px;font-size:14px;">
-IAURI PRIVILEGE
-</div>
-
-<div style="font-size:52px;
-font-weight:900;
-margin-top:12px;">
-兩人同行八折
-</div>
-
-<div style="margin-top:14px;
-font-size:24px;color:#eee;">
-請於下次來店時出示本畫面
-</div>
-
-</div>
-
-</div>
-
-<div style="margin-top:40px;">
-
-<div class="gold"
-style="letter-spacing:8px;font-size:14px;">
-QUICK ACCESS
-</div>
-
-<div style="font-size:56px;
-font-weight:900;
-margin-top:10px;">
-會員服務
-</div>
-
-<div class="grid" style="margin-top:24px;">
-
-<div class="grid-card">
-<div style="font-size:52px;font-weight:900;">
-積分
-</div>
-<div style="font-size:22px;letter-spacing:4px;">
-POINTS
-</div>
-</div>
-
-<div class="grid-card feature">
-<div style="
-background:#ffe15a;
-color:black;
-font-weight:900;
-padding:10px 24px;
-border-radius:999px;
-width:max-content;
-margin-bottom:18px;">
-START
-</div>
-
-<div style="font-size:52px;font-weight:900;">
-預約調理
-</div>
-
-<div style="font-size:22px;letter-spacing:4px;">
-BOOKING
-</div>
-</div>
-
-</div>
-
-</div>
-
-<div style="margin-top:40px;">
-
-<div class="service-card">
-<div style="display:flex;justify-content:space-between;">
-<div>
-<div style="font-size:44px;font-weight:900;">
-精準局部體驗
-</div>
-<div style="font-size:20px;color:#999;">
-LOCAL EXPERIENCE
-</div>
-</div>
-
-<div style="font-size:52px;font-weight:900;">
-$400
-</div>
-</div>
-</div>
-
-<div class="service-card">
-<div style="display:flex;justify-content:space-between;">
-<div>
-<div style="font-size:44px;font-weight:900;">
-全息平衡調理
-</div>
-<div style="font-size:20px;color:#999;">
-FULL BALANCE
-</div>
-</div>
-
-<div style="font-size:52px;font-weight:900;">
-$800
-</div>
-</div>
-</div>
-
-<div class="service-card">
-<div style="display:flex;justify-content:space-between;">
-<div>
-<div style="font-size:44px;font-weight:900;">
-訂製服務
-</div>
-<div style="font-size:20px;color:#999;">
-CUSTOM SERVICE
-</div>
-</div>
-</div>
-</div>
-
-</div>
+  <div id="page-staff" class="page">
+    <div class="title-en mb-3">IAURI THERAPIST</div><h2 class="text-5xl font-black mb-6">調理師控制台</h2>
+    <div id="staffDenied" class="card p-7 text-center hidden"><div class="text-3xl font-black mb-3">無權限</div><div class="text-white/60">此頁面僅限白名單調理師使用</div></div>
+    <div id="staffPanel" class="hidden">
+      <div class="card p-5 mb-5">
+        <div class="flex items-center gap-4 mb-4"><img id="staffMemberPhoto" class="w-20 h-20 rounded-full border border-[#D4AF37] object-cover" src=""><div><div id="staffMemberName" class="text-3xl font-black">會員</div><div id="staffMemberInfo" class="muted mt-1">0/8・0 POINTS</div></div></div>
+        <div id="staffRewardInfo" class="text-white/70"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <button onclick="staffCompleteTreatment()" class="btn-gold rounded-2xl p-5 text-xl">完成調理<br><span class="text-sm">+1 / +5點</span></button>
+        <button onclick="staffUnlockDraw(1)" class="btn-dark rounded-2xl p-5 text-xl">開啟抽獎<br><span class="text-sm">+1 次</span></button>
+        <button onclick="staffRedeemReward()" class="btn-dark rounded-2xl p-5 text-xl">核銷獎勵</button>
+        <button onclick="staffAddReferralPoints()" class="btn-dark rounded-2xl p-5 text-xl">帶朋友來店<br><span class="text-sm">+200點</span></button>
+      </div>
+      <div class="card p-5 mb-5"><div class="text-2xl font-black mb-4">POINTS 折抵</div><div class="grid grid-cols-3 gap-3"><button onclick="staffRedeemPoints(100)" class="chip">100</button><button onclick="staffRedeemPoints(300)" class="chip">300</button><button onclick="staffRedeemPoints(500)" class="chip">500</button></div></div>
+      <div class="card p-5">
+        <div class="title-en mb-3">CARE RECORD</div>
+        <div class="text-3xl font-black mb-4">調理紀錄</div>
+        <div class="text-white/60 mb-3">第一層分類</div>
+        <div id="staffMainItems" class="grid grid-cols-2 gap-3 mb-5"></div>
+        <div class="text-white/60 mb-3">第二層細項（可多選）</div>
+        <div id="staffSubItems" class="grid grid-cols-1 gap-3 mb-5"></div>
+        <input id="staffAmount" type="number" inputmode="numeric" placeholder="本次金額，例如 800" class="w-full mb-4 p-4 rounded-2xl bg-[#171717] border border-white/10 text-white text-xl">
+        <button onclick="staffSubmitTreatmentRecord()" class="btn-gold rounded-2xl w-full p-5 text-xl">送出完整調理紀錄</button>
+      </div>
+    </div>
+  </div>
 
 </div>
 
 <div class="bottom-nav">
-
-<div class="nav-item">
-<div>⌂</div>
-<div>首頁</div>
+  <button class="nav-btn active" data-nav="home" onclick="showPage('home')"><span class="nav-emoji">⌂</span><span>首頁</span></button>
+  <button class="nav-btn" data-nav="points" onclick="showPage('points')"><span class="nav-emoji">◎</span><span>積分</span></button>
+  <button class="nav-btn" data-nav="records" onclick="showPage('records')"><span class="nav-emoji">☷</span><span>紀錄</span></button>
+  <button class="nav-btn rescue" data-nav="rescue" onclick="openRescue()"><span class="nav-emoji">🔥</span><span>救援</span></button>
 </div>
 
-<div class="nav-item">
-<div>◉</div>
-<div>積分</div>
-</div>
-
-<div class="nav-item">
-<div>☷</div>
-<div>紀錄</div>
-</div>
-
-<div class="rescue-btn">
-<div style="font-size:38px;">🔥</div>
-<div style="font-size:18px;">救援</div>
-</div>
-
-</div>
-
-<div class="modal" id="qrModal">
-<img id="modalQr">
-</div>
+<div id="resultModal" class="modal"><div class="card p-7 w-full max-w-[420px] text-center"><div class="gold text-5xl font-black mb-5">恭喜中獎！</div><div class="flex justify-center items-center gap-3 mb-5"><img id="resultPhoto" class="w-14 h-14 rounded-full border border-[#D4AF37]" src=""><div class="text-left"><div id="resultName" class="text-2xl font-black"></div><div id="resultTime" class="text-white/50"></div></div></div><div id="resultPrize" class="mx-auto w-[230px] h-[230px] rounded-full bg-[#fff6cf] text-[#5b006d] text-4xl font-black flex items-center justify-center leading-tight mb-7"></div><button onclick="closeResultAndReload()" class="btn-gold pill w-full h-[64px] text-2xl">太棒了！</button></div></div>
+<div id="qrModal" class="modal"><div class="card p-6 w-full max-w-[420px] text-center"><div class="title-en mb-4">MEMBER QR</div><div id="memberQrLarge" class="qr-large flex justify-center"></div><div class="text-white/60 mt-5 leading-relaxed">請讓調理師掃描此 QR Code</div><button onclick="closeQrModal()" class="btn-gold pill w-full h-[58px] text-xl mt-6">關閉</button></div></div>
 
 <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, query, where, getDocs, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+const firebaseConfig={apiKey:"AIzaSyDO77Pw12IXXeHECJy3YSTcCV9ikok1ev8",authDomain:"iauri-member.firebaseapp.com",projectId:"iauri-member",storageBucket:"iauri-member.firebasestorage.app",messagingSenderId:"787600565952",appId:"1:787600565952:web:460864719a5f543844ef25",measurementId:"G-T8GK6SPK7K"};
+const LIFF_ID="2010173212-2gFbVMbf",SHARE_URL="https://lin.ee/vxi3sZ4",app=initializeApp(firebaseConfig),db=getFirestore(app);
+let profile=null,member=null,memberRef=null,isTherapist=false,staffTargetUid=null,staffTargetData=null;
+const $=id=>document.getElementById(id);
+const nowText=()=>new Date().toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
+function showLoading(show){$("loadingBanner").style.display=show?"block":"none";}
 
-import {
-getFirestore,
-doc,
-getDoc,
-addDoc,
-collection
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDO77Pw12IXXeHECJy3YSTcCV9ikok1ev8",
-  authDomain: "iauri-member.firebaseapp.com",
-  projectId: "iauri-member",
-  storageBucket: "iauri-member.firebasestorage.app",
-  messagingSenderId: "787600565952",
-  appId: "1:787600565952:web:460864719a5f543844ef25",
-  measurementId: "G-T8GK6SPK7K"
-};
-
-const app=initializeApp(firebaseConfig);
-
-const db=getFirestore(app);
-
-window.db=db;
-window.collection=collection;
-window.addDoc=addDoc;
-
-let currentUserId="guest";
-let currentDisplayName="會員";
-
-async function init(){
-
-try{
-
-await liff.init({
-liffId:"2007655316-ZqoN2q6b"
-});
-
-if(liff.isLoggedIn()){
-
-const profile=await liff.getProfile();
-
-currentUserId=profile.userId;
-currentDisplayName=profile.displayName;
-
-document.getElementById("memberName")
-.innerText=currentDisplayName;
-
-document.getElementById("avatarImg")
-.src=profile.pictureUrl;
-
-document.getElementById("memberQr")
-.src=
-"https://api.qrserver.com/v1/create-qr-code/?size=132x132&data="+currentUserId;
-
+async function initLiff(){
+  if(!window.liff) throw new Error("LIFF SDK not loaded");
+  await liff.init({liffId:LIFF_ID});
+  if(!liff.isLoggedIn()){liff.login(); return new Promise(()=>{});}
+  const p=await liff.getProfile();
+  if(!p || !p.userId) throw new Error("Cannot get LINE profile");
+  profile={userId:p.userId,displayName:p.displayName||"會員",pictureUrl:p.pictureUrl||""};
 }
 
-}catch(e){
-
-console.error(e);
-
+async function ensureMember(){
+  memberRef=doc(db,"members",profile.userId);
+  const snap=await getDoc(memberRef);
+  if(!snap.exists()){
+    await setDoc(memberRef,{lineUserId:profile.userId,displayName:profile.displayName,photoUrl:profile.pictureUrl||"",points:0,pointsTotal:0,freeFaceUsedCount:0,freeFaceTotalCount:8,remainingDrawCount:1,welcomeDrawGranted:true,latestPrize:"",latestPrizeRedeemed:true,createdAt:Date.now(),updatedAt:Date.now()});
+  }else{
+    const d=snap.data(),patch={};
+    if(d.points===undefined&&d.pointsTotal!==undefined)patch.points=Number(d.pointsTotal)||0;
+    if(d.points===undefined&&d.pointsTotal===undefined)patch.points=0;
+    if(d.freeFaceUsedCount===undefined)patch.freeFaceUsedCount=0;
+    if(d.freeFaceTotalCount===undefined)patch.freeFaceTotalCount=8;
+    if(d.remainingDrawCount===undefined)patch.remainingDrawCount=0;
+    if(d.latestPrizeRedeemed===undefined)patch.latestPrizeRedeemed=true;
+    if(d.welcomeDrawGranted===undefined){patch.welcomeDrawGranted=true;patch.remainingDrawCount=Number(d.remainingDrawCount||0)+1;}
+    if(profile.pictureUrl && (!d.photoUrl || String(d.photoUrl).includes("dummyimage") || String(d.photoUrl).includes("IAURI")))patch.photoUrl=profile.pictureUrl;
+    if(profile.displayName && (!d.displayName || d.displayName==="測試會員" || d.displayName==="讀取中"))patch.displayName=profile.displayName;
+    if(Object.keys(patch).length)await updateDoc(memberRef,{...patch,updatedAt:Date.now()});
+  }
+  member=(await getDoc(memberRef)).data();
 }
 
+async function checkTherapist(){
+  try{
+    const q=query(collection(db,"staff_users"),where("lineUserId","==",profile.userId),where("active","==",true));
+    const s=await getDocs(q);isTherapist=!s.empty;
+  }catch(e){console.warn("staff check failed",e);}
 }
 
-init();
+function renderHome(){
+  $("memberPhoto").src=member.photoUrl||profile.pictureUrl||"https://dummyimage.com/300x300/111111/d4af37&text=IAURI";
+  $("memberName").innerText=member.displayName||profile.displayName||"會員";
+  const used=Number(member.freeFaceUsedCount||0),total=Number(member.freeFaceTotalCount||8);
+  $("freeFaceBox").style.display=used>=total?"none":"block";
+  $("freeFaceText").innerText=`${used}/${total}次`;
+  $("freeFaceBar").style.width=`${Math.min(100,(used/total)*100)}%`;
+  const pts=Number(member.points||member.pointsTotal||0);
+  $("pointsText").innerText=pts;$("pointsPageText").innerText=pts;
 
-document.getElementById("memberQr")
-.onclick=()=>{
+  const qrUrl=`${location.origin}${location.pathname}?mode=staff&uid=${encodeURIComponent(profile.userId)}`;
+  $("memberQr").innerHTML="";
+  if(window.QRCode){
+    QRCode.toCanvas(qrUrl,{width:132,margin:1},(err,canvas)=>{ if(!err){canvas.onclick=()=>openQrModal(qrUrl);$("memberQr").appendChild(canvas);} else renderQrImage(qrUrl); });
+  }else renderQrImage(qrUrl);
 
-document.getElementById("qrModal")
-.style.display="flex";
+  if(member.latestPrize&&member.latestPrizeRedeemed===false){
+    $("rewardArea").innerHTML=`<div class="reward-card"><div class="reward-title">IAURI PRIVILEGE</div><div class="reward-prize">${member.latestPrize}</div><div class="text-white/60 mt-3 leading-relaxed">請於下次來店時出示本畫面</div></div>`;
+  }else $("rewardArea").innerHTML="";
 
-document.getElementById("modalQr")
-.src=document.getElementById("memberQr").src;
+  if(Number(member.remainingDrawCount||0)>0){
+    $("drawEntryArea").innerHTML=`<button onclick="showPage('draw')" class="btn-gold pill w-full h-[72px] text-2xl mt-6">幸運轉轉樂</button>`;
+    $("drawLockedBox").classList.add("hidden");$("drawGameBox").style.display="block";
+  }else{
+    $("drawEntryArea").innerHTML="";
+    $("drawLockedBox").classList.remove("hidden");$("drawGameBox").style.display="none";
+  }
+}
 
+function renderQrImage(qrUrl){
+  const qrImg=document.createElement("img");
+  qrImg.alt="會員 QR Code";
+  qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=132x132&margin=8&data=${encodeURIComponent(qrUrl)}`;
+  qrImg.onclick=()=>openQrModal(qrUrl);
+  qrImg.onerror=()=>{$("memberQr").innerHTML=`<div class="text-xs text-white/70 break-all max-w-[132px]">${qrUrl}</div>`;};
+  $("memberQr").appendChild(qrImg);
+}
+window.openQrModal=function(qrUrl){$("memberQrLarge").innerHTML="";if(window.QRCode){QRCode.toCanvas(qrUrl,{width:320,margin:1},(err,canvas)=>{if(!err)$("memberQrLarge").appendChild(canvas);else renderLargeQrImg(qrUrl);});}else renderLargeQrImg(qrUrl);$("qrModal").classList.add("show");};
+function renderLargeQrImg(qrUrl){const img=document.createElement("img");img.src=`https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=8&data=${encodeURIComponent(qrUrl)}`;$("memberQrLarge").appendChild(img);}
+window.closeQrModal=function(){$("qrModal").classList.remove("show");};
+
+const services=[{name:"兩個月瘦小臉計畫",sub:"FREE FACE PLAN",price:"$ 0",free:true},{name:"精準局部體驗",sub:"LOCAL EXPERIENCE",price:"$400"},{name:"全息平衡調理",sub:"FULL BALANCE",price:"$800"},{name:"訂製服務",sub:"CUSTOM SERVICE",price:"✦",custom:true}];
+let selectedBookingService="", selectedBookingDate="", selectedBookingTime="";
+function renderBooking(){
+  selectedBookingService="";
+  selectedBookingDate="";
+  selectedBookingTime="";
+  $("bookingDateBox")?.classList.add("hidden");
+  $("bookingTimeBox")?.classList.add("hidden");
+  $("serviceList").innerHTML=services.filter(s=>!(s.free&&Number(member?.freeFaceUsedCount||0)>=8)).map(s=>`<button onclick="selectBookingService('${s.name.replace(/'/g,"\\'")}')" class="w-full text-left ${s.custom?'dark-card':'card'} p-6 flex items-center justify-between ${s.free?'ring-1 ring-[#D4AF37]/45':''}"><div><div class="text-3xl font-black">${s.name}</div><div class="muted tracking-[.05em] mt-2">${s.sub}</div></div><div class="${s.free?'text-[#ff3d67] text-5xl':'text-4xl'} font-black">${s.price}</div></button>`).join("");
+  renderDates();
+  renderTimes();
+}
+function renderDates(){
+  const dbox=$("dateOptions");
+  dbox.innerHTML="";
+  const days=["日","一","二","三","四","五","六"];
+  for(let i=0;i<7;i++){
+    const d=new Date();
+    d.setDate(d.getDate()+i);
+    const yyyy=d.getFullYear();
+    const mm=String(d.getMonth()+1).padStart(2,"0");
+    const dd=String(d.getDate()).padStart(2,"0");
+    const value=`${yyyy}-${mm}-${dd}`;
+    const label=`${d.getMonth()+1}/${d.getDate()} ${days[d.getDay()]}`;
+    dbox.innerHTML+=`<button onclick="selectBookingDate('${value}',this)" class="chip">${label}</button>`;
+  }
+}
+window.selectBookingService=function(name){
+  selectedBookingService=name;
+  selectedBookingDate="";
+  selectedBookingTime="";
+  $("bookingDateBox").classList.remove("hidden");
+  $("bookingTimeBox").classList.remove("hidden");
+  document.querySelectorAll("#dateOptions .chip,#timeOptions .chip").forEach(b=>b.classList.remove("active"));
+  setTimeout(()=>$("bookingDateBox").scrollIntoView({behavior:"smooth",block:"start"}),80);
+}
+window.selectBookingDate=function(value,btn){
+  selectedBookingDate=value;
+  selectedBookingTime="";
+  document.querySelectorAll("#dateOptions .chip").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderTimes();
+}
+window.selectBookingTime=function(value,btn){
+  selectedBookingTime=value;
+  document.querySelectorAll("#timeOptions .chip").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+}
+function renderTimes(){
+  const box=$("timeOptions");
+  box.innerHTML="";
+  const now=new Date(),threshold=new Date(now.getTime()+60*60*1000),slots=[];
+  for(let h=10;h<26;h++){
+    for(const m of [0,30]){
+      const label=`${String(h%24).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+      slots.push({h,m,label});
+    }
+  }
+  slots.forEach(s=>{
+    const slotDate=new Date();
+    if(selectedBookingDate){
+      const [y,mo,d]=selectedBookingDate.split("-").map(Number);
+      slotDate.setFullYear(y,mo-1,d);
+    }
+    slotDate.setHours(s.h>=24?s.h-24:s.h,s.m,0,0);
+    if(s.h>=24)slotDate.setDate(slotDate.getDate()+1);
+    if(!selectedBookingDate || slotDate<=threshold)return;
+    box.innerHTML+=`<button onclick="selectBookingTime('${s.label}',this)" class="chip">${s.label}</button>`;
+  });
+}
+window.confirmBooking=async function(){
+  if(!selectedBookingService){alert("請先選擇調理項目");return;}
+  if(!selectedBookingDate){alert("請先選擇日期");return;}
+  if(!selectedBookingTime){alert("請先選擇時間");return;}
+  try{
+    await addDoc(collection(db,"bookings"),{
+      lineUserId:profile?.userId||"guest",
+      displayName:member?.displayName||profile?.displayName||"會員",
+      photoUrl:member?.photoUrl||profile?.pictureUrl||"",
+      serviceName:selectedBookingService,
+      date:selectedBookingDate,
+      time:selectedBookingTime,
+      status:"pending",
+      createdAt:Date.now()
+    });
+    alert(`預約成功\\n\\n${selectedBookingService}\\n${selectedBookingDate} ${selectedBookingTime}`);
+    showPage("home");
+  }catch(e){
+    console.error(e);
+    alert("預約失敗，請確認網路或 Firebase 權限");
+  }
+}
+
+async function renderRecords(){
+  try{
+    const q=query(collection(db,"treatment_records"),where("lineUserId","==",profile.userId));
+    const snap=await getDocs(q),rows=[];snap.forEach(x=>rows.push(x.data()));
+    rows.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    $("recordsList").innerHTML=rows.length?rows.map(r=>`<div class="record-card"><div class="flex justify-between gap-3"><div class="text-2xl font-black">${r.mainItem||"調理紀錄"}</div><div class="gold text-xl font-black">$${r.amount||0}</div></div><div class="text-white/65 mt-3 leading-loose">${(r.items||[]).map(i=>"✓ "+i).join("<br>")||"本次調理已完成"}</div><div class="text-white/45 mt-4 small">${new Date(r.createdAt||Date.now()).toLocaleString("zh-TW")}｜Therapist ${r.therapistName||""}</div></div>`).join(""):`<div class="dark-card p-6 text-white/60">目前尚無消費紀錄</div>`;
+  }catch(e){$("recordsList").innerHTML=`<div class="dark-card p-6 text-white/60">紀錄讀取失敗，請稍後再試</div>`;}
+}
+window.showPage=async function(name){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));$("page-"+name).classList.add("active");document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.nav===name));if(name==="booking")renderBooking();if(name==="records")await renderRecords();};
+window.openRescue=function(){const h=new Date().getHours();if(!(h>=20||h<2)){alert("救援功能開放時間為晚上 8 點至凌晨 2 點");return;}showPage("rescue");};
+window.editDisplayName=async function(){const name=prompt("請輸入會員顯示名稱",member.displayName||"");if(!name)return;await updateDoc(memberRef,{displayName:name,updatedAt:Date.now()});location.reload();};
+window.shareFriend=async function(){const text="我在 IAURI 抽中了專屬獎勵✨";try{if(navigator.share)await navigator.share({title:"IAURI BEAUTY CLUB",text,url:SHARE_URL});else{await navigator.clipboard.writeText(`${text}
+${SHARE_URL}`);alert("分享文字已複製");}}catch(e){}};
+
+const prizes=[{name:"體驗券400元",weight:24,angle:30},{name:"國際大師指定體驗",weight:18,angle:90},{name:"體驗券800元",weight:22,angle:150},{name:"三人同行五折",weight:18,angle:210},{name:"體驗券1500元",weight:8,angle:270},{name:"兩人同行八折",weight:20,angle:330}];
+let spinning=false,currentRotate=0,lastPrizeName="";
+function weightedPrize(){let pool=prizes.filter(p=>p.name!==lastPrizeName);const total=pool.reduce((s,p)=>s+p.weight,0);let r=Math.random()*total;for(const p of pool){if(r<p.weight)return p;r-=p.weight;}return pool[0];}
+window.startSpin=async function(){if(spinning||Number(member.remainingDrawCount||0)<=0)return;spinning=true;$("spinBtn").disabled=true;$("spinBtn").innerText="轉動中...";const prize=weightedPrize();lastPrizeName=prize.name;currentRotate+=360*12+(360-prize.angle);$("wheel").style.transform=`rotate(${currentRotate}deg)`;setTimeout(async()=>{await updateDoc(memberRef,{remainingDrawCount:increment(-1),latestPrize:prize.name,latestPrizeRedeemed:false,updatedAt:Date.now()});await addDoc(collection(db,"draw_records"),{lineUserId:profile.userId,displayName:member.displayName,photoUrl:member.photoUrl,prize:prize.name,createdAt:Date.now()});$("resultPhoto").src=member.photoUrl||profile.pictureUrl;$("resultName").innerText=member.displayName||profile.displayName;$("resultTime").innerText=nowText();$("resultPrize").innerHTML=prize.name.replace("指定","<br>指定").replace("體驗券","體驗券<br>");$("resultModal").classList.add("show");},8400);};
+window.closeResultAndReload=function(){location.reload();};
+
+const careCatalog={
+  "兩個月瘦小臉計畫":["本次小臉調理完成"],
+  "美容":["基礎面部緊緻","晶亮放鬆","頂級面部緊緻","奢華緊緻小V臉","煥采微循環維護"],
+  "舒緩":["肩頸放鬆","放鬆好眠","美體輕盈管理","舒緩上半身日常緊繃","舒緩下半身日常緊繃","深層夜間好眠","深層釋壓方案","內在平衡美學","經期前後舒活","體態輕盈管理"],
+  "訂製服務":["訂製調理","指定部位加強","其他客製需求"]
+};
+let staffMainItem="兩個月瘦小臉計畫",staffSelectedItems=[];
+function renderStaffCareForm(){
+  if(!$('staffMainItems')||!$('staffSubItems'))return;
+  $('staffMainItems').innerHTML=Object.keys(careCatalog).map(k=>`<button onclick="staffSelectMain('${k}')" class="chip ${staffMainItem===k?'active':''}">${k}</button>`).join('');
+  $('staffSubItems').innerHTML=(careCatalog[staffMainItem]||[]).map(i=>`<button onclick="staffToggleSub('${i}')" class="chip ${staffSelectedItems.includes(i)?'active':''}">${i}</button>`).join('');
+}
+window.staffSelectMain=function(name){staffMainItem=name;staffSelectedItems=[];renderStaffCareForm();};
+window.staffToggleSub=function(item){staffSelectedItems=staffSelectedItems.includes(item)?staffSelectedItems.filter(x=>x!==item):[...staffSelectedItems,item];renderStaffCareForm();};
+window.staffSubmitTreatmentRecord=async function(){
+  if(!requireStaff())return;
+  const amount=Number(($('staffAmount')?.value||0));
+  const items=staffSelectedItems.length?staffSelectedItems:[`${staffMainItem}完成`];
+  const patch={points:increment(5),pointsTotal:increment(5),updatedAt:Date.now()};
+  if(staffMainItem==='兩個月瘦小臉計畫')patch.freeFaceUsedCount=increment(1);
+  await updateDoc(doc(db,'members',staffTargetUid),patch);
+  await addDoc(collection(db,'treatment_records'),{lineUserId:staffTargetUid,mainItem:staffMainItem,items,amount,therapistId:profile.userId,therapistName:profile.displayName,pointsAdded:5,createdAt:Date.now()});
+  alert('已送出調理紀錄，並增加 5 POINTS');location.reload();
 };
 
-document.getElementById("qrModal")
-.onclick=()=>{
+async function loadStaffTarget(){
+  const params=new URLSearchParams(location.search);
+  if(params.get("mode")!=="staff")return;
+  staffTargetUid=params.get("uid");
+  await showPage("staff");
+  if(!isTherapist){$("staffDenied").classList.remove("hidden");return;}
+  if(!staffTargetUid){$("staffDenied").classList.remove("hidden");$("staffDenied").innerHTML="<div class='text-3xl font-black'>缺少會員資料</div>";return;}
+  const ref=doc(db,"members",staffTargetUid),snap=await getDoc(ref);
+  if(!snap.exists()){$("staffDenied").classList.remove("hidden");$("staffDenied").innerHTML="<div class='text-3xl font-black'>找不到會員</div>";return;}
+  staffTargetData=snap.data();$("staffPanel").classList.remove("hidden");renderStaffCareForm();$("staffMemberPhoto").src=staffTargetData.photoUrl||"";$("staffMemberName").innerText=staffTargetData.displayName||"會員";$("staffMemberInfo").innerText=`${staffTargetData.freeFaceUsedCount||0}/8・${staffTargetData.points||0} POINTS`;$("staffRewardInfo").innerHTML=staffTargetData.latestPrize&&staffTargetData.latestPrizeRedeemed===false?`IAURI PRIVILEGE：${staffTargetData.latestPrize}（尚未兌換）`:"目前無未兌換獎勵";
+}
+function requireStaff(){if(!isTherapist){alert("無權限");return false;}if(!staffTargetUid){alert("缺少會員");return false;}return true;}
+window.staffCompleteTreatment=async function(){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{freeFaceUsedCount:increment(1),points:increment(5),pointsTotal:increment(5),updatedAt:Date.now()});await addDoc(collection(db,"treatment_records"),{lineUserId:staffTargetUid,mainItem:"兩個月瘦小臉計畫",items:["本次調理完成"],amount:0,therapistId:profile.userId,therapistName:profile.displayName,pointsAdded:5,createdAt:Date.now()});alert("已完成本次調理，並增加 5 POINTS");location.reload();};
+window.staffUnlockDraw=async function(count){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{remainingDrawCount:increment(count),updatedAt:Date.now()});await addDoc(collection(db,"draw_unlocks"),{lineUserId:staffTargetUid,therapistId:profile.userId,count,createdAt:Date.now()});alert(`已開啟 ${count} 次抽獎資格`);location.reload();};
+window.staffRedeemReward=async function(){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{latestPrizeRedeemed:true,updatedAt:Date.now()});alert("已核銷獎勵");location.reload();};
+window.staffAddReferralPoints=async function(){if(!requireStaff())return;await updateDoc(doc(db,"members",staffTargetUid),{points:increment(200),pointsTotal:increment(200),updatedAt:Date.now()});await addDoc(collection(db,"points_records"),{lineUserId:staffTargetUid,type:"referral_visit",points:200,therapistId:profile.userId,createdAt:Date.now()});alert("已新增帶朋友來店 +200 POINTS");location.reload();};
+window.staffRedeemPoints=async function(amount){if(!requireStaff())return;const snap=await getDoc(doc(db,"members",staffTargetUid)),pts=Number(snap.data().points||0);if(pts<amount){alert("POINTS 不足");return;}await updateDoc(doc(db,"members",staffTargetUid),{points:increment(-amount),updatedAt:Date.now()});await addDoc(collection(db,"points_records"),{lineUserId:staffTargetUid,type:"redeem",points:-amount,therapistId:profile.userId,createdAt:Date.now()});alert(`已折抵 ${amount} POINTS`);location.reload();};
 
-document.getElementById("qrModal")
-.style.display="none";
-
-};
-
+async function boot(){
+  showLoading(true);
+  try{
+    await initLiff();
+    await ensureMember();
+    await checkTherapist();
+    renderHome();
+    renderBooking();
+    await loadStaffTarget();
+  }catch(e){
+    console.error(e);
+    $("memberName").innerText="LINE讀取失敗";
+    $("memberPhoto").src="https://dummyimage.com/300x300/111111/d4af37&text=IAURI";
+    // 不跳出阻擋式錯誤，避免顧客卡死；真正原因通常是 LIFF ID 或 LINE Developers Endpoint / Scope 設定。
+  }finally{showLoading(false);}
+}
+boot();
 </script>
-
 </body>
 </html>
