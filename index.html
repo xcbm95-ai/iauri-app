@@ -195,13 +195,6 @@
           <div class="dark-card p-5 text-white/50">讀取七天預約中...</div>
         </div>
       </div>
-      <div class="card p-5 mb-5 staff-qr-box">
-        <div class="title-en mb-3">SINGLE PHONE QR</div>
-        <div class="text-2xl font-black mb-3">單手機載入會員</div>
-        <div class="text-white/60 leading-relaxed mb-4">沒有第二支手機時，請先在會員頁點開 QR 截圖，再於此上傳 QR 圖片。</div>
-        <input id="staffQrUpload" type="file" accept="image/*" class="w-full p-4 rounded-2xl bg-[#171717] border border-white/10 text-white">
-        <button onclick="loadMemberQrFromUpload()" class="btn-gold rounded-2xl w-full p-4 text-xl mt-4">讀取會員 QR</button>
-      </div>
       <div class="card p-5 mb-5">
         <div class="flex items-center gap-4 mb-4"><img id="staffMemberPhoto" class="w-20 h-20 rounded-full border border-[#D4AF37] object-cover" src=""><div><div id="staffMemberName" class="text-3xl font-black">會員</div><div id="staffMemberInfo" class="muted mt-1">0/8・0 POINTS</div></div></div>
         <div id="staffRewardInfo" class="text-white/70"></div>
@@ -240,9 +233,29 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, query, where, getDocs, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  increment
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig={apiKey:"AIzaSyDO77Pw12IXXeHECJy3YSTcCV9ikok1ev8",authDomain:"iauri-member.firebaseapp.com",projectId:"iauri-member",storageBucket:"iauri-member.firebasestorage.app",messagingSenderId:"787600565952",appId:"1:787600565952:web:460864719a5f543844ef25",measurementId:"G-T8GK6SPK7K"};
+const firebaseConfig = {
+  apiKey: "AIzaSyDO77Pw12IXXeHECJy3YSTcCV9ikok1ev8",
+  authDomain: "iauri-member.firebaseapp.com",
+  projectId: "iauri-member",
+  storageBucket: "iauri-member.firebasestorage.app",
+  messagingSenderId: "787600565952",
+  appId: "1:787600565952:web:460864719a5f543844ef25",
+  measurementId: "G-T8GK6SPK7K"
+};
 const LIFF_ID="2010173212-2gFbVMbf",SHARE_URL="https://lin.ee/vxi3sZ4",app=initializeApp(firebaseConfig),db=getFirestore(app);
 let profile=null,member=null,memberRef=null,isTherapist=false,staffTargetUid=null,staffTargetData=null;
 const $=id=>document.getElementById(id);
@@ -641,7 +654,7 @@ async function renderStaffBookings(){
           <div class="grid grid-cols-3 gap-3">
             <button onclick="markBookingArrived('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>已到店</button>
             <button onclick="completeBookingFromList('${r.id}')" class="btn-gold rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>完成</button>
-            <button onclick="cancelBooking('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'opacity-40':''}" ${disabled?'disabled':''}>取消</button>
+            <button onclick="cancelBooking('${r.id}')" class="btn-dark rounded-2xl p-4 ${disabled?'disabled':''}>取消</button>
           </div>
         </div>
       `;
@@ -700,7 +713,6 @@ window.completeBookingFromList=async function(id){
     updatedAt:Date.now()
   };
 
-  // 只有免費八次方案才增加免費次數；正式菜單不加免費進度
   if(data.serviceName==="兩個月瘦小臉計畫" || data.category==="免費方案"){
     patch.freeFaceUsedCount=increment(1);
   }
