@@ -9,6 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
   <style>
     :root{
       --black:#030303;
@@ -45,8 +46,10 @@
 
     .welcome-card{margin-top:28px;padding:26px;border-radius:32px;background:radial-gradient(circle at 50% 0%,rgba(212,175,55,.24),transparent 36%),linear-gradient(145deg,rgba(212,175,55,.18),rgba(5,5,5,.96));border:1px solid rgba(212,175,55,.45);box-shadow:0 0 36px rgba(212,175,55,.22);text-align:center}
     .welcome-avatar{width:112px;height:112px;border-radius:999px;object-fit:cover;border:3px solid var(--gold);box-shadow:0 0 28px rgba(212,175,55,.35);margin:0 auto 18px}
-    .menu-price-card{padding:18px;border-radius:22px;background:linear-gradient(145deg,#17171c,#080808);border:1px solid rgba(255,255,255,.08);margin-bottom:12px}
+    .menu-price-card{padding:18px;border-radius:22px;background:linear-gradient(145deg,#17171c,#080808);border:1px solid rgba(255,255,255,.08);margin-bottom:12px;color:#fff}
     .menu-price-card.active{background:linear-gradient(145deg,rgba(212,175,55,.95),rgba(212,175,55,.72));color:#050505;font-weight:900}
+    .menu-price-card.active .gold{color:#050505}
+    .staff-qr-box{border:1px dashed rgba(212,175,55,.55);border-radius:24px;padding:18px;background:rgba(0,0,0,.25)}
 
     .small{font-size:12px}.loading-banner{position:fixed;top:0;left:0;right:0;background:#111;color:#D4AF37;padding:8px 12px;font-size:12px;text-align:center;z-index:200;display:none}
     @media (max-width:390px){.big-title{font-size:38px}.grid-card{min-height:136px;padding:20px}.grid-card-title{font-size:26px}.page{padding-left:16px;padding-right:16px}.wheel-center{width:92px;height:92px}.qr-box canvas,.qr-box img{width:116px!important;height:116px!important}}
@@ -171,6 +174,13 @@
     <div class="title-en mb-3">IAURI THERAPIST</div><h2 class="text-5xl font-black mb-6">調理師控制台</h2>
     <div id="staffDenied" class="card p-7 text-center hidden"><div class="text-3xl font-black mb-3">無權限</div><div class="text-white/60">此頁面僅限白名單調理師使用</div></div>
     <div id="staffPanel" class="hidden">
+      <div class="card p-5 mb-5 staff-qr-box">
+        <div class="title-en mb-3">SINGLE PHONE QR</div>
+        <div class="text-2xl font-black mb-3">單手機載入會員</div>
+        <div class="text-white/60 leading-relaxed mb-4">沒有第二支手機時，請先在會員頁點開 QR 截圖，再於此上傳 QR 圖片。</div>
+        <input id="staffQrUpload" type="file" accept="image/*" class="w-full p-4 rounded-2xl bg-[#171717] border border-white/10 text-white">
+        <button onclick="loadMemberQrFromUpload()" class="btn-gold rounded-2xl w-full p-4 text-xl mt-4">讀取會員 QR</button>
+      </div>
       <div class="card p-5 mb-5">
         <div class="flex items-center gap-4 mb-4"><img id="staffMemberPhoto" class="w-20 h-20 rounded-full border border-[#D4AF37] object-cover" src=""><div><div id="staffMemberName" class="text-3xl font-black">會員</div><div id="staffMemberInfo" class="muted mt-1">0/8・0 POINTS</div></div></div>
         <div id="staffRewardInfo" class="text-white/70"></div>
@@ -216,7 +226,6 @@ const LIFF_ID="2010173212-2gFbVMbf",SHARE_URL="https://lin.ee/vxi3sZ4",app=initi
 let profile=null,member=null,memberRef=null,isTherapist=false,staffTargetUid=null,staffTargetData=null;
 const $=id=>document.getElementById(id);
 const nowText=()=>new Date().toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
-
 const OFFICIAL_MENU=[
   {category:"小臉美容",english:"FACE BEAUTY",items:[
     {tier:"400",serviceName:"基礎拉提瘦小臉",price:400},
@@ -244,7 +253,6 @@ const OFFICIAL_MENU=[
     {tier:"1500",serviceName:"三天三夜",price:1500}
   ]}
 ];
-
 function showLoading(show){$("loadingBanner").style.display=show?"block":"none";}
 
 async function initLiff(){
@@ -497,13 +505,41 @@ window.staffSubmitTreatmentRecord=async function(){
   alert('已送出調理紀錄，並增加 5 POINTS');location.reload();
 };
 
+
+window.loadMemberQrFromUpload=async function(){
+  if(!isTherapist){alert("無權限");return;}
+  const input=$("staffQrUpload");
+  const file=input?.files?.[0];
+  if(!file){alert("請先選擇會員 QR 圖片");return;}
+  const dataUrl=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});
+  const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=dataUrl;});
+  const canvas=document.createElement("canvas");
+  const ctx=canvas.getContext("2d");
+  canvas.width=img.naturalWidth||img.width;
+  canvas.height=img.naturalHeight||img.height;
+  ctx.drawImage(img,0,0);
+  const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+  const code=window.jsQR?jsQR(imageData.data,canvas.width,canvas.height):null;
+  if(!code){alert("讀取不到 QR，請確認圖片清楚且包含完整 QR");return;}
+  const raw=code.data;
+  let uid="";
+  try{
+    const u=new URL(raw);
+    uid=u.searchParams.get("uid")||u.searchParams.get("member")||"";
+  }catch(e){
+    uid=raw.startsWith("U")?raw:"";
+  }
+  if(!uid){alert("會員 QR 無效，沒有找到會員 UID");return;}
+  location.href=`${location.origin}${location.pathname}?mode=staff&uid=${encodeURIComponent(uid)}`;
+};
+
 async function loadStaffTarget(){
   const params=new URLSearchParams(location.search);
-  if(params.get("mode")!=="staff")return;
+  if(params.get("mode")!=="staff" && params.get("staff")!=="1")return;
   staffTargetUid=params.get("uid");
   await showPage("staff");
   if(!isTherapist){$("staffDenied").classList.remove("hidden");return;}
-  if(!staffTargetUid){$("staffDenied").classList.remove("hidden");$("staffDenied").innerHTML="<div class='text-3xl font-black'>缺少會員資料</div>";return;}
+  if(!staffTargetUid){$("staffPanel").classList.remove("hidden");$("staffMemberName").innerText="請上傳會員 QR";$("staffMemberInfo").innerText="單手機測試模式";return;}
   const ref=doc(db,"members",staffTargetUid),snap=await getDoc(ref);
   if(!snap.exists()){$("staffDenied").classList.remove("hidden");$("staffDenied").innerHTML="<div class='text-3xl font-black'>找不到會員</div>";return;}
   staffTargetData=snap.data();$("staffPanel").classList.remove("hidden");renderStaffCareForm();$("staffMemberPhoto").src=staffTargetData.photoUrl||"";$("staffMemberName").innerText=staffTargetData.displayName||"會員";$("staffMemberInfo").innerText=`${staffTargetData.freeFaceUsedCount||0}/8・${staffTargetData.points||0} POINTS`;$("staffRewardInfo").innerHTML=staffTargetData.latestPrize&&staffTargetData.latestPrizeRedeemed===false?`IAURI PRIVILEGE：${staffTargetData.latestPrize}（尚未兌換）`:"目前無未兌換獎勵";
